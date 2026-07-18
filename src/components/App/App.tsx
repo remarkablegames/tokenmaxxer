@@ -55,6 +55,7 @@ const ICON_BUTTON_CLASS =
   'grid size-10 cursor-pointer place-items-center rounded-xl border border-white/10 bg-white/4 text-slate-300 transition-colors hover:border-cyan-300/45 hover:bg-cyan-400/8';
 const ACTION_BUTTON_CLASS =
   'cursor-pointer rounded-xl px-4 py-3 text-xs font-extrabold transition hover:-translate-y-px hover:brightness-125 disabled:cursor-not-allowed disabled:opacity-40';
+const SHELL_CLASS = 'mx-auto w-full max-w-400 px-3 sm:px-6';
 
 export function App() {
   const [save, setSave] = useState<SaveEnvelope>(() => loadSave());
@@ -257,8 +258,8 @@ export function App() {
   return (
     <main className="min-h-screen bg-[#050914] text-slate-100">
       <div className="noise pointer-events-none fixed inset-0" />
-      <header className="sticky top-0 z-30 border-b border-cyan-400/15 bg-[#050914]/95 px-3 py-3 backdrop-blur-xl sm:px-6">
-        <div className="mx-auto flex max-w-400 flex-wrap items-center gap-3">
+      <header className="sticky top-0 z-30 border-b border-cyan-400/15 bg-[#050914]/95 py-3 backdrop-blur-xl">
+        <div className={`${SHELL_CLASS} flex flex-wrap items-center gap-3`}>
           <div className="mr-auto">
             <h1 className="text-xl font-black tracking-tight sm:text-2xl">
               <span className="text-amber-300">🏆</span> TOKENMAXXER
@@ -293,8 +294,8 @@ export function App() {
         </div>
       </header>
 
-      <section className="border-b border-amber-300/15 bg-linear-to-r from-amber-500/5 via-cyan-500/5 to-violet-500/5 px-3 py-3 sm:px-6 sm:py-4">
-        <div className="mx-auto max-w-400">
+      <section className="border-b border-amber-300/15 bg-linear-to-r from-amber-500/5 via-cyan-500/5 to-violet-500/5 py-3 sm:py-4">
+        <div className={SHELL_CLASS}>
           <p className={`${EYEBROW_CLASS} text-amber-300`}>HIGH SCORE</p>
           <div className="mb-2 flex items-end justify-between gap-4">
             <h2 className="text-3xl font-black tabular-nums sm:text-5xl">
@@ -336,7 +337,9 @@ export function App() {
         </div>
       </section>
 
-      <div className="mx-auto grid max-w-400 gap-4 p-3 sm:p-6 xl:grid-cols-[minmax(300px,0.85fr)_minmax(400px,1.2fr)_minmax(340px,1fr)]">
+      <div
+        className={`${SHELL_CLASS} grid gap-4 py-3 sm:py-6 xl:grid-cols-[minmax(300px,0.85fr)_minmax(400px,1.2fr)_minmax(340px,1fr)]`}
+      >
         <aside className="space-y-4">
           <Panel title="ACTIVE PROTOCOLS" eyebrow="ABILITIES">
             <div className="space-y-3">
@@ -579,7 +582,9 @@ export function App() {
         </section>
       </div>
 
-      <footer className="mx-auto flex max-w-400 flex-wrap items-center justify-between gap-3 px-4 pb-6 text-xs text-slate-600">
+      <footer
+        className={`${SHELL_CLASS} flex flex-wrap items-center justify-between gap-3 pb-6 text-xs text-slate-600`}
+      >
         <span>LOCAL OPERATIONS · NO NETWORK REQUIRED</span>
         <div className="flex gap-3">
           <button
