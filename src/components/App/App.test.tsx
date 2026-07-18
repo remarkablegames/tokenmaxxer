@@ -100,10 +100,13 @@ describe('Tokenmaxxer dashboard', () => {
     await user.click(
       screen.getByRole('button', { name: /open ops comms, 1 unread/i }),
     );
-    expect(screen.getByRole('dialog')).toHaveTextContent('Ops Comms');
+    const dialog = screen.getByRole('dialog');
+    expect(dialog).toHaveTextContent('Ops Comms');
     expect(
       screen.queryByRole('status', { hidden: true }),
     ).not.toBeInTheDocument();
+    await user.click(dialog);
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
   it('loads earned history without replaying notifications', async () => {
@@ -376,6 +379,12 @@ describe('Tokenmaxxer dashboard', () => {
     const close = screen.getByRole('button', { name: 'Close' });
     expect(close).toHaveClass('text-base');
     expect(close).toHaveFocus();
+    const backdrop = celebration.parentElement;
+    expect(backdrop).not.toBeNull();
+    await user.click(backdrop ?? celebration);
+    expect(
+      screen.getByRole('dialog', { name: 'NEW HIGH SCORE' }),
+    ).toBeInTheDocument();
     await user.click(close);
     expect(
       screen.queryByRole('dialog', { name: 'NEW HIGH SCORE' }),

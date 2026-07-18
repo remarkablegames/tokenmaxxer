@@ -1047,6 +1047,7 @@ export function App() {
       )}
       {modal !== 'none' && (
         <ModalShell
+          closeOnBackdrop={modal === 'comms'}
           onClose={() => {
             setModal('none');
           }}
@@ -1451,15 +1452,22 @@ function ModalShell({
   title,
   children,
   onClose,
+  closeOnBackdrop = false,
 }: {
   title: string;
   children: React.ReactNode;
   onClose: () => void;
+  closeOnBackdrop?: boolean;
 }) {
+  const handleBackdropClick = (event: MouseEvent<HTMLDivElement>) => {
+    if (closeOnBackdrop && event.target === event.currentTarget) onClose();
+  };
+
   return (
     <div
       aria-modal="true"
       className="fixed inset-0 z-100 grid place-items-center overflow-y-auto bg-[#020610]/85 p-4 backdrop-blur-lg"
+      onClick={handleBackdropClick}
       role="dialog"
     >
       <section className="modal-card max-h-[calc(100vh-2rem)] w-full max-w-184 overflow-y-auto rounded-2xl border border-cyan-300/20 bg-[#0a1221] shadow-[0_25px_100px_#000]">
