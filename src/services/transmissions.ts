@@ -79,6 +79,16 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     unlock: { type: 'critical-click', value: 1 },
   },
   {
+    id: 'clicks-100',
+    sender: 'HR Wellness',
+    role: 'PEOPLE OPERATIONS',
+    initials: 'HR',
+    message:
+      'Your input rate exceeds the recommended ergonomic limit. This message satisfies our obligation to mention it.',
+    priority: 40,
+    unlock: { type: 'click', value: 100 },
+  },
+  {
     id: 'record-1k',
     sender: 'Director Campbell',
     role: 'MANAGEMENT',
@@ -106,6 +116,16 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
       'Campbell keeps forwarding me your numbers. Nice run—but that cluster is making requests I didn’t authorize.',
     priority: 100,
     unlock: { type: 'high-score', value: 10_000 },
+  },
+  {
+    id: 'clicks-500',
+    sender: 'Max Chen',
+    role: 'PERFORMANCE LEAD',
+    initials: 'MC',
+    message:
+      'Five hundred manual inputs? I can’t decide whether that’s dedication or a hardware problem.',
+    priority: 40,
+    unlock: { type: 'click', value: 500 },
   },
   {
     id: 'multifinger-purchased',
@@ -156,6 +176,16 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
       'PERFORMANCE LIMIT IDENTIFIED. AUTHORIZATION TO OPTIMIZE: IMPLIED.',
     priority: 100,
     unlock: { type: 'high-score', value: 100_000 },
+  },
+  {
+    id: 'clicks-1000',
+    sender: 'Token Reactor',
+    role: 'SYSTEM',
+    initials: 'TR',
+    message:
+      'MANUAL INPUT PATTERN LEARNED. HUMAN PARTICIPATION REMAINS OPTIONAL.',
+    priority: 60,
+    unlock: { type: 'click', value: 1_000 },
   },
   {
     id: 'hyperfocus-activated',

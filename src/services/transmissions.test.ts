@@ -9,8 +9,8 @@ import {
 
 describe('narrative transmissions', () => {
   it('defines a varied, prioritized office narrative', () => {
-    expect(TRANSMISSIONS).toHaveLength(22);
-    expect(new Set(TRANSMISSIONS.map(({ id }) => id)).size).toBe(22);
+    expect(TRANSMISSIONS).toHaveLength(25);
+    expect(new Set(TRANSMISSIONS.map(({ id }) => id)).size).toBe(25);
     expect(new Set(TRANSMISSIONS.map(({ sender }) => sender)).size).toBe(10);
     expect(TRANSMISSIONS.every(({ priority }) => priority > 0)).toBe(true);
     expect(TRANSMISSIONS.map(({ unlock }) => unlock.type)).toEqual(
@@ -31,7 +31,7 @@ describe('narrative transmissions', () => {
     const progress = createInitialProgress();
     expect(getEligibleTransmissions(progress)).toEqual([]);
 
-    progress.stats.clicks = 1;
+    progress.stats.clicks = 1_000;
     progress.stats.criticalClicks = 1;
     progress.stats.tokens = 500_000;
     progress.stats.prestiges = 1;
