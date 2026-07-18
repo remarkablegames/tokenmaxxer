@@ -1,7 +1,7 @@
 {
   "name": "Tokenmaxxer",
   "short_name": "Tokenmaxxer",
-  "description": "🏆 An absurd incremental game about generating more tokens than anyone else.",
+  "description": "🏆 An incremental game where you optimize token production to chase the ultimate high score.",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#ffffff",

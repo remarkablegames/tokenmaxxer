@@ -4,7 +4,7 @@
 [![test](https://github.com/remarkablegames/tokenmaxxer/actions/workflows/test.yml/badge.svg)](https://github.com/remarkablegames/tokenmaxxer/actions/workflows/test.yml)
 [![codecov](https://codecov.io/gh/remarkablegames/tokenmaxxer/graph/badge.svg?token=suLFjcegVB)](https://codecov.io/gh/remarkablegames/tokenmaxxer)
 
-🏆 An absurd incremental game about generating more tokens than anyone else. Become the ultimate high-score chaser.
+🏆 An incremental game where you optimize token production to chase the ultimate high score.
 
 ## Install
 
