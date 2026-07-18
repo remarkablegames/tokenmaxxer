@@ -21,18 +21,115 @@ describe('Tokenmaxxer dashboard', () => {
     vi.unstubAllGlobals();
   });
 
-  it('renders the complete dashboard and generates tokens', async () => {
+  it('starts with a focused objective and generates tokens', async () => {
     const user = userEvent.setup();
     render(<App />);
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
       'TOKENMAXXER',
     );
     expect(screen.getByText('HIGH SCORE')).toBeInTheDocument();
-    expect(screen.getByText('RUN TELEMETRY')).toBeInTheDocument();
-    expect(screen.getAllByText('LOCKED')).toHaveLength(2);
+    expect(screen.getByText('NEXT OBJECTIVE')).toBeInTheDocument();
+    expect(screen.getByText('Activate the Token Reactor')).toBeInTheDocument();
+    expect(screen.getByText('Mechanical Keyboard')).toBeInTheDocument();
+    expect(screen.getByText('Prompt Templates')).toBeInTheDocument();
+    expect(screen.queryByText('Multi-Finger Maxxing')).not.toBeInTheDocument();
+    expect(screen.queryByText('Automation Fleet')).not.toBeInTheDocument();
+    expect(screen.queryByText('ACTIVE PROTOCOLS')).not.toBeInTheDocument();
+    expect(screen.queryByText('CHAMPION ARCHIVE')).not.toBeInTheDocument();
+    expect(screen.queryByText('RUN TELEMETRY')).not.toBeInTheDocument();
+    expect(screen.queryByText('PRESTIGE PROTOCOL')).not.toBeInTheDocument();
     const reactor = screen.getByRole('button', { name: /activate reactor/i });
     await user.click(reactor);
     expect(screen.getByText('+1')).toBeInTheDocument();
+    expect(screen.getByText('Upgrade Manual Output')).toBeInTheDocument();
+  });
+
+  it('reveals production systems and guidance through early progression', async () => {
+    const save = createInitialSave();
+    save.progress.tokens = 20;
+    save.progress.stats.tokens = 20;
+    save.progress.stats.clicks = 1;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
+    const user = userEvent.setup();
+    render(<App />);
+
+    const keyboard = screen.getByRole('button', {
+      name: /mechanical keyboard/i,
+    });
+    expect(keyboard).toHaveAttribute('data-guided', 'true');
+    await user.click(keyboard);
+    expect(screen.getByText('Bring Automation Online')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'Generate 50 lifetime tokens to unlock Used GPU, then spend 75 tokens to deploy it.',
+      ),
+    ).toBeInTheDocument();
+    expect(screen.getByText('Automation Fleet')).toBeInTheDocument();
+    expect(screen.getByText('Used GPU')).toBeInTheDocument();
+    expect(screen.queryByText('Server Rack')).not.toBeInTheDocument();
+    expect(screen.queryByText('Prompt Engineer')).not.toBeInTheDocument();
+  });
+
+  it('guides the first automation purchase and then points to the record', async () => {
+    const save = createInitialSave();
+    save.progress.tokens = 75;
+    save.progress.stats.tokens = 50;
+    save.progress.stats.clicks = 20;
+    save.progress.upgrades.keyboard = 1;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
+    const user = userEvent.setup();
+    render(<App />);
+
+    const gpu = screen.getByRole('button', { name: /used gpu/i });
+    expect(gpu).toHaveAttribute('data-guided', 'true');
+    await user.click(gpu);
+    expect(screen.getByText('Chase the First Record')).toBeInTheDocument();
+    expect(screen.getByText('Server Rack')).toBeInTheDocument();
+  });
+
+  it('reveals advanced dashboard sections at their progression thresholds', () => {
+    const save = createInitialSave();
+    save.progress.tokens = 5_000;
+    save.progress.stats.tokens = 5_000;
+    save.progress.stats.clicks = 20;
+    save.progress.recordIndex = 1;
+    save.progress.trophies = [0];
+    save.progress.upgrades.keyboard = 1;
+    save.progress.upgrades.gpu = 1;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
+    const { unmount } = render(<App />);
+
+    expect(screen.getByText('CHAMPION ARCHIVE')).toBeInTheDocument();
+    expect(screen.getByText('RUN TELEMETRY')).toBeInTheDocument();
+    expect(screen.getByText('Efficiency Lab')).toBeInTheDocument();
+    expect(screen.getByText('Token Compression')).toBeInTheDocument();
+    expect(screen.getByText('Critical Prompting')).toBeInTheDocument();
+    expect(screen.queryByText('Overclocking')).not.toBeInTheDocument();
+    expect(screen.queryByText('ACTIVE PROTOCOLS')).not.toBeInTheDocument();
+    expect(screen.queryByText('NEXT OBJECTIVE')).not.toBeInTheDocument();
+    unmount();
+
+    save.progress.tokens = 10_000;
+    save.progress.stats.tokens = 10_000;
+    save.progress.recordIndex = 2;
+    save.progress.trophies = [0, 1];
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
+    render(<App />);
+    expect(screen.getByText('ACTIVE PROTOCOLS')).toBeInTheDocument();
+    expect(screen.getByText('Token Surge')).toBeInTheDocument();
+    expect(screen.getByText('Hyperfocus')).toBeInTheDocument();
+  });
+
+  it('reveals Prestige after the 10M trophy', () => {
+    const save = createInitialSave();
+    save.progress.tokens = 10_000_000;
+    save.progress.stats.tokens = 10_000_000;
+    save.progress.recordIndex = 5;
+    save.progress.trophies = [0, 1, 2, 3, 4];
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
+    render(<App />);
+    expect(screen.getByText('PRESTIGE PROTOCOL')).toBeInTheDocument();
+    expect(screen.getByText('Unlock at 100M')).toBeInTheDocument();
   });
 
   it('shows progress as the current token share of the target', () => {
@@ -67,6 +164,10 @@ describe('Tokenmaxxer dashboard', () => {
   });
 
   it('opens archive, stats, settings, and save dialogs', async () => {
+    const save = createInitialSave();
+    save.progress.recordIndex = 1;
+    save.progress.trophies = [0];
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
     const user = userEvent.setup();
     render(<App />);
 
@@ -209,9 +310,13 @@ describe('Tokenmaxxer dashboard', () => {
   });
 
   it('opens the archive and statistics from every dashboard shortcut', async () => {
+    const save = createInitialSave();
+    save.progress.recordIndex = 1;
+    save.progress.trophies = [0];
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
     const user = userEvent.setup();
     render(<App />);
-    await user.click(screen.getByRole('button', { name: /0Trophies/i }));
+    await user.click(screen.getByRole('button', { name: /1Trophies/i }));
     await user.click(screen.getByRole('button', { name: 'Close dialog' }));
     await user.click(screen.getByRole('button', { name: /0Prestiges/i }));
     expect(screen.getByRole('dialog')).toHaveTextContent('Lifetime Statistics');

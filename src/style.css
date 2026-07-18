@@ -84,6 +84,17 @@
   }
 }
 
+@keyframes guidance-pulse {
+  from {
+    border-color: rgb(103 232 249 / 0.35);
+    box-shadow: 0 0 12px rgb(34 211 238 / 0.08);
+  }
+  to {
+    border-color: rgb(103 232 249 / 0.7);
+    box-shadow: 0 0 28px rgb(34 211 238 / 0.22);
+  }
+}
+
 @keyframes planet-tilt {
   to {
     transform: rotate(8deg);

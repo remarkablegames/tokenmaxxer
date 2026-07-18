@@ -24,12 +24,14 @@ import {
 } from 'src/services/game';
 import { exportSave, loadSave, saveGame } from 'src/services/storage';
 import type {
+  AbilityDefinition,
   AbilityId,
   BuyMode,
   GameProgress,
   PerkId,
   SaveEnvelope,
   UpgradeCategory,
+  UpgradeDefinition,
   UpgradeId,
 } from 'src/types/game.types';
 
@@ -39,6 +41,11 @@ interface FloatText {
   critical: boolean;
   x: number;
   y: number;
+}
+interface OnboardingObjective {
+  step: number;
+  title: string;
+  description: string;
 }
 type Modal =
   'none' | 'prestige' | 'achievements' | 'stats' | 'settings' | 'save';
@@ -56,6 +63,73 @@ const ICON_BUTTON_CLASS =
 const ACTION_BUTTON_CLASS =
   'cursor-pointer rounded-xl px-4 py-3 text-xs font-extrabold transition hover:-translate-y-px hover:brightness-125 disabled:cursor-not-allowed disabled:opacity-40';
 const SHELL_CLASS = 'mx-auto w-full max-w-400 px-3 sm:px-6';
+
+function getOnboardingObjective(
+  progress: GameProgress,
+): OnboardingObjective | null {
+  if (progress.trophies.length > 0) return null;
+  if (progress.stats.clicks === 0)
+    return {
+      step: 1,
+      title: 'Activate the Token Reactor',
+      description:
+        'Click the glowing reactor core to generate your first token.',
+    };
+  if (progress.upgrades.keyboard === 0)
+    return {
+      step: 2,
+      title: 'Upgrade Manual Output',
+      description: 'Earn 20 tokens and buy Mechanical Keyboard.',
+    };
+  if (progress.upgrades.gpu === 0)
+    return {
+      step: 3,
+      title: 'Bring Automation Online',
+      description:
+        'Generate 50 lifetime tokens to unlock Used GPU, then spend 75 tokens to deploy it.',
+    };
+  return {
+    step: 4,
+    title: 'Chase the First Record',
+    description: 'Reach 1.00K tokens and secure your first High Score trophy.',
+  };
+}
+
+function getVisibleUpgrades(
+  progress: GameProgress,
+  category: UpgradeCategory,
+): UpgradeDefinition[] {
+  const categoryUpgrades = UPGRADES.filter(
+    (upgrade) => upgrade.category === category,
+  );
+  const nextLocked = categoryUpgrades
+    .filter((upgrade) => progress.stats.tokens < upgrade.unlockAt)
+    .sort((a, b) => a.unlockAt - b.unlockAt)[0];
+  return categoryUpgrades.filter(
+    (upgrade) =>
+      progress.stats.tokens >= upgrade.unlockAt || upgrade === nextLocked,
+  );
+}
+
+function isAbilityUnlocked(
+  progress: GameProgress,
+  ability: AbilityDefinition,
+): boolean {
+  return (
+    progress.recordIndex > 0 &&
+    getRecordTarget(progress.recordIndex - 1) >= ability.unlockAt
+  );
+}
+
+function getVisibleAbilities(progress: GameProgress): AbilityDefinition[] {
+  const unlocked = ABILITIES.filter((ability) =>
+    isAbilityUnlocked(progress, ability),
+  );
+  const nextLocked = ABILITIES.find(
+    (ability) => !isAbilityUnlocked(progress, ability),
+  );
+  return nextLocked === undefined ? unlocked : [...unlocked, nextLocked];
+}
 
 export function App() {
   const [save, setSave] = useState<SaveEnvelope>(() => loadSave());
@@ -83,6 +157,22 @@ export function App() {
     Math.max(0, (progress.tokens / target) * 100),
   );
   const stage = getReactorStage(progress.recordIndex);
+  const onboardingObjective = getOnboardingObjective(progress);
+  const showProgressPanels = progress.trophies.length > 0;
+  const visibleAbilities = getVisibleAbilities(progress);
+  const showAbilities = visibleAbilities.some((ability) =>
+    isAbilityUnlocked(progress, ability),
+  );
+  const showPrestige = progress.recordIndex >= 5 || progress.pendingCredits > 0;
+  const visibleCategories: UpgradeCategory[] = [
+    'manual',
+    ...(progress.upgrades.keyboard > 0
+      ? (['automation'] as UpgradeCategory[])
+      : []),
+    ...(progress.stats.tokens >= 5_000
+      ? (['efficiency'] as UpgradeCategory[])
+      : []),
+  ];
 
   useEffect(() => {
     progressRef.current = progress;
@@ -341,119 +431,164 @@ export function App() {
         className={`${SHELL_CLASS} grid gap-4 py-3 sm:py-6 xl:grid-cols-[minmax(300px,0.85fr)_minmax(400px,1.2fr)_minmax(340px,1fr)]`}
       >
         <aside className="space-y-4">
-          <Panel title="ACTIVE PROTOCOLS" eyebrow="ABILITIES">
-            <div className="space-y-3">
-              {ABILITIES.map((ability) => {
-                const state = progress.abilities[ability.id];
-                const unlocked =
-                  progress.recordIndex > 0 &&
-                  getRecordTarget(progress.recordIndex - 1) >= ability.unlockAt;
-                return (
-                  <button
-                    key={ability.id}
-                    className={`flex w-full cursor-pointer items-center gap-3 rounded-xl border p-3 transition hover:-translate-y-px active:scale-[0.985] disabled:cursor-not-allowed disabled:opacity-70 ${state.remaining > 0 ? 'border-cyan-400/50 bg-cyan-400/6 shadow-[inset_0_0_24px_rgb(34_211_238/0.08)]' : 'border-white/8 bg-white/3 hover:border-cyan-400/45 hover:bg-cyan-400/6'}`}
-                    disabled={!unlocked || state.cooldown > 0}
-                    onClick={() => {
-                      handleAbility(ability.id);
-                    }}
-                    type="button"
-                  >
-                    <span
-                      className={`grid size-9 shrink-0 place-items-center rounded-lg border border-cyan-300/20 bg-cyan-500/8 text-lg text-cyan-300 ${state.remaining > 0 ? 'glow-pulse' : ''}`}
+          {onboardingObjective !== null && (
+            <section
+              aria-live="polite"
+              className={`${PANEL_CLASS} border-cyan-300/20 p-4 shadow-[inset_0_1px_0_rgb(255_255_255/0.035),0_0_40px_rgb(6_182_212/0.08)]`}
+            >
+              <div className="mb-3 flex items-center justify-between gap-3">
+                <p className={EYEBROW_CLASS}>NEXT OBJECTIVE</p>
+                <span className="text-xs font-bold tracking-wider text-slate-500">
+                  STEP {onboardingObjective.step}/4
+                </span>
+              </div>
+              <h2 className="text-lg font-bold text-cyan-100">
+                {onboardingObjective.title}
+              </h2>
+              <p className="mt-2 text-sm leading-relaxed text-slate-400">
+                {onboardingObjective.description}
+              </p>
+              <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-black/35">
+                <div
+                  className="h-full rounded-full bg-linear-to-r from-cyan-500 to-cyan-300 transition-[width] duration-500"
+                  style={{
+                    width: `${String((onboardingObjective.step / 4) * 100)}%`,
+                  }}
+                />
+              </div>
+            </section>
+          )}
+          {showAbilities && (
+            <Panel
+              className="animate-[modal-in_.35s_ease-out]"
+              title="ACTIVE PROTOCOLS"
+              eyebrow="ABILITIES"
+            >
+              <div className="space-y-3">
+                {visibleAbilities.map((ability) => {
+                  const state = progress.abilities[ability.id];
+                  const unlocked = isAbilityUnlocked(progress, ability);
+                  return (
+                    <button
+                      key={ability.id}
+                      className={`flex w-full cursor-pointer items-center gap-3 rounded-xl border p-3 transition hover:-translate-y-px active:scale-[0.985] disabled:cursor-not-allowed disabled:opacity-70 ${state.remaining > 0 ? 'border-cyan-400/50 bg-cyan-400/6 shadow-[inset_0_0_24px_rgb(34_211_238/0.08)]' : 'border-white/8 bg-white/3 hover:border-cyan-400/45 hover:bg-cyan-400/6'}`}
+                      disabled={!unlocked || state.cooldown > 0}
+                      onClick={() => {
+                        handleAbility(ability.id);
+                      }}
+                      type="button"
                     >
-                      {ability.id === 'surge' ? 'ϟ' : '◉'}
-                    </span>
-                    <span className="min-w-0 flex-1 text-left">
-                      <strong className="block">{ability.name}</strong>
-                      <small className="block overflow-hidden text-xs text-ellipsis whitespace-nowrap text-slate-400">
+                      <span
+                        className={`grid size-9 shrink-0 place-items-center rounded-lg border border-cyan-300/20 bg-cyan-500/8 text-lg text-cyan-300 ${state.remaining > 0 ? 'glow-pulse' : ''}`}
+                      >
+                        {ability.id === 'surge' ? 'ϟ' : '◉'}
+                      </span>
+                      <span className="min-w-0 flex-1 text-left">
+                        <strong className="block">{ability.name}</strong>
+                        <small className="block overflow-hidden text-xs text-ellipsis whitespace-nowrap text-slate-400">
+                          {!unlocked
+                            ? `Unlock at ${formatNumber(ability.unlockAt)}`
+                            : state.remaining > 0
+                              ? `ACTIVE · ${state.remaining.toFixed(1)}s`
+                              : state.cooldown > 0
+                                ? `Recharging · ${state.cooldown.toFixed(1)}s`
+                                : ability.description}
+                        </small>
+                      </span>
+                      <span className="text-xs font-extrabold text-cyan-300">
                         {!unlocked
-                          ? `Unlock at ${formatNumber(ability.unlockAt)}`
-                          : state.remaining > 0
-                            ? `ACTIVE · ${state.remaining.toFixed(1)}s`
-                            : state.cooldown > 0
-                              ? `Recharging · ${state.cooldown.toFixed(1)}s`
-                              : ability.description}
-                      </small>
-                    </span>
-                    <span className="text-xs font-extrabold text-cyan-300">
-                      {!unlocked
-                        ? 'LOCKED'
-                        : state.cooldown > 0
-                          ? `${String(Math.ceil(state.cooldown))}s`
-                          : 'READY'}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </Panel>
-          <Panel title="CHAMPION ARCHIVE" eyebrow="PROGRESS">
-            <div className="grid grid-cols-3 gap-2">
-              <ArchiveButton
-                label="Trophies"
-                value={String(progress.trophies.length)}
-                onClick={() => {
-                  setModal('achievements');
-                }}
-              />
-              <ArchiveButton
-                label="Achievements"
-                value={`${String(progress.achievements.length)}/12`}
-                onClick={() => {
-                  setModal('achievements');
-                }}
-              />
-              <ArchiveButton
-                label="Prestiges"
-                value={String(progress.stats.prestiges)}
-                onClick={() => {
-                  setModal('stats');
-                }}
-              />
-            </div>
-          </Panel>
-          <button
-            className="flex w-full cursor-pointer items-center justify-between gap-4 rounded-2xl border border-amber-300/30 bg-linear-to-r from-amber-900/25 to-violet-900/20 p-4 text-left disabled:cursor-not-allowed disabled:opacity-75 disabled:saturate-50 [&_small]:block [&_small]:text-xs [&_small]:tracking-[0.15em] [&_small]:text-amber-300 [&_strong]:mt-1 [&_strong]:block [&>span:last-child]:text-xs [&>span:last-child]:text-amber-200"
-            disabled={progress.pendingCredits <= 0}
-            onClick={() => {
-              setModal('prestige');
-            }}
-            type="button"
-          >
-            <span>
-              <small>PRESTIGE PROTOCOL</small>
-              <strong>🏆 Set a New Record</strong>
-            </span>
-            <span>
-              {progress.pendingCredits > 0
-                ? `+${String(progress.pendingCredits)} credits`
-                : `Unlock at ${formatNumber(getRecordTarget(5))}`}
-            </span>
-          </button>
-          <Panel title="RUN TELEMETRY" eyebrow="LIVE DATA">
-            <div className="grid grid-cols-2 gap-2">
-              <MiniMetric
-                label="Lifetime Tokens"
-                value={formatNumber(progress.stats.tokens)}
-              />
-              <MiniMetric
-                label="Reactor Clicks"
-                value={formatNumber(progress.stats.clicks)}
-              />
-              <MiniMetric
-                label="Critical Clicks"
-                value={formatNumber(progress.stats.criticalClicks)}
-              />
-              <MiniMetric
-                label="Active Time"
-                value={formatDuration(progress.stats.playTime)}
-              />
-            </div>
-          </Panel>
+                          ? 'LOCKED'
+                          : state.cooldown > 0
+                            ? `${String(Math.ceil(state.cooldown))}s`
+                            : 'READY'}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </Panel>
+          )}
+          {showProgressPanels && (
+            <>
+              <Panel
+                className="animate-[modal-in_.35s_ease-out]"
+                title="CHAMPION ARCHIVE"
+                eyebrow="PROGRESS"
+              >
+                <div className="grid grid-cols-3 gap-2">
+                  <ArchiveButton
+                    label="Trophies"
+                    value={String(progress.trophies.length)}
+                    onClick={() => {
+                      setModal('achievements');
+                    }}
+                  />
+                  <ArchiveButton
+                    label="Achievements"
+                    value={`${String(progress.achievements.length)}/12`}
+                    onClick={() => {
+                      setModal('achievements');
+                    }}
+                  />
+                  <ArchiveButton
+                    label="Prestiges"
+                    value={String(progress.stats.prestiges)}
+                    onClick={() => {
+                      setModal('stats');
+                    }}
+                  />
+                </div>
+              </Panel>
+              {showPrestige && (
+                <button
+                  className="flex w-full animate-[modal-in_.35s_ease-out] cursor-pointer items-center justify-between gap-4 rounded-2xl border border-amber-300/30 bg-linear-to-r from-amber-900/25 to-violet-900/20 p-4 text-left disabled:cursor-not-allowed disabled:opacity-75 disabled:saturate-50 [&_small]:block [&_small]:text-xs [&_small]:tracking-[0.15em] [&_small]:text-amber-300 [&_strong]:mt-1 [&_strong]:block [&>span:last-child]:text-xs [&>span:last-child]:text-amber-200"
+                  disabled={progress.pendingCredits <= 0}
+                  onClick={() => {
+                    setModal('prestige');
+                  }}
+                  type="button"
+                >
+                  <span>
+                    <small>PRESTIGE PROTOCOL</small>
+                    <strong>🏆 Set a New Record</strong>
+                  </span>
+                  <span>
+                    {progress.pendingCredits > 0
+                      ? `+${String(progress.pendingCredits)} credits`
+                      : `Unlock at ${formatNumber(getRecordTarget(5))}`}
+                  </span>
+                </button>
+              )}
+              <Panel
+                className="animate-[modal-in_.35s_ease-out]"
+                title="RUN TELEMETRY"
+                eyebrow="LIVE DATA"
+              >
+                <div className="grid grid-cols-2 gap-2">
+                  <MiniMetric
+                    label="Lifetime Tokens"
+                    value={formatNumber(progress.stats.tokens)}
+                  />
+                  <MiniMetric
+                    label="Reactor Clicks"
+                    value={formatNumber(progress.stats.clicks)}
+                  />
+                  <MiniMetric
+                    label="Critical Clicks"
+                    value={formatNumber(progress.stats.criticalClicks)}
+                  />
+                  <MiniMetric
+                    label="Active Time"
+                    value={formatDuration(progress.stats.playTime)}
+                  />
+                </div>
+              </Panel>
+            </>
+          )}
         </aside>
 
         <section
-          className={`${PANEL_CLASS} relative flex min-h-125 flex-col items-center justify-center overflow-hidden p-4`}
+          className={`${PANEL_CLASS} relative flex min-h-125 flex-col items-center justify-center overflow-hidden p-4 ${progress.stats.clicks === 0 ? 'shadow-[inset_0_1px_0_rgb(255_255_255/0.035),0_0_55px_rgb(34_211_238/0.16)]' : ''}`}
         >
           <div className="absolute inset-x-8 top-5 flex justify-between">
             <span className={EYEBROW_CLASS}>REACTOR STAGE {stage + 1}/6</span>
@@ -463,6 +598,7 @@ export function App() {
           </div>
           <Reactor
             active={progress.abilities.surge.remaining > 0}
+            guided={progress.stats.clicks === 0}
             label={`Activate reactor for ${formatNumber(metrics.tokensPerClick)} tokens`}
             onActivate={handleReactor}
             stage={stage}
@@ -516,68 +652,71 @@ export function App() {
             </div>
           </div>
           <div className="max-h-155 [scrollbar-color:#155e75_transparent] overflow-y-auto p-3 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-cyan-800/50 [&::-webkit-scrollbar-thumb:hover]:bg-cyan-600/80 [&::-webkit-scrollbar-track]:bg-transparent">
-            {(['manual', 'automation', 'efficiency'] as const).map(
-              (category) => (
-                <div className="mb-5" key={category}>
-                  <h3 className="mb-2 text-xs font-bold tracking-[.2em] text-slate-500">
-                    {CATEGORY_LABELS[category]}
-                  </h3>
-                  <div className="space-y-2">
-                    {UPGRADES.filter(
-                      (upgrade) => upgrade.category === category,
-                    ).map((upgrade) => {
-                      const unlocked =
-                        progress.stats.tokens >= upgrade.unlockAt;
-                      const quote = getPurchaseQuote(
-                        progress,
-                        upgrade,
-                        buyMode,
-                      );
-                      const nextCost = getPurchaseQuote(
-                        { ...progress, tokens: Number.MAX_SAFE_INTEGER },
-                        upgrade,
-                        1,
-                      ).cost;
-                      return (
-                        <button
-                          className="flex w-full cursor-pointer items-center gap-3 rounded-xl border border-white/8 bg-white/3 p-3 transition hover:-translate-y-px hover:border-cyan-400/45 hover:bg-cyan-400/6 active:scale-[0.985] disabled:cursor-not-allowed disabled:opacity-70"
-                          disabled={!unlocked || quote.count === 0}
-                          key={upgrade.id}
-                          onClick={() => {
-                            handlePurchase(upgrade.id);
-                          }}
-                          type="button"
-                        >
-                          <span className="grid size-9 shrink-0 place-items-center rounded-lg border border-cyan-300/20 bg-cyan-500/8 text-lg text-cyan-300">
-                            {upgrade.icon}
+            {visibleCategories.map((category) => (
+              <div
+                className="mb-5 animate-[modal-in_.35s_ease-out]"
+                key={category}
+              >
+                <h3 className="mb-2 text-xs font-bold tracking-[.2em] text-slate-500">
+                  {CATEGORY_LABELS[category]}
+                </h3>
+                <div className="space-y-2">
+                  {getVisibleUpgrades(progress, category).map((upgrade) => {
+                    const unlocked = progress.stats.tokens >= upgrade.unlockAt;
+                    const quote = getPurchaseQuote(progress, upgrade, buyMode);
+                    const nextCost = getPurchaseQuote(
+                      { ...progress, tokens: Number.MAX_SAFE_INTEGER },
+                      upgrade,
+                      1,
+                    ).cost;
+                    const guided =
+                      (upgrade.id === 'keyboard' &&
+                        progress.stats.clicks > 0 &&
+                        progress.upgrades.keyboard === 0 &&
+                        quote.count > 0) ||
+                      (upgrade.id === 'gpu' &&
+                        progress.upgrades.gpu === 0 &&
+                        quote.count > 0);
+                    return (
+                      <button
+                        className={`flex w-full cursor-pointer items-center gap-3 rounded-xl border bg-white/3 p-3 transition hover:-translate-y-px hover:border-cyan-400/45 hover:bg-cyan-400/6 active:scale-[0.985] disabled:cursor-not-allowed disabled:opacity-70 ${guided ? 'animate-[guidance-pulse_1.4s_ease-in-out_infinite_alternate] border-cyan-300/60' : 'border-white/8'}`}
+                        data-guided={guided ? 'true' : undefined}
+                        disabled={!unlocked || quote.count === 0}
+                        key={upgrade.id}
+                        onClick={() => {
+                          handlePurchase(upgrade.id);
+                        }}
+                        type="button"
+                      >
+                        <span className="grid size-9 shrink-0 place-items-center rounded-lg border border-cyan-300/20 bg-cyan-500/8 text-lg text-cyan-300">
+                          {upgrade.icon}
+                        </span>
+                        <span className="min-w-0 flex-1 text-left">
+                          <strong className="block truncate">
+                            {upgrade.name}
+                          </strong>
+                          <small className="block overflow-hidden text-xs text-ellipsis whitespace-nowrap text-slate-400">
+                            {unlocked
+                              ? upgrade.description
+                              : `LOCKED · Generate ${formatNumber(upgrade.unlockAt)} lifetime tokens`}
+                          </small>
+                        </span>
+                        <span className="flex shrink-0 flex-col items-end gap-0.5 tabular-nums">
+                          <em className="text-xs whitespace-nowrap text-slate-400 not-italic">
+                            LV. {progress.upgrades[upgrade.id]}
+                          </em>
+                          <span className="text-xs font-extrabold whitespace-nowrap text-amber-300">
+                            {quote.count > 0
+                              ? `${formatNumber(quote.cost)} T`
+                              : `${formatNumber(nextCost)} T`}
                           </span>
-                          <span className="min-w-0 flex-1 text-left">
-                            <strong className="block truncate">
-                              {upgrade.name}
-                            </strong>
-                            <small className="block overflow-hidden text-xs text-ellipsis whitespace-nowrap text-slate-400">
-                              {unlocked
-                                ? upgrade.description
-                                : `LOCKED · Generate ${formatNumber(upgrade.unlockAt)} lifetime tokens`}
-                            </small>
-                          </span>
-                          <span className="flex shrink-0 flex-col items-end gap-0.5 tabular-nums">
-                            <em className="text-xs whitespace-nowrap text-slate-400 not-italic">
-                              LV. {progress.upgrades[upgrade.id]}
-                            </em>
-                            <span className="text-xs font-extrabold whitespace-nowrap text-amber-300">
-                              {quote.count > 0
-                                ? `${formatNumber(quote.cost)} T`
-                                : `${formatNumber(nextCost)} T`}
-                            </span>
-                          </span>
-                        </button>
-                      );
-                    })}
-                  </div>
+                        </span>
+                      </button>
+                    );
+                  })}
                 </div>
-              ),
-            )}
+              </div>
+            ))}
           </div>
         </section>
       </div>
@@ -888,13 +1027,15 @@ function Panel({
   title,
   eyebrow,
   children,
+  className = '',
 }: {
   title: string;
   eyebrow: string;
   children: React.ReactNode;
+  className?: string;
 }) {
   return (
-    <section className={`${PANEL_CLASS} p-4`}>
+    <section className={`${PANEL_CLASS} p-4 ${className}`}>
       <p className={EYEBROW_CLASS}>{eyebrow}</p>
       <h2 className="mb-3 text-lg font-bold">{title}</h2>
       {children}
