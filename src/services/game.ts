@@ -238,8 +238,9 @@ export function getSeedTokens(level: number): number {
 export function getAiModelDeployment(level: number): string | null {
   if (level >= 30) return 'MythOS';
   if (level >= 20) return 'DeepThunk';
-  if (level >= 10) return 'Claudio';
-  if (level >= 5) return 'TalkGTP';
+  if (level >= 15) return 'Claudio';
+  if (level >= 10) return 'GeminAI';
+  if (level >= 5) return 'TalkGPT';
   if (level >= 1) return 'GoPilot';
   return null;
 }

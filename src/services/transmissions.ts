@@ -94,14 +94,24 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     unlock: { type: 'upgrade', value: 'model', level: 1 },
   },
   {
-    id: 'model-talkgtp',
+    id: 'model-talkgpt',
     sender: 'Quality Assurance',
     role: 'QUALITY ASSURANCE',
     initials: 'QA',
     message:
-      'TalkGTP passed the conversation benchmark by grading its own answers.',
+      'TalkGPT passed the conversation benchmark by grading its own answers.',
     priority: 40,
     unlock: { type: 'upgrade', value: 'model', level: 5 },
+  },
+  {
+    id: 'model-geminai',
+    sender: 'IT Support',
+    role: 'INFRASTRUCTURE',
+    initials: 'IT',
+    message:
+      'GeminAI deployed two instances. Both insist the other one approved it.',
+    priority: 60,
+    unlock: { type: 'upgrade', value: 'model', level: 10 },
   },
   {
     id: 'model-claudio',
@@ -111,7 +121,7 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     message:
       'Claudio reviewed its own terms of service and found us noncompliant.',
     priority: 60,
-    unlock: { type: 'upgrade', value: 'model', level: 10 },
+    unlock: { type: 'upgrade', value: 'model', level: 15 },
   },
   {
     id: 'model-deepthunk',

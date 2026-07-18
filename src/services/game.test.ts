@@ -80,8 +80,9 @@ describe('game calculations', () => {
     expect(getSeedTokens(2)).toBe(1_000);
     expect(getAiModelDeployment(0)).toBeNull();
     expect(getAiModelDeployment(1)).toBe('GoPilot');
-    expect(getAiModelDeployment(5)).toBe('TalkGTP');
-    expect(getAiModelDeployment(10)).toBe('Claudio');
+    expect(getAiModelDeployment(5)).toBe('TalkGPT');
+    expect(getAiModelDeployment(10)).toBe('GeminAI');
+    expect(getAiModelDeployment(15)).toBe('Claudio');
     expect(getAiModelDeployment(20)).toBe('DeepThunk');
     expect(getAiModelDeployment(30)).toBe('MythOS');
     expect(getUpgradeDescription(UPGRADES[0], 1)).toBe(

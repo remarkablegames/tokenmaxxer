@@ -9,8 +9,8 @@ import {
 
 describe('narrative transmissions', () => {
   it('defines a varied, prioritized office narrative', () => {
-    expect(TRANSMISSIONS).toHaveLength(50);
-    expect(new Set(TRANSMISSIONS.map(({ id }) => id)).size).toBe(50);
+    expect(TRANSMISSIONS).toHaveLength(51);
+    expect(new Set(TRANSMISSIONS.map(({ id }) => id)).size).toBe(51);
     expect(new Set(TRANSMISSIONS.map(({ sender }) => sender)).size).toBe(13);
     expect(TRANSMISSIONS.every(({ priority }) => priority > 0)).toBe(true);
     expect(TRANSMISSIONS.map(({ unlock }) => unlock.type)).toEqual(
@@ -72,7 +72,7 @@ describe('narrative transmissions', () => {
       getEligibleTransmissions(progress)
         .filter(({ id }) => id.startsWith('model-'))
         .map(({ id }) => id),
-    ).toEqual(['model-gopilot', 'model-talkgtp']);
+    ).toEqual(['model-gopilot', 'model-talkgpt']);
 
     progress.upgrades.model = 30;
     expect(
@@ -81,7 +81,8 @@ describe('narrative transmissions', () => {
         .map(({ id }) => id),
     ).toEqual([
       'model-gopilot',
-      'model-talkgtp',
+      'model-talkgpt',
+      'model-geminai',
       'model-claudio',
       'model-deepthunk',
       'model-mythos',
