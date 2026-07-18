@@ -287,7 +287,7 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     role: 'SYSTEM',
     initials: 'TR',
     message:
-      'Additional compute assimilated. The word “purchase” is becoming inaccurate.',
+      'Additional agents delegated. Oversight responsibilities have been delegated to a subagent.',
     priority: 60,
     unlock: { type: 'upgrade', value: 'cluster' },
   },

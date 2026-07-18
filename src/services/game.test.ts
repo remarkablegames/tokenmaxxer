@@ -65,6 +65,9 @@ describe('game calculations', () => {
       ABILITIES.length,
     );
     expect(ABILITIES.every(({ icon }) => icon.endsWith('.svg'))).toBe(true);
+    expect(UPGRADES.find(({ id }) => id === 'cluster')?.name).toBe(
+      'Agent Swarm',
+    );
   });
 
   it('creates initial state and record helpers', () => {

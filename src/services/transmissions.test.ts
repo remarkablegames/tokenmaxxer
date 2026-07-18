@@ -13,6 +13,9 @@ describe('narrative transmissions', () => {
     expect(new Set(TRANSMISSIONS.map(({ id }) => id)).size).toBe(65);
     expect(new Set(TRANSMISSIONS.map(({ sender }) => sender)).size).toBe(14);
     expect(TRANSMISSIONS.every(({ priority }) => priority > 0)).toBe(true);
+    expect(
+      TRANSMISSIONS.find(({ id }) => id === 'cluster-purchased')?.message,
+    ).toContain('delegated to a subagent');
     expect(TRANSMISSIONS.map(({ unlock }) => unlock.type)).toEqual(
       expect.arrayContaining([
         'click',

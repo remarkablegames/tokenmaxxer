@@ -91,7 +91,7 @@ export const UPGRADES: UpgradeDefinition[] = [
   },
   {
     id: 'cluster',
-    name: 'AI Cluster',
+    name: 'Agent Swarm',
     description: '+900 tokens per second',
     category: 'automation',
     baseCost: 100_000,
