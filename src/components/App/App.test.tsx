@@ -417,6 +417,11 @@ describe('Tokenmaxxer dashboard', () => {
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: 'Statistics' }));
+    expect(screen.getByRole('button', { name: 'Statistics' })).toHaveClass(
+      'cursor-pointer',
+      'text-slate-500',
+      'hover:text-cyan-300',
+    );
     dialog = screen.getByRole('dialog');
     expect(dialog).toHaveTextContent('Lifetime Statistics');
     await user.click(dialog);
@@ -431,6 +436,11 @@ describe('Tokenmaxxer dashboard', () => {
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: 'Save Data' }));
+    expect(screen.getByRole('button', { name: 'Save Data' })).toHaveClass(
+      'cursor-pointer',
+      'text-slate-500',
+      'hover:text-cyan-300',
+    );
     await user.click(screen.getByRole('button', { name: 'Manual Save' }));
     expect(localStorage.getItem(STORAGE_KEY)).not.toBeNull();
     dialog = screen.getByRole('dialog');

@@ -982,6 +982,7 @@ export function App() {
         <span>LOCAL OPERATIONS · NO NETWORK REQUIRED</span>
         <div className="flex gap-3">
           <button
+            className="cursor-pointer text-slate-500 transition-colors hover:text-cyan-300"
             onClick={() => {
               setModal('stats');
             }}
@@ -990,6 +991,7 @@ export function App() {
             Statistics
           </button>
           <button
+            className="cursor-pointer text-slate-500 transition-colors hover:text-cyan-300"
             onClick={() => {
               setModal('save');
             }}
