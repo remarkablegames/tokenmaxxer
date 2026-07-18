@@ -59,6 +59,14 @@ Checks for type errors.
 
 Runs tests.
 
+## Testing
+
+Preview High Score celebration:
+
+```
+http://localhost:5173/?preview=high-score
+```
+
 ## License
 
 [MIT](LICENSE)

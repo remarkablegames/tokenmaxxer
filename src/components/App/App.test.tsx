@@ -15,6 +15,7 @@ describe('Tokenmaxxer dashboard', () => {
   });
 
   afterEach(() => {
+    window.history.replaceState({}, '', '/');
     vi.useRealTimers();
     vi.restoreAllMocks();
     vi.unstubAllGlobals();
@@ -48,6 +49,13 @@ describe('Tokenmaxxer dashboard', () => {
       'aria-valuenow',
       '15.3',
     );
+  });
+
+  it('forces the High Score celebration through the preview query', () => {
+    window.history.replaceState({}, '', '/?preview=high-score');
+    render(<App />);
+    expect(screen.getByRole('status')).toHaveTextContent('NEW HIGH SCORE');
+    expect(screen.getByRole('status')).toHaveTextContent('1.00K');
   });
 
   it('opens archive, stats, settings, and save dialogs', async () => {

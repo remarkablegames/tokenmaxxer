@@ -62,7 +62,11 @@ export function App() {
   const [buyMode, setBuyMode] = useState<BuyMode>(1);
   const [modal, setModal] = useState<Modal>('none');
   const [floats, setFloats] = useState<FloatText[]>([]);
-  const [celebration, setCelebration] = useState<number | null>(null);
+  const [celebration, setCelebration] = useState<number | null>(() =>
+    new URLSearchParams(window.location.search).get('preview') === 'high-score'
+      ? Math.max(0, save.progress.recordIndex - 1)
+      : null,
+  );
   const [notice, setNotice] = useState('SYSTEM ONLINE');
   const [importText, setImportText] = useState('');
   const lastFrame = useRef(0);
