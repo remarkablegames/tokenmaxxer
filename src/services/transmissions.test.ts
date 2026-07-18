@@ -16,7 +16,7 @@ describe('narrative transmissions', () => {
     expect(TRANSMISSIONS.map(({ unlock }) => unlock.type)).toEqual(
       expect.arrayContaining([
         'click',
-        'record',
+        'high-score',
         'prestige',
         'critical-click',
         'lifetime-tokens',

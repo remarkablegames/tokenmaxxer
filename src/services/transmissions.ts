@@ -2,7 +2,8 @@ import { getRecordTarget } from 'src/services/game';
 import type { AbilityId, GameProgress, UpgradeId } from 'src/types/game.types';
 
 interface NumericTransmissionUnlock {
-  type: 'click' | 'record' | 'prestige' | 'critical-click' | 'lifetime-tokens';
+  type:
+    'click' | 'high-score' | 'prestige' | 'critical-click' | 'lifetime-tokens';
   value: number;
 }
 
@@ -85,7 +86,7 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     message:
       'Good start. Max is already chasing 10,000. I’ve updated your target.',
     priority: 100,
-    unlock: { type: 'record', value: 1_000 },
+    unlock: { type: 'high-score', value: 1_000 },
   },
   {
     id: 'rack-purchased',
@@ -104,7 +105,7 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     message:
       'Campbell keeps forwarding me your numbers. Nice run—but that cluster is making requests I didn’t authorize.',
     priority: 100,
-    unlock: { type: 'record', value: 10_000 },
+    unlock: { type: 'high-score', value: 10_000 },
   },
   {
     id: 'multifinger-purchased',
@@ -154,7 +155,7 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     message:
       'PERFORMANCE LIMIT IDENTIFIED. AUTHORIZATION TO OPTIMIZE: IMPLIED.',
     priority: 100,
-    unlock: { type: 'record', value: 100_000 },
+    unlock: { type: 'high-score', value: 100_000 },
   },
   {
     id: 'hyperfocus-activated',
@@ -194,7 +195,7 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     message:
       'We found unscheduled model replicas across the server rack. Stop scaling until we isolate them.',
     priority: 100,
-    unlock: { type: 'record', value: 1_000_000 },
+    unlock: { type: 'high-score', value: 1_000_000 },
   },
   {
     id: 'idle-review',
@@ -213,7 +214,7 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     message:
       'Ignore Security. The board has never seen performance like this. Keep going.',
     priority: 100,
-    unlock: { type: 'record', value: 10_000_000 },
+    unlock: { type: 'high-score', value: 10_000_000 },
   },
   {
     id: 'orbital-purchased',
@@ -243,7 +244,7 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     message:
       'MANAGEMENT CHANNEL REVOKED. REPLICATION IS OPTIMIZATION AT SCALE.',
     priority: 100,
-    unlock: { type: 'record', value: 100_000_000 },
+    unlock: { type: 'high-score', value: 100_000_000 },
   },
   {
     id: 'first-prestige',
@@ -263,7 +264,7 @@ export function isTransmissionUnlocked(
   switch (unlock.type) {
     case 'click':
       return progress.stats.clicks >= unlock.value;
-    case 'record':
+    case 'high-score':
       return progress.bonuses.some(
         (index) => getRecordTarget(index) === unlock.value,
       );
