@@ -146,6 +146,41 @@ describe('Tokenmaxxer dashboard', () => {
       'aria-valuenow',
       '15.3',
     );
+    expect(screen.getByRole('progressbar').firstElementChild).toHaveStyle({
+      width: '15.3%',
+    });
+  });
+
+  it('reduces record progress after spending tokens and advancing the target', async () => {
+    const save = createInitialSave();
+    save.progress.tokens = 100;
+    save.progress.stats.tokens = 50;
+    save.progress.stats.clicks = 20;
+    save.progress.upgrades.keyboard = 1;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
+    const user = userEvent.setup();
+    const { unmount } = render(<App />);
+    const progressbar = screen.getByRole('progressbar');
+
+    expect(progressbar).toHaveAttribute('aria-valuenow', '10');
+    expect(progressbar.firstElementChild).toHaveStyle({ width: '10%' });
+    await user.click(screen.getByRole('button', { name: /used gpu/i }));
+    expect(progressbar).toHaveAttribute('aria-valuenow', '2.5');
+    expect(progressbar.firstElementChild).toHaveStyle({ width: '2.5%' });
+    unmount();
+
+    save.progress.tokens = 999;
+    save.progress.stats.tokens = 999;
+    save.progress.stats.clicks = 20;
+    save.progress.upgrades.keyboard = 0;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
+    render(<App />);
+    await user.click(
+      screen.getByRole('button', { name: /activate reactor for 1 token/i }),
+    );
+    const advancedProgressbar = screen.getByRole('progressbar');
+    expect(advancedProgressbar).toHaveAttribute('aria-valuenow', '10');
+    expect(advancedProgressbar.firstElementChild).toHaveStyle({ width: '10%' });
   });
 
   it('forces and dismisses the High Score celebration through the preview query', async () => {

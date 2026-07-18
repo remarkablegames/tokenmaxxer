@@ -156,6 +156,7 @@ export function App() {
     100,
     Math.max(0, (progress.tokens / target) * 100),
   );
+  const displayedRecordProgress = Number(recordProgress.toFixed(1));
   const stage = getReactorStage(progress.recordIndex);
   const onboardingObjective = getOnboardingObjective(progress);
   const showProgressPanels = progress.trophies.length > 0;
@@ -403,7 +404,7 @@ export function App() {
                 PROGRESS
               </span>
               <strong className="text-sm text-amber-300 sm:text-base">
-                {recordProgress.toFixed(1)}%
+                {displayedRecordProgress.toFixed(1)}%
               </strong>
             </div>
           </div>
@@ -411,13 +412,13 @@ export function App() {
             aria-label="High Score progress"
             aria-valuemax={100}
             aria-valuemin={0}
-            aria-valuenow={Number(recordProgress.toFixed(1))}
+            aria-valuenow={displayedRecordProgress}
             className="h-3 overflow-hidden rounded-full border border-white/8 bg-black/45 shadow-[inset_0_2px_5px_rgb(0_0_0/0.55)]"
             role="progressbar"
           >
             <div
-              className="h-full rounded-[inherit] bg-linear-to-r from-cyan-600 via-cyan-300 to-amber-400 shadow-[0_0_20px_#22d3ee] transition-[width] duration-300 ease-out"
-              style={{ width: `${String(recordProgress)}%` }}
+              className="h-full rounded-[inherit] bg-linear-to-r from-cyan-600 via-cyan-300 to-amber-400 shadow-[0_0_20px_#22d3ee]"
+              style={{ width: `${String(displayedRecordProgress)}%` }}
             />
           </div>
           <div className="mt-2 flex justify-between text-xs text-slate-500">
