@@ -292,7 +292,7 @@ export function App() {
 
       <section className="border-b border-amber-300/15 bg-linear-to-r from-amber-500/5 via-cyan-500/5 to-violet-500/5 px-3 py-3 sm:px-6 sm:py-4">
         <div className="mx-auto max-w-400">
-          <p className={`${EYEBROW_CLASS} text-amber-300`}>HIGH SCORE CHASE</p>
+          <p className={`${EYEBROW_CLASS} text-amber-300`}>HIGH SCORE</p>
           <div className="mb-2 flex items-end justify-between gap-4">
             <h2 className="text-3xl font-black tabular-nums sm:text-5xl">
               <span className="text-cyan-100">

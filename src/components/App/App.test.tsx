@@ -26,7 +26,7 @@ describe('Tokenmaxxer dashboard', () => {
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
       'TOKENMAXXER',
     );
-    expect(screen.getByText('HIGH SCORE CHASE')).toBeInTheDocument();
+    expect(screen.getByText('HIGH SCORE')).toBeInTheDocument();
     expect(screen.getByText('RUN TELEMETRY')).toBeInTheDocument();
     expect(screen.getAllByText('LOCKED')).toHaveLength(2);
     const reactor = screen.getByRole('button', { name: /activate reactor/i });
