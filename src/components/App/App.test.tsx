@@ -51,11 +51,19 @@ describe('Tokenmaxxer dashboard', () => {
     );
   });
 
-  it('forces the High Score celebration through the preview query', () => {
+  it('forces and dismisses the High Score celebration through the preview query', async () => {
+    const user = userEvent.setup();
     window.history.replaceState({}, '', '/?preview=high-score');
     render(<App />);
     expect(screen.getByRole('status')).toHaveTextContent('NEW HIGH SCORE');
     expect(screen.getByRole('status')).toHaveTextContent('1.00K');
+    expect(screen.getByRole('status')).toHaveTextContent('NEXT TARGET: 10.0K');
+    await user.click(
+      screen.getByRole('button', {
+        name: 'Dismiss High Score celebration',
+      }),
+    );
+    expect(screen.queryByRole('status')).not.toBeInTheDocument();
   });
 
   it('opens archive, stats, settings, and save dialogs', async () => {

@@ -613,20 +613,38 @@ export function App() {
         </span>
       ))}
       {celebration !== null && (
-        <div
-          className="celebration fixed inset-0 z-90 flex flex-col items-center justify-center bg-[radial-gradient(circle,rgb(6_182_212/0.24),rgb(5_9_20/0.92)_60%)] text-center"
-          role="status"
-        >
-          <div className="trophy-burst text-7xl">🏆</div>
-          <p className="text-xs font-black tracking-[0.4em] text-cyan-300">
-            NEW HIGH SCORE
-          </p>
-          <strong className="text-[clamp(3rem,11vw,8rem)] leading-none text-white [text-shadow:0_0_35px_#22d3ee]">
-            {formatNumber(getRecordTarget(celebration))}
-          </strong>
-          <span className="mt-4 font-extrabold tracking-[0.15em] text-amber-300">
-            TROPHY #{celebration + 1} SECURED
-          </span>
+        <div className="celebration fixed inset-0 z-90 grid place-items-center bg-[radial-gradient(circle,rgb(8_38_56/0.82),rgb(3_7_18/0.97)_65%)] p-4 text-center backdrop-blur-sm">
+          <button
+            aria-label="Dismiss High Score celebration"
+            className="absolute inset-0 cursor-pointer"
+            onClick={() => {
+              setCelebration(null);
+            }}
+            type="button"
+          />
+          <div
+            className="pointer-events-none relative w-full max-w-160 rounded-3xl border border-cyan-300/20 bg-[#06111f]/92 px-6 py-10 shadow-[0_0_100px_rgb(6_182_212/0.18),inset_0_1px_0_rgb(255_255_255/0.06)] sm:px-12 sm:py-12"
+            role="status"
+          >
+            <div className="trophy-burst mx-auto mb-4 w-fit text-amber-300 drop-shadow-[0_0_22px_rgb(251_191_36/0.45)]">
+              <TrophyIcon />
+            </div>
+            <p className="text-xs font-black tracking-[0.4em] text-cyan-300">
+              NEW HIGH SCORE
+            </p>
+            <strong className="my-2 block text-[clamp(3.5rem,8vw,7rem)] leading-none text-white [text-shadow:0_0_28px_#0891b2]">
+              {formatNumber(getRecordTarget(celebration))}
+            </strong>
+            <span className="block font-extrabold tracking-[0.15em] text-amber-300">
+              TROPHY #{celebration + 1} SECURED
+            </span>
+            <span className="mt-5 block text-xs font-bold tracking-[0.18em] text-slate-300">
+              NEXT TARGET: {formatNumber(getRecordTarget(celebration + 1))}
+            </span>
+            <small className="mt-7 block text-[0.65rem] tracking-[0.14em] text-slate-500">
+              CLICK ANYWHERE TO CONTINUE
+            </small>
+          </div>
         </div>
       )}
       {modal !== 'none' && (
@@ -939,6 +957,34 @@ function MiniMetric({ label, value }: { label: string; value: string }) {
       </small>
       <strong className="mt-0.5 block text-sm text-cyan-100">{value}</strong>
     </div>
+  );
+}
+function TrophyIcon() {
+  return (
+    <svg aria-hidden="true" className="size-20 sm:size-24" viewBox="0 0 96 96">
+      <path
+        d="M29 14h38v17c0 18-7 30-19 35-12-5-19-17-19-35V14Z"
+        fill="currentColor"
+      />
+      <path
+        d="M29 23H17v8c0 13 7 20 20 21M67 23h12v8c0 13-7 20-20 21"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeWidth="7"
+      />
+      <path
+        d="M48 65v12M34 84h28"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeWidth="8"
+      />
+      <path
+        d="m48 25 4 8 9 1-6.5 6.5L56 50l-8-4.5L40 50l1.5-9.5L35 34l9-1Z"
+        fill="#fff7d6"
+      />
+    </svg>
   );
 }
 function ModalShell({
