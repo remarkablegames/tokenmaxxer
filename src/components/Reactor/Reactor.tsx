@@ -143,15 +143,10 @@ export function Reactor({ stage, label, active, onActivate }: ReactorProps) {
           filter="url(#core-glow)"
         />
         <g fill="#082f49" stroke="#082f49" strokeLinecap="round">
-          <path
-            d="M178 182h44M200 182v36M187 218h26"
-            fill="none"
-            strokeWidth="6"
-          />
-          <circle cx="178" cy="182" r="4" stroke="none" />
-          <circle cx="222" cy="182" r="4" stroke="none" />
-          <circle cx="187" cy="218" r="4" stroke="none" />
-          <circle cx="213" cy="218" r="4" stroke="none" />
+          <path d="M176 183h48M200 183v36" fill="none" strokeWidth="6" />
+          <circle cx="176" cy="183" r="4" stroke="none" />
+          <circle cx="224" cy="183" r="4" stroke="none" />
+          <circle cx="200" cy="219" r="4" stroke="none" />
         </g>
       </svg>
       <span className="absolute inset-x-0 bottom-2 text-center text-xs font-bold tracking-[0.22em] text-cyan-200 uppercase">
