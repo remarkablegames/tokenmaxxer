@@ -421,12 +421,12 @@ describe('Tokenmaxxer dashboard', () => {
       }),
     ).toBeInTheDocument();
     expect(screen.getByRole('dialog')).toHaveTextContent('0 → 3');
-    expect(screen.getByRole('dialog')).toHaveTextContent('+0% → +30%');
+    expect(screen.getByRole('dialog')).toHaveTextContent('×1.00 → ×1.30');
 
     fireEvent.click(
       screen.getByRole('button', { name: 'Start a New Session' }),
     );
-    expect(screen.getByText('3 · +30%')).toBeInTheDocument();
+    expect(screen.getByText('3 · ×1.30')).toBeInTheDocument();
     expect(
       screen.getByRole('heading', {
         level: 2,
@@ -520,7 +520,7 @@ describe('Tokenmaxxer dashboard', () => {
       screen.getByRole('button', { name: /start a new session.*\+3 rating/i }),
     );
     expect(screen.getByText('2 → 5')).toBeInTheDocument();
-    expect(screen.getByText(/\+20% → \+50%/)).toBeInTheDocument();
+    expect(screen.getByText(/×1\.20 → ×1\.50/)).toBeInTheDocument();
     await user.click(screen.getByRole('dialog'));
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     await user.click(
@@ -529,9 +529,9 @@ describe('Tokenmaxxer dashboard', () => {
     await user.click(
       screen.getByRole('button', { name: 'Start a New Session' }),
     );
-    expect(screen.getByText(/PERFORMANCE RATING \+3/i)).toBeInTheDocument();
-    expect(screen.getByText('Performance Rating')).toBeInTheDocument();
-    expect(screen.getByText('5 · +50%')).toBeInTheDocument();
+    expect(screen.getByText(/BENCHMARK RATING \+3/i)).toBeInTheDocument();
+    expect(screen.getByText('Benchmark Rating')).toBeInTheDocument();
+    expect(screen.getByText('5 · ×1.50')).toBeInTheDocument();
     expect(
       screen.getByRole('heading', {
         level: 2,
@@ -540,10 +540,10 @@ describe('Tokenmaxxer dashboard', () => {
     ).toBeInTheDocument();
     await user.click(
       screen.getByRole('button', {
-        name: /5 · \+50%Performance Rating/i,
+        name: /5 · ×1\.50Benchmark Rating/i,
       }),
     );
-    expect(screen.getByRole('dialog')).toHaveTextContent('Performance Rating5');
+    expect(screen.getByRole('dialog')).toHaveTextContent('Benchmark Rating5');
     expect(screen.getByRole('dialog')).toHaveTextContent('Lifetime Record100M');
     await user.click(screen.getByRole('dialog'));
     expect(screen.getByRole('status')).toHaveAccessibleName(

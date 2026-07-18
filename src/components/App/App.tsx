@@ -240,9 +240,7 @@ export function App() {
     isAbilityUnlocked(progress, ability),
   );
   const showPrestige = progress.recordIndex >= 5 || progress.pendingRating > 0;
-  const productionBonus = Math.round(
-    (getPerformanceMultiplier(progress.performanceRating) - 1) * 100,
-  );
+  const tokenMultiplier = getPerformanceMultiplier(progress.performanceRating);
   const visibleCategories: UpgradeCategory[] = [
     'manual',
     ...(progress.upgrades.keyboard > 0
@@ -511,7 +509,7 @@ export function App() {
       updateProgress(next);
       setModal('none');
       playSound('prestige', save.preferences.volume, save.preferences.muted);
-      setNotice(`PERFORMANCE RATING +${String(progress.pendingRating)}`);
+      setNotice(`BENCHMARK RATING +${String(progress.pendingRating)}`);
     }
   };
 
@@ -560,7 +558,7 @@ export function App() {
     /* v8 ignore next -- native confirmation is exercised manually */
     if (
       !window.confirm(
-        'Reset all game progress? Performance Bonuses, records, and Performance Rating will be erased.',
+        'Reset all game progress? Performance Bonuses, records, and Benchmark Rating will be erased.',
       )
     )
       return;
@@ -810,8 +808,8 @@ export function App() {
                     }}
                   />
                   <ArchiveButton
-                    label="Performance Rating"
-                    value={`${String(progress.performanceRating)} · +${String(productionBonus)}%`}
+                    label="Benchmark Rating"
+                    value={`${String(progress.performanceRating)} · ×${tokenMultiplier.toFixed(2)}`}
                     onClick={() => {
                       setModal('stats');
                     }}
@@ -1179,7 +1177,7 @@ export function App() {
             <div className="mx-auto max-w-2xl space-y-5">
               <div className="flex items-center justify-between rounded-xl border border-amber-300/20 bg-amber-300/7 px-4 py-3">
                 <span className="text-sm font-bold tracking-[0.15em] text-slate-300">
-                  PERFORMANCE RATING
+                  BENCHMARK RATING
                 </span>
                 <strong className="text-xl text-amber-300">
                   {progress.performanceRating} →{' '}
@@ -1202,7 +1200,7 @@ export function App() {
                   </h3>
                   <p className="mt-2 text-base leading-relaxed text-slate-300">
                     Long-term memory: lifetime records, Performance Bonuses,
-                    achievements, statistics, and Performance Rating.
+                    achievements, statistics, and Benchmark Rating.
                   </p>
                 </section>
               </div>
@@ -1212,19 +1210,14 @@ export function App() {
                     PERMANENT EFFECT
                   </span>
                   <strong className="mt-1 block text-xl text-cyan-300">
-                    Production bonus: +{productionBonus}% → +
-                    {Math.round(
-                      (getPerformanceMultiplier(
-                        progress.performanceRating + progress.pendingRating,
-                      ) -
-                        1) *
-                        100,
-                    )}
-                    %
+                    Token Multiplier: ×{tokenMultiplier.toFixed(2)} → ×
+                    {getPerformanceMultiplier(
+                      progress.performanceRating + progress.pendingRating,
+                    ).toFixed(2)}
                   </strong>
                 </span>
                 <button
-                  className={`${ACTION_BUTTON_CLASS} text-md bg-linear-to-r from-cyan-600 to-violet-600 px-5 py-4 text-white`}
+                  className={`${ACTION_BUTTON_CLASS} bg-linear-to-r from-cyan-600 to-violet-600 px-5 py-4 text-base text-white`}
                   disabled={progress.pendingRating <= 0}
                   onClick={handlePrestige}
                   type="button"
@@ -1291,12 +1284,12 @@ export function App() {
                 value={formatDuration(progress.stats.playTime)}
               />
               <StatTile
-                label="Performance Rating"
+                label="Benchmark Rating"
                 value={String(progress.performanceRating)}
               />
               <StatTile
-                label="Rating Bonus"
-                value={`+${String(productionBonus)}%`}
+                label="Token Multiplier"
+                value={`×${tokenMultiplier.toFixed(2)}`}
               />
               <StatTile
                 label="Lifetime Record"

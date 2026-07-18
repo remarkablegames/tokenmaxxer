@@ -8,19 +8,19 @@ The implementation uses a deterministic TypeScript game engine, React dashboard,
 
 ## Core Game and Balance
 
-- Track tokens, tokens per click, tokens per second, critical chance, active bonuses, current-run records, lifetime Performance Bonuses, Performance Rating, upgrades, abilities, achievements, and lifetime statistics.
+- Track tokens, tokens per click, tokens per second, critical chance, active bonuses, current-run records, lifetime Performance Bonuses, Benchmark Rating, upgrades, abilities, achievements, and lifetime statistics.
 - Begin High Score targets at 1,000 and increase them by 10× indefinitely.
 - Crossing a target awards its permanent Performance Bonus on the first lifetime clear, triggers a celebration, advances the current-run target, and evolves the Token Reactor.
-- Reset the current High Score ladder to 1,000 on Prestige alongside tokens, normal upgrades, and abilities. Preserve lifetime Performance Bonuses, Performance Rating, achievements, preferences, and lifetime statistics.
-- Unlock Prestige after the 100,000,000 record. Records from that point add pending Performance Rating using `milestoneIndex - 2`; Prestige requires and claims an unclaimed payout.
-- Grant +10% all production per permanent Performance Rating point. The bonus is automatic and cannot be spent.
+- Reset the current High Score ladder to 1,000 on Prestige alongside tokens, normal upgrades, and abilities. Preserve lifetime Performance Bonuses, Benchmark Rating, achievements, preferences, and lifetime statistics.
+- Unlock Prestige after the 100,000,000 record. Records from that point add pending Benchmark Rating using `milestoneIndex - 2`; Prestige requires and claims an unclaimed payout.
+- Add 0.10 permanently to the Token Multiplier per Benchmark Rating point. The multiplier is automatic and cannot be spent.
 - Label milestones already earned in a previous run as `RECORD RECLAIMED`; reserve `NEW HIGH SCORE` for first-time lifetime records.
 - Pause production, ability durations, and cooldowns while the document is hidden. Do not grant closed-tab or away progress.
 - Support buy-one, buy-ten, and buy-max controls with exact costs and benefits.
 
-### Permanent Performance Rating
+### Permanent Benchmark Rating
 
-- Convert the full pending payout into Performance Rating when the player sets a new record.
+- Convert the full pending payout into Benchmark Rating when the player starts a new session.
 - Apply the rating multiplier equally to manual and automated production.
 - Display the current rating and exact production percentage persistently in the Champion Archive and Lifetime Statistics.
 
@@ -53,7 +53,7 @@ The implementation uses a deterministic TypeScript game engine, React dashboard,
 
 - Separate pure calculations and reducer-style state transitions from React rendering.
 - Drive production through a delta-time loop while the page is visible.
-- Use strict interfaces for game state, statistics, definitions, abilities, achievements, Performance Rating, preferences, and versioned saves.
+- Use strict interfaces for game state, statistics, definitions, abilities, achievements, Benchmark Rating, preferences, and versioned saves.
 - Store the complete save envelope under the single localStorage key `org.remarkablegames.tokenmaxxer`.
 - Keep progress and preferences in separate fields inside that envelope so resetting progress preserves mute and volume settings.
 - Autosave every five seconds and on page lifecycle events.
@@ -65,7 +65,7 @@ The implementation uses a deterministic TypeScript game engine, React dashboard,
 
 ## Test Plan
 
-- Unit-test upgrade costs, bulk purchases, production formulas, critical clicks, milestones, Performance Bonus uniqueness, reactor stages, abilities, Prestige, Performance Rating, formatting, achievements, and save validation.
+- Unit-test upgrade costs, bulk purchases, production formulas, critical clicks, milestones, Performance Bonus uniqueness, reactor stages, abilities, Prestige, Benchmark Rating, formatting, achievements, and save validation.
 - Use fake timers and visibility mocks to verify production, autosaving, cooldowns, effect expiry, and hidden-tab pausing.
 - Test clicking, purchases, locked upgrades, amount controls, abilities, new and reclaimed celebrations, Prestige, automatic rating payouts, settings, import/export, reset, and keyboard operation with Testing Library.
 - Mock Web Audio, clipboard, download, and lifecycle APIs and verify graceful unsupported behavior.

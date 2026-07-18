@@ -23,7 +23,7 @@ Derive onboarding entirely from permanent gameplay progress so continued games a
   - Efficiency at 5,000 lifetime tokens.
   - Abilities after reaching the 10,000 record.
   - Champion Archive and Run Telemetry after the first trophy.
-  - Prestige after securing the 10 million Performance Bonus, or whenever pending Performance Rating exists.
+  - Prestige after securing the 10 million Performance Bonus, or whenever pending Benchmark Rating exists.
 - Within each revealed upgrade category, display every unlocked upgrade and only the next locked upgrade with the lowest threshold.
 - Within abilities, display unlocked abilities and only the next upcoming locked ability.
 - Apply a brief entrance animation when a new section or category appears.
@@ -31,7 +31,7 @@ Derive onboarding entirely from permanent gameplay progress so continued games a
 
 ## Interfaces and Persistence
 
-- Derive the current objective and visible dashboard systems from clicks, owned upgrades, lifetime tokens, Performance Bonuses, record index, and pending Performance Rating.
+- Derive the current objective and visible dashboard systems from clicks, owned upgrades, lifetime tokens, Performance Bonuses, record index, and pending Benchmark Rating.
 - Do not change `SaveEnvelope`, `GameProgress`, the save version, or the localStorage key `org.remarkablegames.tokenmaxxer`.
 - Continued saves resume at the appropriate objective instead of restarting onboarding.
 - Because lifetime statistics, records, and trophies survive Prestige, established players retain all previously revealed systems after resetting normal progress.

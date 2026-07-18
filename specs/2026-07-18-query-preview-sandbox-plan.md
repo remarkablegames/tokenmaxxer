@@ -19,8 +19,8 @@ The fixture contains:
 - 100 million current and lifetime tokens
 - Six completed High Score milestones
 - Performance Bonuses for milestones zero through five
-- Three pending Performance Rating points
-- Zero existing Performance Rating
+- Three pending Benchmark Rating points
+- Zero existing Benchmark Rating
 
 ### High Score Preview
 
