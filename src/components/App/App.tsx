@@ -560,7 +560,9 @@ export function App() {
             <h1 className="text-xl font-black tracking-tight sm:text-2xl">
               <span className="text-amber-300">🏆</span> TOKENMAXXER
             </h1>
-            <p className="status text-xs tracking-[.28em] text-cyan-300">
+            <p
+              className={`status text-xs tracking-[.28em] ${notice === 'SYSTEM ONLINE' ? 'text-emerald-300' : 'text-cyan-300'}`}
+            >
               ● {notice}
             </p>
           </div>

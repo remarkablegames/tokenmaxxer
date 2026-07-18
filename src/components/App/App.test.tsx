@@ -27,6 +27,7 @@ describe('Tokenmaxxer dashboard', () => {
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
       'TOKENMAXXER',
     );
+    expect(screen.getByText(/SYSTEM ONLINE/)).toHaveClass('text-emerald-300');
     expect(screen.getByText('HIGH SCORE')).toBeInTheDocument();
     expect(screen.getByText('NEXT OBJECTIVE')).toBeInTheDocument();
     expect(screen.getByText('Activate the Token Reactor')).toBeInTheDocument();
