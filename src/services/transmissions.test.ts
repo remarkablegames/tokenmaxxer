@@ -9,9 +9,9 @@ import {
 
 describe('narrative transmissions', () => {
   it('defines a varied, prioritized office narrative', () => {
-    expect(TRANSMISSIONS).toHaveLength(25);
-    expect(new Set(TRANSMISSIONS.map(({ id }) => id)).size).toBe(25);
-    expect(new Set(TRANSMISSIONS.map(({ sender }) => sender)).size).toBe(10);
+    expect(TRANSMISSIONS).toHaveLength(45);
+    expect(new Set(TRANSMISSIONS.map(({ id }) => id)).size).toBe(45);
+    expect(new Set(TRANSMISSIONS.map(({ sender }) => sender)).size).toBe(13);
     expect(TRANSMISSIONS.every(({ priority }) => priority > 0)).toBe(true);
     expect(TRANSMISSIONS.map(({ unlock }) => unlock.type)).toEqual(
       expect.arrayContaining([
@@ -22,6 +22,9 @@ describe('narrative transmissions', () => {
         'lifetime-tokens',
         'upgrade',
         'ability',
+        'play-time',
+        'tokens-per-second',
+        'ability-uses',
         'session',
       ]),
     );
@@ -31,21 +34,28 @@ describe('narrative transmissions', () => {
     const progress = createInitialProgress();
     expect(getEligibleTransmissions(progress)).toEqual([]);
 
-    progress.stats.clicks = 1_000;
+    progress.stats.clicks = 5_000;
     progress.stats.criticalClicks = 1;
     progress.stats.tokens = 500_000;
-    progress.stats.prestiges = 1;
+    progress.stats.prestiges = 3;
+    progress.stats.abilitiesUsed = 20;
+    progress.stats.playTime = 600;
+    progress.stats.highestTps = 10_000;
     progress.upgrades.keyboard = 1;
+    progress.upgrades.templates = 1;
     progress.upgrades.gpu = 1;
     progress.upgrades.rack = 1;
     progress.upgrades.multifinger = 1;
     progress.upgrades.compression = 1;
+    progress.upgrades.critical = 1;
+    progress.upgrades.overclock = 1;
+    progress.upgrades.optimization = 1;
     progress.upgrades.engineer = 1;
     progress.upgrades.cluster = 1;
     progress.upgrades.orbital = 1;
     progress.abilities.surge.cooldown = 1;
     progress.abilities.hyperfocus.remaining = 1;
-    progress.bonuses = [0, 1, 2, 3, 4, 5, 6];
+    progress.bonuses = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 
     expect(getEligibleTransmissions(progress).map(({ id }) => id)).toEqual(
       TRANSMISSIONS.filter(({ unlock }) => unlock.type !== 'session').map(

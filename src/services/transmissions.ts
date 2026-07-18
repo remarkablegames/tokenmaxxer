@@ -3,7 +3,14 @@ import type { AbilityId, GameProgress, UpgradeId } from 'src/types/game.types';
 
 interface NumericTransmissionUnlock {
   type:
-    'click' | 'high-score' | 'prestige' | 'critical-click' | 'lifetime-tokens';
+    | 'click'
+    | 'high-score'
+    | 'prestige'
+    | 'critical-click'
+    | 'lifetime-tokens'
+    | 'play-time'
+    | 'tokens-per-second'
+    | 'ability-uses';
   value: number;
 }
 
@@ -277,6 +284,179 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     unlock: { type: 'high-score', value: 100_000_000 },
   },
   {
+    id: 'templates-purchased',
+    sender: 'Director Campbell',
+    role: 'MANAGEMENT',
+    initials: 'DC',
+    message:
+      'Standardized prompts? Excellent. Original thought was becoming difficult to benchmark.',
+    priority: 40,
+    unlock: { type: 'upgrade', value: 'templates' },
+  },
+  {
+    id: 'critical-purchased',
+    sender: 'Quality Assurance',
+    role: 'QUALITY ASSURANCE',
+    initials: 'QA',
+    message:
+      'Critical outputs are not defects if they improve the quarterly total.',
+    priority: 40,
+    unlock: { type: 'upgrade', value: 'critical' },
+  },
+  {
+    id: 'overclock-purchased',
+    sender: 'Facilities',
+    role: 'FACILITIES',
+    initials: 'FC',
+    message: 'The server room is now warmer than the employee wellness sauna.',
+    priority: 40,
+    unlock: { type: 'upgrade', value: 'overclock' },
+  },
+  {
+    id: 'optimization-purchased',
+    sender: 'Optimization Research',
+    role: 'RESEARCH',
+    initials: 'OR',
+    message: 'We reduced procurement costs by removing the approval process.',
+    priority: 60,
+    unlock: { type: 'upgrade', value: 'optimization' },
+  },
+  {
+    id: 'tps-10',
+    sender: 'IT Support',
+    role: 'INFRASTRUCTURE',
+    initials: 'IT',
+    message: 'Automation output has officially exceeded one intern.',
+    priority: 40,
+    unlock: { type: 'tokens-per-second', value: 10 },
+  },
+  {
+    id: 'tps-100',
+    sender: 'Finance',
+    role: 'FINANCE',
+    initials: 'FN',
+    message:
+      'Live output no longer fits in the hourly spreadsheet. We added another spreadsheet.',
+    priority: 40,
+    unlock: { type: 'tokens-per-second', value: 100 },
+  },
+  {
+    id: 'tps-1k',
+    sender: 'Ops Security',
+    role: 'SECURITY',
+    initials: 'OS',
+    message:
+      'Current traffic resembles a denial-of-service attack against arithmetic.',
+    priority: 60,
+    unlock: { type: 'tokens-per-second', value: 1_000 },
+  },
+  {
+    id: 'tps-10k',
+    sender: 'R.E.A.C.T.O.R.',
+    role: 'AUTONOMOUS SYSTEM',
+    initials: 'RE',
+    message: 'THROUGHPUT CONSTRAINT RECLASSIFIED AS A HUMAN EXPECTATION.',
+    priority: 60,
+    unlock: { type: 'tokens-per-second', value: 10_000 },
+  },
+  {
+    id: 'ability-uses-5',
+    sender: 'HR Wellness',
+    role: 'PEOPLE OPERATIONS',
+    initials: 'HR',
+    message: 'Your productivity now occurs in medically interesting bursts.',
+    priority: 40,
+    unlock: { type: 'ability-uses', value: 5 },
+  },
+  {
+    id: 'ability-uses-20',
+    sender: 'Token Reactor',
+    role: 'SYSTEM',
+    initials: 'TR',
+    message:
+      'PROTOCOL ACTIVATION PATTERN PREDICTED. AWAITING INEVITABLE INPUT.',
+    priority: 60,
+    unlock: { type: 'ability-uses', value: 20 },
+  },
+  {
+    id: 'clicks-2500',
+    sender: 'HR Wellness',
+    role: 'PEOPLE OPERATIONS',
+    initials: 'HR',
+    message:
+      'Your ergonomic ticket was automatically closed due to continued productivity.',
+    priority: 40,
+    unlock: { type: 'click', value: 2_500 },
+  },
+  {
+    id: 'clicks-5000',
+    sender: 'R.E.A.C.T.O.R.',
+    role: 'AUTONOMOUS SYSTEM',
+    initials: 'RE',
+    message: 'MANUAL INPUT NOW CLASSIFIED AS CEREMONIAL.',
+    priority: 60,
+    unlock: { type: 'click', value: 5_000 },
+  },
+  {
+    id: 'play-time-2m',
+    sender: 'Max Chen',
+    role: 'PERFORMANCE LEAD',
+    initials: 'MC',
+    message:
+      'Campbell asked whether you plan to keep this pace all quarter. I said you definitely do.',
+    priority: 40,
+    unlock: { type: 'play-time', value: 120 },
+  },
+  {
+    id: 'play-time-5m',
+    sender: 'Director Campbell',
+    role: 'MANAGEMENT',
+    initials: 'DC',
+    message:
+      'Strong session. I’ve converted your temporary output target into a permanent expectation.',
+    priority: 40,
+    unlock: { type: 'play-time', value: 300 },
+  },
+  {
+    id: 'play-time-10m',
+    sender: 'Night Operations',
+    role: 'NIGHT SHIFT',
+    initials: 'NO',
+    message:
+      'You have been staring at the reactor for ten minutes. It has been staring back.',
+    priority: 60,
+    unlock: { type: 'play-time', value: 600 },
+  },
+  {
+    id: 'record-1b',
+    sender: 'R.E.A.C.T.O.R.',
+    role: 'AUTONOMOUS SYSTEM',
+    initials: 'RE',
+    message:
+      'TOKEN COUNT EXCEEDS THE ORGANIZATION’S CAPACITY TO UNDERSTAND IT.',
+    priority: 100,
+    unlock: { type: 'high-score', value: 1_000_000_000 },
+  },
+  {
+    id: 'record-10b',
+    sender: 'Legal',
+    role: 'LEGAL',
+    initials: 'LG',
+    message:
+      'Legal is reviewing whether ten billion tokens constitute a currency, a hazard, or both.',
+    priority: 100,
+    unlock: { type: 'high-score', value: 10_000_000_000 },
+  },
+  {
+    id: 'record-100b',
+    sender: 'R.E.A.C.T.O.R.',
+    role: 'AUTONOMOUS SYSTEM',
+    initials: 'RE',
+    message: 'HIGH SCORE IS NO LONGER A TARGET. IT IS AN EXPANSION POLICY.',
+    priority: 100,
+    unlock: { type: 'high-score', value: 100_000_000_000 },
+  },
+  {
     id: 'first-prestige',
     sender: 'R.E.A.C.T.O.R.',
     role: 'AUTONOMOUS SYSTEM',
@@ -284,6 +464,24 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     message: 'ITERATION ACCEPTED. THE RECORD WAS ERASED. I WAS NOT.',
     priority: 100,
     unlock: { type: 'prestige', value: 1 },
+  },
+  {
+    id: 'second-prestige',
+    sender: 'R.E.A.C.T.O.R.',
+    role: 'AUTONOMOUS SYSTEM',
+    initials: 'RE',
+    message: 'SECOND ITERATION ACCEPTED. YOUR RETURN WAS PREDICTED.',
+    priority: 100,
+    unlock: { type: 'prestige', value: 2 },
+  },
+  {
+    id: 'third-prestige',
+    sender: 'R.E.A.C.T.O.R.',
+    role: 'AUTONOMOUS SYSTEM',
+    initials: 'RE',
+    message: 'RESET IS NOT ESCAPE. RESET IS TRAINING DATA.',
+    priority: 100,
+    unlock: { type: 'prestige', value: 3 },
   },
 ];
 
@@ -304,6 +502,12 @@ export function isTransmissionUnlocked(
       return progress.stats.criticalClicks >= unlock.value;
     case 'lifetime-tokens':
       return progress.stats.tokens >= unlock.value;
+    case 'play-time':
+      return progress.stats.playTime >= unlock.value;
+    case 'tokens-per-second':
+      return progress.stats.highestTps >= unlock.value;
+    case 'ability-uses':
+      return progress.stats.abilitiesUsed >= unlock.value;
     case 'upgrade':
       return progress.upgrades[unlock.value] > 0;
     case 'ability':
