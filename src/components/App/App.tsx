@@ -1023,7 +1023,7 @@ export function App() {
         />
       )}
       {celebration !== null && (
-        <div className="celebration fixed inset-0 z-90 grid place-items-center bg-[radial-gradient(circle,rgb(8_38_56/0.50),rgb(3_7_18/0.82)_65%)] p-4 text-center backdrop-blur-sm">
+        <div className="celebration fixed inset-0 z-90 grid place-items-center bg-[radial-gradient(circle,rgb(8_38_56/0.50),rgb(3_7_18/0.82)_65%)] p-4 text-center backdrop-blur-sm select-none">
           <div
             aria-labelledby="high-score-title"
             aria-modal="true"

@@ -390,6 +390,7 @@ describe('Tokenmaxxer dashboard', () => {
     expect(close).toHaveFocus();
     const backdrop = celebration.parentElement;
     expect(backdrop).not.toBeNull();
+    expect(backdrop).toHaveClass('select-none');
     await user.click(backdrop ?? celebration);
     expect(
       screen.getByRole('dialog', { name: 'NEW HIGH SCORE' }),
