@@ -1008,22 +1008,19 @@ export function App() {
       )}
       {celebration !== null && (
         <div className="celebration fixed inset-0 z-90 grid place-items-center bg-[radial-gradient(circle,rgb(8_38_56/0.50),rgb(3_7_18/0.82)_65%)] p-4 text-center backdrop-blur-sm">
-          <button
-            aria-label="Dismiss High Score celebration"
-            className="absolute inset-0 cursor-pointer"
-            onClick={() => {
-              setCelebration(null);
-            }}
-            type="button"
-          />
           <div
-            className="pointer-events-none relative w-full max-w-160 rounded-3xl border border-cyan-300/20 bg-[#06111f]/92 px-6 py-10 shadow-[0_0_100px_rgb(6_182_212/0.18),inset_0_1px_0_rgb(255_255_255/0.06)] sm:px-12 sm:py-12"
-            role="status"
+            aria-labelledby="high-score-title"
+            aria-modal="true"
+            className="relative w-full max-w-160 rounded-3xl border border-cyan-300/20 bg-[#06111f]/92 px-6 py-10 shadow-[0_0_100px_rgb(6_182_212/0.18),inset_0_1px_0_rgb(255_255_255/0.06)] sm:px-12 sm:py-12"
+            role="dialog"
           >
             <div className="trophy-burst mx-auto mb-4 w-fit text-amber-300 drop-shadow-[0_0_22px_rgb(251_191_36/0.45)]">
               <TrophyIcon />
             </div>
-            <p className="text-xs font-black tracking-[0.4em] text-cyan-300">
+            <p
+              className="text-xs font-black tracking-[0.4em] text-cyan-300"
+              id="high-score-title"
+            >
               NEW HIGH SCORE
             </p>
             <strong className="my-2 block text-[clamp(3.5rem,8vw,7rem)] leading-none text-white [text-shadow:0_0_28px_#0891b2]">
@@ -1035,9 +1032,16 @@ export function App() {
             <span className="mt-5 block text-xs font-bold tracking-[0.18em] text-slate-300">
               NEXT TARGET: {formatNumber(getRecordTarget(celebration + 1))}
             </span>
-            <small className="mt-7 block text-xs tracking-[0.14em] text-slate-400">
-              CLICK ANYWHERE TO CONTINUE
-            </small>
+            <button
+              autoFocus
+              className={`${ACTION_BUTTON_CLASS} mt-7 min-w-32 bg-cyan-500 text-[#04101c] shadow-[0_0_24px_rgb(6_182_212/0.22)]`}
+              onClick={() => {
+                setCelebration(null);
+              }}
+              type="button"
+            >
+              Close
+            </button>
           </div>
         </div>
       )}

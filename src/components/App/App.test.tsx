@@ -359,18 +359,17 @@ describe('Tokenmaxxer dashboard', () => {
     const user = userEvent.setup();
     window.history.replaceState({}, '', '/?preview=high-score');
     render(<App />);
-    expect(screen.getByRole('status')).toHaveTextContent('NEW HIGH SCORE');
-    expect(screen.getByRole('status')).toHaveTextContent(
-      'PERFORMANCE BONUS #1 EARNED',
-    );
-    expect(screen.getByRole('status')).toHaveTextContent('1.00K');
-    expect(screen.getByRole('status')).toHaveTextContent('NEXT TARGET: 10.0K');
-    await user.click(
-      screen.getByRole('button', {
-        name: 'Dismiss High Score celebration',
-      }),
-    );
-    expect(screen.queryByRole('status')).not.toBeInTheDocument();
+    const celebration = screen.getByRole('dialog', { name: 'NEW HIGH SCORE' });
+    expect(celebration).toHaveTextContent('NEW HIGH SCORE');
+    expect(celebration).toHaveTextContent('PERFORMANCE BONUS #1 EARNED');
+    expect(celebration).toHaveTextContent('1.00K');
+    expect(celebration).toHaveTextContent('NEXT TARGET: 10.0K');
+    const close = screen.getByRole('button', { name: 'Close' });
+    expect(close).toHaveFocus();
+    await user.click(close);
+    expect(
+      screen.queryByRole('dialog', { name: 'NEW HIGH SCORE' }),
+    ).not.toBeInTheDocument();
   });
 
   it('opens archive, stats, settings, and save dialogs', async () => {
