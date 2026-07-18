@@ -720,9 +720,14 @@ export function App() {
                       type="button"
                     >
                       <span
-                        className={`grid size-9 shrink-0 place-items-center rounded-lg border border-cyan-300/20 bg-cyan-500/8 text-lg text-cyan-300 ${state.remaining > 0 ? 'glow-pulse' : ''}`}
+                        className={`grid size-9 shrink-0 place-items-center rounded-lg border border-cyan-300/20 bg-cyan-500/8 ${state.remaining > 0 ? 'glow-pulse' : ''}`}
                       >
-                        {ability.id === 'surge' ? 'ϟ' : '◉'}
+                        <img
+                          alt=""
+                          aria-hidden="true"
+                          className="size-7"
+                          src={ability.icon}
+                        />
                       </span>
                       <span className="min-w-0 flex-1 text-left">
                         <strong className="block">{ability.name}</strong>

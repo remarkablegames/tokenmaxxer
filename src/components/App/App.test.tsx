@@ -298,6 +298,9 @@ describe('Tokenmaxxer dashboard', () => {
     render(<App />);
     expect(screen.getByText('ACTIVE PROTOCOLS')).toBeInTheDocument();
     expect(screen.getByText('Token Surge')).toBeInTheDocument();
+    expect(
+      screen.getByText('Token Surge').closest('button')?.querySelector('img'),
+    ).toHaveAttribute('src', 'icons/abilities/token-surge.svg');
     expect(screen.getByText('Hyperfocus')).toBeInTheDocument();
   });
 

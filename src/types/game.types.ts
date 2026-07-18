@@ -37,6 +37,7 @@ export interface AbilityDefinition {
   id: AbilityId;
   name: string;
   description: string;
+  icon: string;
   unlockAt: number;
   duration: number;
   cooldown: number;

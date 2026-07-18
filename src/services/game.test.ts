@@ -58,6 +58,10 @@ describe('game calculations', () => {
       UPGRADES.length,
     );
     expect(UPGRADES.every(({ icon }) => icon.endsWith('.svg'))).toBe(true);
+    expect(new Set(ABILITIES.map(({ icon }) => icon)).size).toBe(
+      ABILITIES.length,
+    );
+    expect(ABILITIES.every(({ icon }) => icon.endsWith('.svg'))).toBe(true);
   });
 
   it('creates initial state and record helpers', () => {
