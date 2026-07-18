@@ -74,14 +74,9 @@ export function App() {
   const progress = save.progress;
   const metrics = calculateMetrics(progress);
   const target = getRecordTarget(progress.recordIndex);
-  const priorTarget =
-    progress.recordIndex === 0 ? 0 : getRecordTarget(progress.recordIndex - 1);
   const recordProgress = Math.min(
     100,
-    Math.max(
-      0,
-      ((progress.tokens - priorTarget) / (target - priorTarget)) * 100,
-    ),
+    Math.max(0, (progress.tokens / target) * 100),
   );
   const stage = getReactorStage(progress.recordIndex);
 
@@ -341,7 +336,7 @@ export function App() {
                 return (
                   <button
                     key={ability.id}
-                    className={`flex w-full cursor-pointer items-center gap-3 rounded-xl border p-3 transition hover:-translate-y-px active:scale-[0.985] disabled:cursor-not-allowed disabled:opacity-60 ${state.remaining > 0 ? 'border-cyan-400/50 bg-cyan-400/6 shadow-[inset_0_0_24px_rgb(34_211_238/0.08)]' : 'border-white/8 bg-white/3 hover:border-cyan-400/45 hover:bg-cyan-400/6'}`}
+                    className={`flex w-full cursor-pointer items-center gap-3 rounded-xl border p-3 transition hover:-translate-y-px active:scale-[0.985] disabled:cursor-not-allowed disabled:opacity-70 ${state.remaining > 0 ? 'border-cyan-400/50 bg-cyan-400/6 shadow-[inset_0_0_24px_rgb(34_211_238/0.08)]' : 'border-white/8 bg-white/3 hover:border-cyan-400/45 hover:bg-cyan-400/6'}`}
                     disabled={!unlocked || state.cooldown > 0}
                     onClick={() => {
                       handleAbility(ability.id);
@@ -355,7 +350,7 @@ export function App() {
                     </span>
                     <span className="min-w-0 flex-1 text-left">
                       <strong className="block">{ability.name}</strong>
-                      <small className="block overflow-hidden text-[0.7rem] text-ellipsis whitespace-nowrap text-slate-500">
+                      <small className="block overflow-hidden text-[0.7rem] text-ellipsis whitespace-nowrap text-slate-400">
                         {!unlocked
                           ? `Unlock at ${formatNumber(ability.unlockAt)}`
                           : state.remaining > 0
@@ -366,9 +361,11 @@ export function App() {
                       </small>
                     </span>
                     <span className="text-[0.62rem] font-extrabold text-cyan-300">
-                      {state.cooldown > 0
-                        ? `${String(Math.ceil(state.cooldown))}s`
-                        : 'READY'}
+                      {!unlocked
+                        ? 'LOCKED'
+                        : state.cooldown > 0
+                          ? `${String(Math.ceil(state.cooldown))}s`
+                          : 'READY'}
                     </span>
                   </button>
                 );
@@ -418,6 +415,26 @@ export function App() {
                 : `Unlock at ${formatNumber(getRecordTarget(5))}`}
             </span>
           </button>
+          <Panel title="RUN TELEMETRY" eyebrow="LIVE DATA">
+            <div className="grid grid-cols-2 gap-2">
+              <MiniMetric
+                label="Lifetime Tokens"
+                value={formatNumber(progress.stats.tokens)}
+              />
+              <MiniMetric
+                label="Reactor Clicks"
+                value={formatNumber(progress.stats.clicks)}
+              />
+              <MiniMetric
+                label="Critical Clicks"
+                value={formatNumber(progress.stats.criticalClicks)}
+              />
+              <MiniMetric
+                label="Active Time"
+                value={formatDuration(progress.stats.playTime)}
+              />
+            </div>
+          </Panel>
         </aside>
 
         <section
@@ -483,7 +500,7 @@ export function App() {
               ))}
             </div>
           </div>
-          <div className="max-h-155 overflow-y-auto p-3">
+          <div className="max-h-155 [scrollbar-color:#155e75_transparent] overflow-y-auto p-3 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-cyan-800/70 [&::-webkit-scrollbar-thumb:hover]:bg-cyan-600 [&::-webkit-scrollbar-track]:bg-transparent">
             {(['manual', 'automation', 'efficiency'] as const).map(
               (category) => (
                 <div className="mb-5" key={category}>
@@ -508,7 +525,7 @@ export function App() {
                       ).cost;
                       return (
                         <button
-                          className="flex w-full cursor-pointer items-center gap-3 rounded-xl border border-white/8 bg-white/3 p-3 transition hover:-translate-y-px hover:border-cyan-400/45 hover:bg-cyan-400/6 active:scale-[0.985] disabled:cursor-not-allowed disabled:opacity-60"
+                          className="flex w-full cursor-pointer items-center gap-3 rounded-xl border border-white/8 bg-white/3 p-3 transition hover:-translate-y-px hover:border-cyan-400/45 hover:bg-cyan-400/6 active:scale-[0.985] disabled:cursor-not-allowed disabled:opacity-70"
                           disabled={!unlocked || quote.count === 0}
                           key={upgrade.id}
                           onClick={() => {
@@ -528,7 +545,7 @@ export function App() {
                                 LV. {progress.upgrades[upgrade.id]}
                               </em>
                             </span>
-                            <small className="block overflow-hidden text-[0.7rem] text-ellipsis whitespace-nowrap text-slate-500">
+                            <small className="block overflow-hidden text-[0.7rem] text-ellipsis whitespace-nowrap text-slate-400">
                               {unlocked
                                 ? upgrade.description
                                 : `LOCKED · Generate ${formatNumber(upgrade.unlockAt)} lifetime tokens`}
@@ -898,6 +915,16 @@ function StatTile({ label, value }: { label: string; value: string }) {
     <div className="rounded-xl border border-white/7 bg-white/3 p-3">
       <small className="block text-[0.66rem] text-slate-500">{label}</small>
       <strong className="mt-1 block text-lg text-cyan-100">{value}</strong>
+    </div>
+  );
+}
+function MiniMetric({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-lg border border-white/7 bg-black/15 p-2.5">
+      <small className="block text-[0.6rem] tracking-wide text-slate-400">
+        {label}
+      </small>
+      <strong className="mt-0.5 block text-sm text-cyan-100">{value}</strong>
     </div>
   );
 }

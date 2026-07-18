@@ -27,9 +27,20 @@ describe('Tokenmaxxer dashboard', () => {
       'TOKENMAXXER',
     );
     expect(screen.getByText('CURRENT HIGH SCORE TARGET')).toBeInTheDocument();
+    expect(screen.getByText('RUN TELEMETRY')).toBeInTheDocument();
+    expect(screen.getAllByText('LOCKED')).toHaveLength(2);
     const reactor = screen.getByRole('button', { name: /activate reactor/i });
     await user.click(reactor);
     expect(screen.getByText('+1')).toBeInTheDocument();
+  });
+
+  it('shows progress as the current token share of the target', () => {
+    const save = createInitialSave();
+    save.progress.tokens = 15_300;
+    save.progress.recordIndex = 2;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
+    render(<App />);
+    expect(screen.getByText('15.3%')).toBeInTheDocument();
   });
 
   it('opens archive, stats, settings, and save dialogs', async () => {
