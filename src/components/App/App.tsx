@@ -292,26 +292,35 @@ export function App() {
 
       <section className="border-b border-amber-300/15 bg-linear-to-r from-amber-500/5 via-cyan-500/5 to-violet-500/5 px-3 py-3 sm:px-6 sm:py-4">
         <div className="mx-auto max-w-400">
+          <p className={`${EYEBROW_CLASS} text-amber-300`}>HIGH SCORE CHASE</p>
           <div className="mb-2 flex items-end justify-between gap-4">
-            <div>
-              <p className={`${EYEBROW_CLASS} text-amber-300`}>
-                CURRENT HIGH SCORE TARGET
-              </p>
-              <h2 className="text-3xl font-black tabular-nums sm:text-5xl">
-                {formatNumber(target)}{' '}
-                <span className="text-base font-medium text-slate-500">
-                  TOKENS
-                </span>
-              </h2>
-            </div>
-            <div className="text-right">
-              <p className="text-xs text-slate-400">RECORD PROGRESS</p>
-              <strong className="text-amber-300">
+            <h2 className="text-3xl font-black tabular-nums sm:text-5xl">
+              <span className="text-cyan-100">
+                {formatNumber(progress.tokens)}
+              </span>{' '}
+              <span className="text-slate-600">/</span>{' '}
+              <span>{formatNumber(target)}</span>{' '}
+              <span className="text-base font-medium text-slate-500">
+                TOKENS
+              </span>
+            </h2>
+            <div className="shrink-0 pb-1 text-right">
+              <span className="block text-[0.65rem] font-bold tracking-wider text-slate-400">
+                PROGRESS
+              </span>
+              <strong className="text-sm text-amber-300 sm:text-base">
                 {recordProgress.toFixed(1)}%
               </strong>
             </div>
           </div>
-          <div className="h-3 overflow-hidden rounded-full border border-white/8 bg-black/45 shadow-[inset_0_2px_5px_rgb(0_0_0/0.55)]">
+          <div
+            aria-label="High Score progress"
+            aria-valuemax={100}
+            aria-valuemin={0}
+            aria-valuenow={Number(recordProgress.toFixed(1))}
+            className="h-3 overflow-hidden rounded-full border border-white/8 bg-black/45 shadow-[inset_0_2px_5px_rgb(0_0_0/0.55)]"
+            role="progressbar"
+          >
             <div
               className="h-full rounded-[inherit] bg-linear-to-r from-cyan-600 via-cyan-300 to-amber-400 shadow-[0_0_20px_#22d3ee] transition-[width] duration-300 ease-out"
               style={{ width: `${String(recordProgress)}%` }}

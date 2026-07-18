@@ -26,7 +26,7 @@ describe('Tokenmaxxer dashboard', () => {
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
       'TOKENMAXXER',
     );
-    expect(screen.getByText('CURRENT HIGH SCORE TARGET')).toBeInTheDocument();
+    expect(screen.getByText('HIGH SCORE CHASE')).toBeInTheDocument();
     expect(screen.getByText('RUN TELEMETRY')).toBeInTheDocument();
     expect(screen.getAllByText('LOCKED')).toHaveLength(2);
     const reactor = screen.getByRole('button', { name: /activate reactor/i });
@@ -40,7 +40,14 @@ describe('Tokenmaxxer dashboard', () => {
     save.progress.recordIndex = 2;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
     render(<App />);
+    expect(
+      screen.getByRole('heading', { name: '15.3K / 100K TOKENS' }),
+    ).toBeInTheDocument();
     expect(screen.getByText('15.3%')).toBeInTheDocument();
+    expect(screen.getByRole('progressbar')).toHaveAttribute(
+      'aria-valuenow',
+      '15.3',
+    );
   });
 
   it('opens archive, stats, settings, and save dialogs', async () => {
