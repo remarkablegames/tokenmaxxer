@@ -212,14 +212,14 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     unlock: { type: 'upgrade', value: 'multifinger' },
   },
   {
-    id: 'compression-purchased',
+    id: 'context-compaction-purchased',
     sender: 'Finance',
     role: 'FINANCE',
     initials: 'FN',
     message:
       'Context compaction completed. Several earlier decisions have been summarized as “probably intentional.”',
     priority: 40,
-    unlock: { type: 'upgrade', value: 'compression' },
+    unlock: { type: 'upgrade', value: 'contextCompaction' },
   },
   {
     id: 'surge-activated',
@@ -282,14 +282,14 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     unlock: { type: 'lifetime-tokens', value: 500_000 },
   },
   {
-    id: 'cluster-purchased',
+    id: 'agent-swarm-purchased',
     sender: 'Token Reactor',
     role: 'SYSTEM',
     initials: 'TR',
     message:
       'Additional agents delegated. Oversight responsibilities have been delegated to a subagent.',
     priority: 60,
-    unlock: { type: 'upgrade', value: 'cluster' },
+    unlock: { type: 'upgrade', value: 'agentSwarm' },
   },
   {
     id: 'record-1m',

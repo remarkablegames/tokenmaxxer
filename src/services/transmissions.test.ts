@@ -14,10 +14,11 @@ describe('narrative transmissions', () => {
     expect(new Set(TRANSMISSIONS.map(({ sender }) => sender)).size).toBe(14);
     expect(TRANSMISSIONS.every(({ priority }) => priority > 0)).toBe(true);
     expect(
-      TRANSMISSIONS.find(({ id }) => id === 'cluster-purchased')?.message,
+      TRANSMISSIONS.find(({ id }) => id === 'agent-swarm-purchased')?.message,
     ).toContain('delegated to a subagent');
     expect(
-      TRANSMISSIONS.find(({ id }) => id === 'compression-purchased')?.message,
+      TRANSMISSIONS.find(({ id }) => id === 'context-compaction-purchased')
+        ?.message,
     ).toBe(
       'Context compaction completed. Several earlier decisions have been summarized as “probably intentional.”',
     );
@@ -55,12 +56,12 @@ describe('narrative transmissions', () => {
     progress.upgrades.model = 30;
     progress.upgrades.rack = 1;
     progress.upgrades.multifinger = 1;
-    progress.upgrades.compression = 1;
+    progress.upgrades.contextCompaction = 1;
     progress.upgrades.critical = 1;
     progress.upgrades.overclock = 1;
     progress.upgrades.optimization = 1;
     progress.upgrades.engineer = 1;
-    progress.upgrades.cluster = 1;
+    progress.upgrades.agentSwarm = 1;
     progress.upgrades.orbital = 1;
     progress.abilities.surge.cooldown = 1;
     progress.abilities.hyperfocus.remaining = 1;

@@ -45,9 +45,9 @@ function richProgress(): GameProgress {
     model: 1,
     rack: 1,
     engineer: 1,
-    cluster: 1,
+    agentSwarm: 1,
     orbital: 1,
-    compression: 1,
+    contextCompaction: 1,
     overclock: 1,
     critical: 20,
     optimization: 10,
@@ -65,10 +65,10 @@ describe('game calculations', () => {
       ABILITIES.length,
     );
     expect(ABILITIES.every(({ icon }) => icon.endsWith('.svg'))).toBe(true);
-    expect(UPGRADES.find(({ id }) => id === 'cluster')?.name).toBe(
+    expect(UPGRADES.find(({ id }) => id === 'agentSwarm')?.name).toBe(
       'Agent Swarm',
     );
-    expect(UPGRADES.find(({ id }) => id === 'compression')?.name).toBe(
+    expect(UPGRADES.find(({ id }) => id === 'contextCompaction')?.name).toBe(
       'Context Compaction',
     );
   });

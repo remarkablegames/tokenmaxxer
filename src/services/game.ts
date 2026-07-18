@@ -90,14 +90,14 @@ export const UPGRADES: UpgradeDefinition[] = [
     icon: 'icons/upgrades/engineer.svg',
   },
   {
-    id: 'cluster',
+    id: 'agentSwarm',
     name: 'Agent Swarm',
     description: '+900 tokens per second',
     category: 'automation',
     baseCost: 100_000,
     growth: 1.17,
     unlockAt: 500_000,
-    icon: 'icons/upgrades/cluster.svg',
+    icon: 'icons/upgrades/agent-swarm.svg',
   },
   {
     id: 'orbital',
@@ -110,14 +110,14 @@ export const UPGRADES: UpgradeDefinition[] = [
     icon: 'icons/upgrades/orbital.svg',
   },
   {
-    id: 'compression',
+    id: 'contextCompaction',
     name: 'Context Compaction',
     description: '×1.2 all production',
     category: 'efficiency',
     baseCost: 2_500,
     growth: 1.2,
     unlockAt: 5_000,
-    icon: 'icons/upgrades/compression.svg',
+    icon: 'icons/upgrades/context-compaction.svg',
   },
   {
     id: 'overclock',
@@ -208,9 +208,9 @@ const EMPTY_UPGRADES: Record<UpgradeId, number> = {
   model: 0,
   rack: 0,
   engineer: 0,
-  cluster: 0,
+  agentSwarm: 0,
   orbital: 0,
-  compression: 0,
+  contextCompaction: 0,
   overclock: 0,
   critical: 0,
   optimization: 0,
@@ -301,18 +301,18 @@ export function calculateMetrics(progress: GameProgress): ProductionMetrics {
   const manualBase = 1 + u.keyboard + u.multifinger * 5;
   const manualMultiplier =
     (1 + u.templates * 0.25) *
-    (1 + u.compression * 0.2) *
+    (1 + u.contextCompaction * 0.2) *
     (1 + progress.perks.manualCalibration * 0.25);
   const automationBase =
     u.gpu +
     u.model * 4 +
     u.rack * 12 +
     u.engineer * 100 +
-    u.cluster * 900 +
+    u.agentSwarm * 900 +
     u.orbital * 8_000;
   const automationMultiplier =
     (1 + u.overclock * 0.35) *
-    (1 + u.compression * 0.2) *
+    (1 + u.contextCompaction * 0.2) *
     (1 + progress.perks.automationRouting * 0.25);
   const surge = progress.abilities.surge.remaining > 0 ? 3 : 1;
   const hyperfocus = progress.abilities.hyperfocus.remaining > 0 ? 5 : 1;
@@ -402,7 +402,7 @@ export const ACHIEVEMENTS: AchievementDefinition[] = [
       p.upgrades.gpu +
         p.upgrades.rack +
         p.upgrades.engineer +
-        p.upgrades.cluster +
+        p.upgrades.agentSwarm +
         p.upgrades.orbital >
       0,
   },
@@ -449,7 +449,7 @@ export const ACHIEVEMENTS: AchievementDefinition[] = [
     name: 'Full Stack',
     description: 'Own every automation producer',
     test: (p) =>
-      ['gpu', 'rack', 'engineer', 'cluster', 'orbital'].every(
+      ['gpu', 'rack', 'engineer', 'agentSwarm', 'orbital'].every(
         (id) => p.upgrades[id as UpgradeId] > 0,
       ),
   },

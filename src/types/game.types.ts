@@ -8,9 +8,9 @@ export type UpgradeId =
   | 'model'
   | 'rack'
   | 'engineer'
-  | 'cluster'
+  | 'agentSwarm'
   | 'orbital'
-  | 'compression'
+  | 'contextCompaction'
   | 'overclock'
   | 'critical'
   | 'optimization';
