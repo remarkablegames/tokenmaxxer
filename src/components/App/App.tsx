@@ -1018,7 +1018,7 @@ export function App() {
               <TrophyIcon />
             </div>
             <p
-              className="text-xs font-black tracking-[0.4em] text-cyan-300"
+              className="text-sm font-black tracking-[0.4em] text-cyan-300"
               id="high-score-title"
             >
               NEW HIGH SCORE
@@ -1026,15 +1026,15 @@ export function App() {
             <strong className="my-2 block text-[clamp(3.5rem,8vw,7rem)] leading-none text-white [text-shadow:0_0_28px_#0891b2]">
               {formatNumber(getRecordTarget(celebration))}
             </strong>
-            <span className="block font-extrabold tracking-[0.15em] text-amber-300">
+            <span className="block text-base font-extrabold tracking-[0.15em] text-amber-300 sm:text-lg">
               PERFORMANCE BONUS #{celebration + 1} EARNED
             </span>
-            <span className="mt-5 block text-xs font-bold tracking-[0.18em] text-slate-300">
+            <span className="mt-3 block text-sm font-bold tracking-[0.18em] text-slate-300">
               NEXT TARGET: {formatNumber(getRecordTarget(celebration + 1))}
             </span>
             <button
               autoFocus
-              className={`${ACTION_BUTTON_CLASS} mt-7 min-w-32 bg-cyan-500 text-[#04101c] shadow-[0_0_24px_rgb(6_182_212/0.22)]`}
+              className="mt-7 min-w-32 cursor-pointer rounded-xl bg-cyan-500 px-4 py-3 text-base font-extrabold text-[#04101c] shadow-[0_0_24px_rgb(6_182_212/0.22)] transition hover:-translate-y-px hover:brightness-125"
               onClick={() => {
                 setCelebration(null);
               }}

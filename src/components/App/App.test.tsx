@@ -361,10 +361,20 @@ describe('Tokenmaxxer dashboard', () => {
     render(<App />);
     const celebration = screen.getByRole('dialog', { name: 'NEW HIGH SCORE' });
     expect(celebration).toHaveTextContent('NEW HIGH SCORE');
+    expect(screen.getByText('NEW HIGH SCORE')).toHaveClass('text-sm');
     expect(celebration).toHaveTextContent('PERFORMANCE BONUS #1 EARNED');
+    expect(screen.getByText('PERFORMANCE BONUS #1 EARNED')).toHaveClass(
+      'text-base',
+      'sm:text-lg',
+    );
     expect(celebration).toHaveTextContent('1.00K');
     expect(celebration).toHaveTextContent('NEXT TARGET: 10.0K');
+    expect(screen.getByText('NEXT TARGET: 10.0K')).toHaveClass(
+      'mt-3',
+      'text-sm',
+    );
     const close = screen.getByRole('button', { name: 'Close' });
+    expect(close).toHaveClass('text-base');
     expect(close).toHaveFocus();
     await user.click(close);
     expect(
