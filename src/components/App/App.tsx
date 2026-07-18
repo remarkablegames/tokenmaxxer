@@ -290,7 +290,7 @@ export function App() {
         </div>
       </header>
 
-      <section className="border-b border-amber-300/15 bg-linear-to-r from-amber-500/5 via-cyan-500/5 to-violet-500/5 px-3 py-5 sm:px-6">
+      <section className="border-b border-amber-300/15 bg-linear-to-r from-amber-500/5 via-cyan-500/5 to-violet-500/5 px-3 py-3 sm:px-6 sm:py-4">
         <div className="mx-auto max-w-400">
           <div className="mb-2 flex items-end justify-between gap-4">
             <div>
@@ -350,7 +350,7 @@ export function App() {
                     </span>
                     <span className="min-w-0 flex-1 text-left">
                       <strong className="block">{ability.name}</strong>
-                      <small className="block overflow-hidden text-[0.7rem] text-ellipsis whitespace-nowrap text-slate-400">
+                      <small className="block overflow-hidden text-xs text-ellipsis whitespace-nowrap text-slate-300">
                         {!unlocked
                           ? `Unlock at ${formatNumber(ability.unlockAt)}`
                           : state.remaining > 0
@@ -360,7 +360,7 @@ export function App() {
                               : ability.description}
                       </small>
                     </span>
-                    <span className="text-[0.62rem] font-extrabold text-cyan-300">
+                    <span className="text-[0.7rem] font-extrabold text-cyan-300">
                       {!unlocked
                         ? 'LOCKED'
                         : state.cooldown > 0
@@ -398,7 +398,7 @@ export function App() {
             </div>
           </Panel>
           <button
-            className="flex w-full cursor-pointer items-center justify-between gap-4 rounded-2xl border border-amber-300/30 bg-linear-to-r from-amber-900/25 to-violet-900/20 p-4 text-left disabled:cursor-not-allowed disabled:opacity-60 disabled:saturate-50 [&_small]:block [&_small]:text-[0.6rem] [&_small]:tracking-[0.15em] [&_small]:text-amber-400 [&_strong]:mt-1 [&_strong]:block [&>span:last-child]:text-[0.65rem] [&>span:last-child]:text-amber-300"
+            className="flex w-full cursor-pointer items-center justify-between gap-4 rounded-2xl border border-amber-300/30 bg-linear-to-r from-amber-900/25 to-violet-900/20 p-4 text-left disabled:cursor-not-allowed disabled:opacity-75 disabled:saturate-50 [&_small]:block [&_small]:text-[0.68rem] [&_small]:tracking-[0.15em] [&_small]:text-amber-300 [&_strong]:mt-1 [&_strong]:block [&>span:last-child]:text-[0.72rem] [&>span:last-child]:text-amber-200"
             disabled={progress.pendingCredits <= 0}
             onClick={() => {
               setModal('prestige');
@@ -488,7 +488,7 @@ export function App() {
               {([1, 10, 'max'] as const).map((mode) => (
                 <button
                   aria-pressed={buyMode === mode}
-                  className="cursor-pointer rounded-md px-2 py-1 text-[0.62rem] font-extrabold text-slate-500 aria-pressed:bg-cyan-700 aria-pressed:text-white"
+                  className="cursor-pointer rounded-md px-2 py-1 text-[0.68rem] font-extrabold text-slate-400 aria-pressed:bg-cyan-700 aria-pressed:text-white"
                   key={mode}
                   onClick={() => {
                     setBuyMode(mode);
@@ -500,7 +500,7 @@ export function App() {
               ))}
             </div>
           </div>
-          <div className="max-h-155 [scrollbar-color:#155e75_transparent] overflow-y-auto p-3 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-cyan-800/70 [&::-webkit-scrollbar-thumb:hover]:bg-cyan-600 [&::-webkit-scrollbar-track]:bg-transparent">
+          <div className="max-h-155 [scrollbar-color:#155e75_transparent] overflow-y-auto p-3 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-cyan-800/50 [&::-webkit-scrollbar-thumb:hover]:bg-cyan-600/80 [&::-webkit-scrollbar-track]:bg-transparent">
             {(['manual', 'automation', 'efficiency'] as const).map(
               (category) => (
                 <div className="mb-5" key={category}>
@@ -541,17 +541,17 @@ export function App() {
                               <strong className="truncate">
                                 {upgrade.name}
                               </strong>
-                              <em className="text-[0.62rem] whitespace-nowrap text-slate-500 not-italic">
+                              <em className="text-[0.68rem] whitespace-nowrap text-slate-400 not-italic">
                                 LV. {progress.upgrades[upgrade.id]}
                               </em>
                             </span>
-                            <small className="block overflow-hidden text-[0.7rem] text-ellipsis whitespace-nowrap text-slate-400">
+                            <small className="block overflow-hidden text-xs text-ellipsis whitespace-nowrap text-slate-300">
                               {unlocked
                                 ? upgrade.description
                                 : `LOCKED · Generate ${formatNumber(upgrade.unlockAt)} lifetime tokens`}
                             </small>
                           </span>
-                          <span className="text-[0.68rem] font-extrabold whitespace-nowrap text-amber-300">
+                          <span className="text-[0.72rem] font-extrabold whitespace-nowrap text-amber-300">
                             {quote.count > 0
                               ? `${formatNumber(quote.cost)} T`
                               : `${formatNumber(nextCost)} T`}
@@ -703,7 +703,7 @@ export function App() {
                   <span className="text-amber-400">
                     {progress.achievements.includes(achievement.id) ? '◆' : '◇'}
                   </span>
-                  <div className="[&_small]:block [&_small]:text-[0.7rem] [&_small]:text-slate-500 [&_strong]:block">
+                  <div className="[&_small]:block [&_small]:text-xs [&_small]:text-slate-400 [&_strong]:block">
                     <strong>{achievement.name}</strong>
                     <small>{achievement.description}</small>
                   </div>
@@ -877,7 +877,7 @@ function Stat({
 }) {
   return (
     <div className="min-w-20 border-l border-white/9 pl-3 max-sm:order-3 max-sm:min-w-0 max-sm:flex-1">
-      <small className="block text-[0.58rem] tracking-[0.12em] text-slate-500">
+      <small className="block text-[0.65rem] tracking-[0.12em] text-slate-400">
         {label}
       </small>
       <strong
@@ -904,7 +904,7 @@ function ArchiveButton({
       type="button"
     >
       <strong className="block text-amber-300">{value}</strong>
-      <small className="mt-0.5 block text-[0.58rem] text-slate-500">
+      <small className="mt-0.5 block text-[0.66rem] text-slate-400">
         {label}
       </small>
     </button>
@@ -913,7 +913,7 @@ function ArchiveButton({
 function StatTile({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-xl border border-white/7 bg-white/3 p-3">
-      <small className="block text-[0.66rem] text-slate-500">{label}</small>
+      <small className="block text-xs text-slate-400">{label}</small>
       <strong className="mt-1 block text-lg text-cyan-100">{value}</strong>
     </div>
   );
@@ -921,7 +921,7 @@ function StatTile({ label, value }: { label: string; value: string }) {
 function MiniMetric({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-lg border border-white/7 bg-black/15 p-2.5">
-      <small className="block text-[0.6rem] tracking-wide text-slate-400">
+      <small className="block text-[0.68rem] tracking-wide text-slate-300">
         {label}
       </small>
       <strong className="mt-0.5 block text-sm text-cyan-100">{value}</strong>

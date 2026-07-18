@@ -142,16 +142,17 @@ export function Reactor({ stage, label, active, onActivate }: ReactorProps) {
           fill="url(#core-gradient)"
           filter="url(#core-glow)"
         />
-        <text
-          fill="#082f49"
-          fontSize="28"
-          fontWeight="900"
-          textAnchor="middle"
-          x="200"
-          y="210"
-        >
-          T
-        </text>
+        <g fill="#082f49" stroke="#082f49" strokeLinecap="round">
+          <path
+            d="M178 182h44M200 182v36M187 218h26"
+            fill="none"
+            strokeWidth="6"
+          />
+          <circle cx="178" cy="182" r="4" stroke="none" />
+          <circle cx="222" cy="182" r="4" stroke="none" />
+          <circle cx="187" cy="218" r="4" stroke="none" />
+          <circle cx="213" cy="218" r="4" stroke="none" />
+        </g>
       </svg>
       <span className="absolute inset-x-0 bottom-2 text-center text-xs font-bold tracking-[0.22em] text-cyan-200 uppercase">
         {STAGE_NAMES[stage]}
