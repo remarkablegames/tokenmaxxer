@@ -1,7 +1,7 @@
 {
-  "name": "Vite React Tailwind Template",
-  "short_name": "Vite React Tailwind Template",
-  "description": "Vite React Tailwind Template",
+  "name": "Tokenmaxxer",
+  "short_name": "Tokenmaxxer",
+  "description": "🏆 An absurd incremental game about generating more tokens than anyone else.",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#ffffff",
