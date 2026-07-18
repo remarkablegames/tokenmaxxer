@@ -421,12 +421,14 @@ describe('Tokenmaxxer dashboard', () => {
       }),
     ).toBeInTheDocument();
     expect(screen.getByRole('dialog')).toHaveTextContent('0 → 3');
-    expect(screen.getByRole('dialog')).toHaveTextContent('×1.00 → ×1.30');
+    expect(screen.getByRole('dialog')).toHaveTextContent('1.0× → 1.3×');
 
     fireEvent.click(
       screen.getByRole('button', { name: 'Start a New Session' }),
     );
-    expect(screen.getByText('3 · ×1.30')).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /3Benchmark Rating/i }),
+    ).toBeInTheDocument();
     expect(
       screen.getByRole('heading', {
         level: 2,
@@ -520,7 +522,7 @@ describe('Tokenmaxxer dashboard', () => {
       screen.getByRole('button', { name: /start a new session.*\+3 rating/i }),
     );
     expect(screen.getByText('2 → 5')).toBeInTheDocument();
-    expect(screen.getByText(/×1\.20 → ×1\.50/)).toBeInTheDocument();
+    expect(screen.getByText(/1\.2× → 1\.5×/)).toBeInTheDocument();
     await user.click(screen.getByRole('dialog'));
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     await user.click(
@@ -531,7 +533,9 @@ describe('Tokenmaxxer dashboard', () => {
     );
     expect(screen.getByText(/BENCHMARK RATING \+3/i)).toBeInTheDocument();
     expect(screen.getByText('Benchmark Rating')).toBeInTheDocument();
-    expect(screen.getByText('5 · ×1.50')).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /5Benchmark Rating/i }),
+    ).toBeInTheDocument();
     expect(
       screen.getByRole('heading', {
         level: 2,
@@ -540,7 +544,7 @@ describe('Tokenmaxxer dashboard', () => {
     ).toBeInTheDocument();
     await user.click(
       screen.getByRole('button', {
-        name: /5 · ×1\.50Benchmark Rating/i,
+        name: /5Benchmark Rating/i,
       }),
     );
     expect(screen.getByRole('dialog')).toHaveTextContent('Benchmark Rating5');

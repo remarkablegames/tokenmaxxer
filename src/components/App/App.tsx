@@ -810,7 +810,7 @@ export function App() {
                   />
                   <ArchiveButton
                     label="Benchmark Rating"
-                    value={`${String(progress.prestigeLevel)} · ×${tokenMultiplier.toFixed(2)}`}
+                    value={String(progress.prestigeLevel)}
                     onClick={() => {
                       setModal('stats');
                     }}
@@ -1211,10 +1211,11 @@ export function App() {
                     PERMANENT EFFECT
                   </span>
                   <strong className="mt-1 block text-xl text-cyan-300">
-                    Token Multiplier: ×{tokenMultiplier.toFixed(2)} → ×
+                    Token Multiplier: {tokenMultiplier.toFixed(1)}× →{' '}
                     {getTokenMultiplier(
                       progress.prestigeLevel + progress.pendingPrestigeLevels,
-                    ).toFixed(2)}
+                    ).toFixed(1)}
+                    ×
                   </strong>
                 </span>
                 <button
@@ -1290,7 +1291,7 @@ export function App() {
               />
               <StatTile
                 label="Token Multiplier"
-                value={`×${tokenMultiplier.toFixed(2)}`}
+                value={`${tokenMultiplier.toFixed(1)}×`}
               />
               <StatTile
                 label="Lifetime Record"
