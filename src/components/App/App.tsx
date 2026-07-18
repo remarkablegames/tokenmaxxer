@@ -552,7 +552,7 @@ export function App() {
                             <strong className="block truncate">
                               {upgrade.name}
                             </strong>
-                            <small className="block overflow-hidden text-xs text-ellipsis whitespace-nowrap text-slate-300">
+                            <small className="block overflow-hidden text-xs text-ellipsis whitespace-nowrap text-slate-400">
                               {unlocked
                                 ? upgrade.description
                                 : `LOCKED · Generate ${formatNumber(upgrade.unlockAt)} lifetime tokens`}
