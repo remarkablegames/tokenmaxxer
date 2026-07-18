@@ -362,7 +362,7 @@ export function App() {
                     </span>
                     <span className="min-w-0 flex-1 text-left">
                       <strong className="block">{ability.name}</strong>
-                      <small className="block overflow-hidden text-xs text-ellipsis whitespace-nowrap text-slate-300">
+                      <small className="block overflow-hidden text-xs text-ellipsis whitespace-nowrap text-slate-400">
                         {!unlocked
                           ? `Unlock at ${formatNumber(ability.unlockAt)}`
                           : state.remaining > 0
