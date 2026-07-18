@@ -15,7 +15,7 @@ import type {
 export const STORAGE_KEY = 'org.remarkablegames.tokenmaxxer';
 export const CRITICAL_MULTIPLIER = 5;
 export const PRESTIGE_RECORD_INDEX = 5;
-export const PERFORMANCE_RATING_BONUS = 0.1;
+export const TOKEN_MULTIPLIER_PER_PRESTIGE_LEVEL = 0.1;
 
 export const UPGRADES: UpgradeDefinition[] = [
   {
@@ -227,8 +227,8 @@ export function createInitialProgress(): GameProgress {
     },
     bonuses: [],
     achievements: [],
-    performanceRating: 0,
-    pendingRating: 0,
+    prestigeLevel: 0,
+    pendingPrestigeLevels: 0,
     stats: {
       tokens: 0,
       manualTokens: 0,
@@ -267,14 +267,14 @@ export function calculateMetrics(progress: GameProgress): ProductionMetrics {
     u.orbital * 8_000;
   const automationMultiplier =
     (1 + u.overclock * 0.35) * (1 + u.contextCompaction * 0.2);
-  const ratingMultiplier = getPerformanceMultiplier(progress.performanceRating);
+  const tokenMultiplier = getTokenMultiplier(progress.prestigeLevel);
   const surge = progress.abilities.surge.remaining > 0 ? 3 : 1;
   const hyperfocus = progress.abilities.hyperfocus.remaining > 0 ? 5 : 1;
   return {
     tokensPerClick:
-      manualBase * manualMultiplier * ratingMultiplier * surge * hyperfocus,
+      manualBase * manualMultiplier * tokenMultiplier * surge * hyperfocus,
     tokensPerSecond:
-      automationBase * automationMultiplier * ratingMultiplier * surge,
+      automationBase * automationMultiplier * tokenMultiplier * surge,
     criticalChance: Math.min(
       0.35,
       0.05 +
@@ -284,8 +284,8 @@ export function calculateMetrics(progress: GameProgress): ProductionMetrics {
   };
 }
 
-export function getPerformanceMultiplier(rating: number): number {
-  return 1 + rating * PERFORMANCE_RATING_BONUS;
+export function getTokenMultiplier(prestigeLevel: number): number {
+  return 1 + prestigeLevel * TOKEN_MULTIPLIER_PER_PRESTIGE_LEVEL;
 }
 
 export function getUpgradeCost(
@@ -328,8 +328,9 @@ function processMilestones(progress: GameProgress): GameProgress {
       bonuses: next.bonuses.includes(index)
         ? next.bonuses
         : [...next.bonuses, index],
-      pendingRating:
-        next.pendingRating + (index >= PRESTIGE_RECORD_INDEX ? index - 2 : 0),
+      pendingPrestigeLevels:
+        next.pendingPrestigeLevels +
+        (index >= PRESTIGE_RECORD_INDEX ? index - 2 : 0),
     };
   }
   return next;
@@ -543,7 +544,7 @@ export function activateAbility(
 export function prestige(progress: GameProgress): GameProgress {
   if (
     progress.recordIndex <= PRESTIGE_RECORD_INDEX ||
-    progress.pendingRating <= 0
+    progress.pendingPrestigeLevels <= 0
   )
     return progress;
   const fresh = createInitialProgress();
@@ -552,7 +553,7 @@ export function prestige(progress: GameProgress): GameProgress {
     recordIndex: 0,
     bonuses: [...progress.bonuses],
     achievements: [...progress.achievements],
-    performanceRating: progress.performanceRating + progress.pendingRating,
+    prestigeLevel: progress.prestigeLevel + progress.pendingPrestigeLevels,
     stats: { ...progress.stats, prestiges: progress.stats.prestiges + 1 },
   });
 }
@@ -622,8 +623,8 @@ export function parseSave(raw: string): SaveEnvelope | null {
     const numericValues = [
       ...UPGRADES.map((upgrade) => progress.upgrades[upgrade.id]),
       ...abilityValues,
-      progress.performanceRating,
-      progress.pendingRating,
+      progress.prestigeLevel,
+      progress.pendingPrestigeLevels,
       progress.stats.tokens,
       progress.stats.manualTokens,
       progress.stats.clicks,
@@ -643,8 +644,8 @@ export function parseSave(raw: string): SaveEnvelope | null {
     )
       return null;
     if (
-      !Number.isInteger(progress.performanceRating) ||
-      !Number.isInteger(progress.pendingRating) ||
+      !Number.isInteger(progress.prestigeLevel) ||
+      !Number.isInteger(progress.pendingPrestigeLevels) ||
       progress.bonuses.some((value) => !Number.isInteger(value) || value < 0) ||
       progress.achievements.some((value) => typeof value !== 'string')
     )

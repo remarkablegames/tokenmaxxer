@@ -47,7 +47,7 @@ export function applyPreview(
       tokens: 100_000_000,
       recordIndex: 6,
       bonuses: [0, 1, 2, 3, 4, 5],
-      pendingRating: 3,
+      pendingPrestigeLevels: 3,
       stats: { ...prepared.stats, tokens: 100_000_000 },
     };
   }

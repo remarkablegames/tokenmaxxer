@@ -11,10 +11,10 @@ import {
   formatDuration,
   formatNumber,
   getAiModelDeployment,
-  getPerformanceMultiplier,
   getPurchaseQuote,
   getReactorStage,
   getRecordTarget,
+  getTokenMultiplier,
   getUpgradeCost,
   getUpgradeDescription,
   parseSave,
@@ -29,7 +29,7 @@ function richProgress(): GameProgress {
   const progress = createInitialProgress();
   progress.tokens = 1_000_000_000;
   progress.stats.tokens = 20_000_000;
-  progress.performanceRating = 5;
+  progress.prestigeLevel = 5;
   progress.upgrades = {
     keyboard: 2,
     templates: 1,
@@ -78,8 +78,8 @@ describe('game calculations', () => {
     expect(getRecordTarget(2)).toBe(100_000);
     expect(getReactorStage(-1)).toBe(0);
     expect(getReactorStage(20)).toBe(5);
-    expect(getPerformanceMultiplier(0)).toBe(1);
-    expect(getPerformanceMultiplier(5)).toBe(1.5);
+    expect(getTokenMultiplier(0)).toBe(1);
+    expect(getTokenMultiplier(5)).toBe(1.5);
     expect(getAiModelDeployment(0)).toBeNull();
     expect(getAiModelDeployment(1)).toBe('GoPilot');
     expect(getAiModelDeployment(5)).toBe('TalkGPT');
@@ -142,7 +142,7 @@ describe('game calculations', () => {
     const critical = clickReactor(progress, 0);
     expect(critical.critical).toBe(true);
     expect(critical.progress.recordIndex).toBe(6);
-    expect(critical.progress.pendingRating).toBe(3);
+    expect(critical.progress.pendingPrestigeLevels).toBe(3);
     expect(critical.progress.stats.criticalClicks).toBe(1);
 
     progress.tokens = 1_100_000_000;
@@ -198,14 +198,14 @@ describe('game actions', () => {
     const progress = richProgress();
     expect(prestige(progress)).toBe(progress);
     progress.recordIndex = 6;
-    progress.pendingRating = 3;
+    progress.pendingPrestigeLevels = 3;
     progress.bonuses = [0, 1, 2, 3, 4, 5];
     progress.achievements = ['record'];
     const next = prestige(progress);
     expect(next.tokens).toBe(0);
     expect(next.recordIndex).toBe(0);
-    expect(next.performanceRating).toBe(8);
-    expect(next.pendingRating).toBe(0);
+    expect(next.prestigeLevel).toBe(8);
+    expect(next.pendingPrestigeLevels).toBe(0);
     expect(next.stats.prestiges).toBe(1);
     expect(next.achievements).toContain('new-era');
   });
@@ -255,10 +255,10 @@ describe('formatting and save validation', () => {
         save.preferences.volume = 2;
       },
       (save: SaveEnvelope) => {
-        save.progress.performanceRating = Number.NaN;
+        save.progress.prestigeLevel = Number.NaN;
       },
       (save: SaveEnvelope) => {
-        save.progress.pendingRating = 0.5;
+        save.progress.pendingPrestigeLevels = 0.5;
       },
       (save: SaveEnvelope) => {
         save.version = 2 as 1;

@@ -55,8 +55,8 @@ describe('query preview sandbox', () => {
       tokens: 100_000_000,
       recordIndex: 6,
       bonuses: [0, 1, 2, 3, 4, 5],
-      performanceRating: 0,
-      pendingRating: 3,
+      prestigeLevel: 0,
+      pendingPrestigeLevels: 3,
       stats: { tokens: 100_000_000 },
     });
   });

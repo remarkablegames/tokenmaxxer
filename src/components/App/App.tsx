@@ -11,10 +11,10 @@ import {
   clickReactor,
   formatDuration,
   formatNumber,
-  getPerformanceMultiplier,
   getPurchaseQuote,
   getReactorStage,
   getRecordTarget,
+  getTokenMultiplier,
   getUpgradeDescription,
   parseSave,
   prestige,
@@ -239,8 +239,9 @@ export function App() {
   const showAbilities = visibleAbilities.some((ability) =>
     isAbilityUnlocked(progress, ability),
   );
-  const showPrestige = progress.recordIndex >= 5 || progress.pendingRating > 0;
-  const tokenMultiplier = getPerformanceMultiplier(progress.performanceRating);
+  const showPrestige =
+    progress.recordIndex >= 5 || progress.pendingPrestigeLevels > 0;
+  const tokenMultiplier = getTokenMultiplier(progress.prestigeLevel);
   const visibleCategories: UpgradeCategory[] = [
     'manual',
     ...(progress.upgrades.keyboard > 0
@@ -509,7 +510,7 @@ export function App() {
       updateProgress(next);
       setModal('none');
       playSound('prestige', save.preferences.volume, save.preferences.muted);
-      setNotice(`BENCHMARK RATING +${String(progress.pendingRating)}`);
+      setNotice(`BENCHMARK RATING +${String(progress.pendingPrestigeLevels)}`);
     }
   };
 
@@ -809,7 +810,7 @@ export function App() {
                   />
                   <ArchiveButton
                     label="Benchmark Rating"
-                    value={`${String(progress.performanceRating)} · ×${tokenMultiplier.toFixed(2)}`}
+                    value={`${String(progress.prestigeLevel)} · ×${tokenMultiplier.toFixed(2)}`}
                     onClick={() => {
                       setModal('stats');
                     }}
@@ -819,7 +820,7 @@ export function App() {
               {showPrestige && (
                 <button
                   className="flex w-full animate-[modal-in_.35s_ease-out] cursor-pointer items-center justify-between gap-4 rounded-2xl border border-amber-300/30 bg-linear-to-r from-amber-900/25 to-violet-900/20 p-4 text-left disabled:cursor-not-allowed disabled:opacity-75 disabled:saturate-50 [&_small]:block [&_small]:text-xs [&_small]:tracking-[0.15em] [&_small]:text-amber-300 [&_strong]:mt-1 [&_strong]:block [&>span:last-child]:text-xs [&>span:last-child]:text-amber-200"
-                  disabled={progress.pendingRating <= 0}
+                  disabled={progress.pendingPrestigeLevels <= 0}
                   onClick={() => {
                     setModal('prestige');
                   }}
@@ -830,8 +831,8 @@ export function App() {
                     <strong>Start a New Session</strong>
                   </span>
                   <span>
-                    {progress.pendingRating > 0
-                      ? `+${String(progress.pendingRating)} rating`
+                    {progress.pendingPrestigeLevels > 0
+                      ? `+${String(progress.pendingPrestigeLevels)} rating`
                       : `Unlock at ${formatNumber(getRecordTarget(5))}`}
                   </span>
                 </button>
@@ -1180,8 +1181,8 @@ export function App() {
                   BENCHMARK RATING
                 </span>
                 <strong className="text-xl text-amber-300">
-                  {progress.performanceRating} →{' '}
-                  {progress.performanceRating + progress.pendingRating}
+                  {progress.prestigeLevel} →{' '}
+                  {progress.prestigeLevel + progress.pendingPrestigeLevels}
                 </strong>
               </div>
               <div className="grid gap-3 sm:grid-cols-2">
@@ -1211,14 +1212,14 @@ export function App() {
                   </span>
                   <strong className="mt-1 block text-xl text-cyan-300">
                     Token Multiplier: ×{tokenMultiplier.toFixed(2)} → ×
-                    {getPerformanceMultiplier(
-                      progress.performanceRating + progress.pendingRating,
+                    {getTokenMultiplier(
+                      progress.prestigeLevel + progress.pendingPrestigeLevels,
                     ).toFixed(2)}
                   </strong>
                 </span>
                 <button
                   className={`${ACTION_BUTTON_CLASS} bg-linear-to-r from-cyan-600 to-violet-600 px-5 py-4 text-base text-white`}
-                  disabled={progress.pendingRating <= 0}
+                  disabled={progress.pendingPrestigeLevels <= 0}
                   onClick={handlePrestige}
                   type="button"
                 >
@@ -1285,7 +1286,7 @@ export function App() {
               />
               <StatTile
                 label="Benchmark Rating"
-                value={String(progress.performanceRating)}
+                value={String(progress.prestigeLevel)}
               />
               <StatTile
                 label="Token Multiplier"

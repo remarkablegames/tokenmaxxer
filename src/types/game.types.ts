@@ -69,8 +69,8 @@ export interface GameProgress {
   abilities: Record<AbilityId, AbilityState>;
   bonuses: number[];
   achievements: string[];
-  performanceRating: number;
-  pendingRating: number;
+  prestigeLevel: number;
+  pendingPrestigeLevels: number;
   stats: LifetimeStats;
 }
 
