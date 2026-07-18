@@ -32,6 +32,12 @@ describe('Tokenmaxxer dashboard', () => {
     expect(screen.getByText('NEXT OBJECTIVE')).toBeInTheDocument();
     expect(screen.getByText('Activate the Token Reactor')).toBeInTheDocument();
     expect(screen.getByText('Mechanical Keyboard')).toBeInTheDocument();
+    expect(
+      screen
+        .getByText('Mechanical Keyboard')
+        .closest('button')
+        ?.querySelector('img'),
+    ).toHaveAttribute('src', 'icons/upgrades/keyboard.svg');
     expect(screen.getByText('Prompt Templates')).toBeInTheDocument();
     expect(screen.queryByText('Multi-Finger Maxxing')).not.toBeInTheDocument();
     expect(screen.queryByText('Automation Fleet')).not.toBeInTheDocument();

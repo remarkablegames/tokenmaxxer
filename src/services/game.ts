@@ -27,7 +27,7 @@ export const UPGRADES: UpgradeDefinition[] = [
     baseCost: 20,
     growth: 1.15,
     unlockAt: 0,
-    icon: '⌨',
+    icon: 'icons/upgrades/keyboard.svg',
   },
   {
     id: 'templates',
@@ -37,7 +37,7 @@ export const UPGRADES: UpgradeDefinition[] = [
     baseCost: 200,
     growth: 1.17,
     unlockAt: 250,
-    icon: '◇',
+    icon: 'icons/upgrades/templates.svg',
   },
   {
     id: 'multifinger',
@@ -47,7 +47,7 @@ export const UPGRADES: UpgradeDefinition[] = [
     baseCost: 2_000,
     growth: 1.19,
     unlockAt: 10_000,
-    icon: '✦',
+    icon: 'icons/upgrades/multifinger.svg',
   },
   {
     id: 'gpu',
@@ -57,7 +57,7 @@ export const UPGRADES: UpgradeDefinition[] = [
     baseCost: 75,
     growth: 1.14,
     unlockAt: 50,
-    icon: '▣',
+    icon: 'icons/upgrades/gpu.svg',
   },
   {
     id: 'rack',
@@ -67,7 +67,7 @@ export const UPGRADES: UpgradeDefinition[] = [
     baseCost: 1_000,
     growth: 1.15,
     unlockAt: 1_000,
-    icon: '▤',
+    icon: 'icons/upgrades/rack.svg',
   },
   {
     id: 'engineer',
@@ -77,7 +77,7 @@ export const UPGRADES: UpgradeDefinition[] = [
     baseCost: 10_000,
     growth: 1.16,
     unlockAt: 50_000,
-    icon: '♙',
+    icon: 'icons/upgrades/engineer.svg',
   },
   {
     id: 'cluster',
@@ -87,7 +87,7 @@ export const UPGRADES: UpgradeDefinition[] = [
     baseCost: 100_000,
     growth: 1.17,
     unlockAt: 500_000,
-    icon: '⬡',
+    icon: 'icons/upgrades/cluster.svg',
   },
   {
     id: 'orbital',
@@ -97,7 +97,7 @@ export const UPGRADES: UpgradeDefinition[] = [
     baseCost: 1_000_000,
     growth: 1.18,
     unlockAt: 10_000_000,
-    icon: '◎',
+    icon: 'icons/upgrades/orbital.svg',
   },
   {
     id: 'compression',
@@ -107,7 +107,7 @@ export const UPGRADES: UpgradeDefinition[] = [
     baseCost: 2_500,
     growth: 1.2,
     unlockAt: 5_000,
-    icon: '↘',
+    icon: 'icons/upgrades/compression.svg',
   },
   {
     id: 'overclock',
@@ -117,7 +117,7 @@ export const UPGRADES: UpgradeDefinition[] = [
     baseCost: 15_000,
     growth: 1.2,
     unlockAt: 100_000,
-    icon: 'ϟ',
+    icon: 'icons/upgrades/overclock.svg',
   },
   {
     id: 'critical',
@@ -127,7 +127,7 @@ export const UPGRADES: UpgradeDefinition[] = [
     baseCost: 7_500,
     growth: 1.19,
     unlockAt: 25_000,
-    icon: '!',
+    icon: 'icons/upgrades/critical.svg',
   },
   {
     id: 'optimization',
@@ -137,7 +137,7 @@ export const UPGRADES: UpgradeDefinition[] = [
     baseCost: 100_000,
     growth: 1.2,
     unlockAt: 1_000_000,
-    icon: '⌁',
+    icon: 'icons/upgrades/optimization.svg',
   },
 ];
 

@@ -53,6 +53,13 @@ function richProgress(): GameProgress {
 }
 
 describe('game calculations', () => {
+  it('uses a distinct SVG asset for every upgrade', () => {
+    expect(new Set(UPGRADES.map(({ icon }) => icon)).size).toBe(
+      UPGRADES.length,
+    );
+    expect(UPGRADES.every(({ icon }) => icon.endsWith('.svg'))).toBe(true);
+  });
+
   it('creates initial state and record helpers', () => {
     expect(createInitialSave()).toMatchObject({
       version: 1,

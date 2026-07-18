@@ -929,8 +929,13 @@ export function App() {
                         }}
                         type="button"
                       >
-                        <span className="grid size-9 shrink-0 place-items-center rounded-lg border border-cyan-300/20 bg-cyan-500/8 text-lg text-cyan-300">
-                          {upgrade.icon}
+                        <span className="grid size-9 shrink-0 place-items-center rounded-lg border border-cyan-300/20 bg-cyan-500/8">
+                          <img
+                            alt=""
+                            aria-hidden="true"
+                            className="size-7"
+                            src={upgrade.icon}
+                          />
                         </span>
                         <span className="min-w-0 flex-1 text-left">
                           <strong className="block truncate">
