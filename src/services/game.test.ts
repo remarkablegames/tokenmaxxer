@@ -68,6 +68,9 @@ describe('game calculations', () => {
     expect(UPGRADES.find(({ id }) => id === 'cluster')?.name).toBe(
       'Agent Swarm',
     );
+    expect(UPGRADES.find(({ id }) => id === 'compression')?.name).toBe(
+      'Context Compaction',
+    );
   });
 
   it('creates initial state and record helpers', () => {

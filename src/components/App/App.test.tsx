@@ -283,7 +283,7 @@ describe('Tokenmaxxer dashboard', () => {
     expect(screen.getByText('CHAMPION ARCHIVE')).toBeInTheDocument();
     expect(screen.getByText('RUN TELEMETRY')).toBeInTheDocument();
     expect(screen.getByText('Efficiency Lab')).toBeInTheDocument();
-    expect(screen.getByText('Token Compression')).toBeInTheDocument();
+    expect(screen.getByText('Context Compaction')).toBeInTheDocument();
     expect(screen.getByText('Critical Prompting')).toBeInTheDocument();
     expect(screen.queryByText('Overclocking')).not.toBeInTheDocument();
     expect(screen.queryByText('ACTIVE PROTOCOLS')).not.toBeInTheDocument();

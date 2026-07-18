@@ -16,6 +16,11 @@ describe('narrative transmissions', () => {
     expect(
       TRANSMISSIONS.find(({ id }) => id === 'cluster-purchased')?.message,
     ).toContain('delegated to a subagent');
+    expect(
+      TRANSMISSIONS.find(({ id }) => id === 'compression-purchased')?.message,
+    ).toBe(
+      'Context compaction completed. Several earlier decisions have been summarized as “probably intentional.”',
+    );
     expect(TRANSMISSIONS.map(({ unlock }) => unlock.type)).toEqual(
       expect.arrayContaining([
         'click',

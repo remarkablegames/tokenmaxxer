@@ -111,7 +111,7 @@ export const UPGRADES: UpgradeDefinition[] = [
   },
   {
     id: 'compression',
-    name: 'Token Compression',
+    name: 'Context Compaction',
     description: '×1.2 all production',
     category: 'efficiency',
     baseCost: 2_500,

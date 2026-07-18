@@ -217,7 +217,7 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     role: 'FINANCE',
     initials: 'FN',
     message:
-      'Compressed tokens still count as full-size revenue. Accounting has approved this interpretation.',
+      'Context compaction completed. Several earlier decisions have been summarized as “probably intentional.”',
     priority: 40,
     unlock: { type: 'upgrade', value: 'compression' },
   },
