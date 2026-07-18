@@ -11,7 +11,7 @@ describe('narrative transmissions', () => {
   it('defines a varied, prioritized office narrative', () => {
     expect(TRANSMISSIONS).toHaveLength(65);
     expect(new Set(TRANSMISSIONS.map(({ id }) => id)).size).toBe(65);
-    expect(new Set(TRANSMISSIONS.map(({ sender }) => sender)).size).toBe(14);
+    expect(new Set(TRANSMISSIONS.map(({ sender }) => sender)).size).toBe(13);
     expect(TRANSMISSIONS.every(({ priority }) => priority > 0)).toBe(true);
     expect(
       TRANSMISSIONS.find(({ id }) => id === 'agent-swarm-purchased')?.message,
@@ -22,6 +22,9 @@ describe('narrative transmissions', () => {
     ).toBe(
       'Context compaction completed. Several earlier decisions have been summarized as “probably intentional.”',
     );
+    expect(
+      TRANSMISSIONS.find(({ id }) => id === 'optimization-purchased')?.message,
+    ).toContain('premium AI slop');
     expect(TRANSMISSIONS.map(({ unlock }) => unlock.type)).toEqual(
       expect.arrayContaining([
         'click',

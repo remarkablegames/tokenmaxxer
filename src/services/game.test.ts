@@ -71,6 +71,9 @@ describe('game calculations', () => {
     expect(UPGRADES.find(({ id }) => id === 'contextCompaction')?.name).toBe(
       'Context Compaction',
     );
+    expect(UPGRADES.find(({ id }) => id === 'optimization')?.name).toBe(
+      'KV Cache Optimization',
+    );
   });
 
   it('creates initial state and record helpers', () => {

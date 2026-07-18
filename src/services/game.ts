@@ -141,7 +141,7 @@ export const UPGRADES: UpgradeDefinition[] = [
   },
   {
     id: 'optimization',
-    name: 'Optimization Research',
+    name: 'KV Cache Optimization',
     description: '6% lower upgrade costs',
     category: 'efficiency',
     baseCost: 100_000,

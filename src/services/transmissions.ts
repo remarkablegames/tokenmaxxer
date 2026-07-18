@@ -381,10 +381,11 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
   },
   {
     id: 'optimization-purchased',
-    sender: 'Optimization Research',
-    role: 'RESEARCH',
-    initials: 'OR',
-    message: 'We reduced procurement costs by removing the approval process.',
+    sender: 'Finance',
+    role: 'FINANCE',
+    initials: 'FN',
+    message:
+      'Repeated requests are now served from cache. Finance has reclassified duplicate output as premium AI slop.',
     priority: 60,
     unlock: { type: 'upgrade', value: 'optimization' },
   },
