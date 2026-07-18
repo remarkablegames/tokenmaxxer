@@ -81,7 +81,7 @@ const SHELL_CLASS = 'mx-auto w-full max-w-400 px-3 sm:px-6';
 function getOnboardingObjective(
   progress: GameProgress,
 ): OnboardingObjective | null {
-  if (progress.trophies.length > 0) return null;
+  if (progress.bonuses.length > 0) return null;
   if (progress.stats.clicks === 0)
     return {
       step: 1,
@@ -105,7 +105,8 @@ function getOnboardingObjective(
   return {
     step: 4,
     title: 'Chase the First Record',
-    description: 'Reach 1.00K tokens and secure your first High Score trophy.',
+    description:
+      'Reach 1.00K tokens and earn your first High Score Performance Bonus.',
   };
 }
 
@@ -223,7 +224,7 @@ export function App() {
   const displayedRecordProgress = Number(recordProgress.toFixed(1));
   const stage = getReactorStage(progress.recordIndex);
   const onboardingObjective = getOnboardingObjective(progress);
-  const showProgressPanels = progress.trophies.length > 0;
+  const showProgressPanels = progress.bonuses.length > 0;
   const visibleAbilities = getVisibleAbilities(progress);
   const showAbilities = visibleAbilities.some((ability) =>
     isAbilityUnlocked(progress, ability),
@@ -538,7 +539,7 @@ export function App() {
     /* v8 ignore next -- native confirmation is exercised manually */
     if (
       !window.confirm(
-        'Reset all game progress? Trophies, records, and perks will be erased.',
+        'Reset all game progress? Performance Bonuses, records, and perks will be erased.',
       )
     )
       return;
@@ -659,8 +660,8 @@ export function App() {
             />
           </div>
           <div className="mt-2 flex justify-between text-xs text-slate-500">
-            <span>{progress.trophies.length} TROPHIES SECURED</span>
-            <span>NEXT TROPHY: #{progress.recordIndex + 1}</span>
+            <span>{progress.bonuses.length} PERFORMANCE BONUSES EARNED</span>
+            <span>NEXT BONUS: #{progress.recordIndex + 1}</span>
           </div>
         </div>
       </section>
@@ -755,8 +756,8 @@ export function App() {
               >
                 <div className="grid grid-cols-3 gap-2">
                   <ArchiveButton
-                    label="Trophies"
-                    value={String(progress.trophies.length)}
+                    label="Bonuses"
+                    value={String(progress.bonuses.length)}
                     onClick={() => {
                       setModal('achievements');
                     }}
@@ -1027,7 +1028,7 @@ export function App() {
               {formatNumber(getRecordTarget(celebration))}
             </strong>
             <span className="block font-extrabold tracking-[0.15em] text-amber-300">
-              TROPHY #{celebration + 1} SECURED
+              PERFORMANCE BONUS #{celebration + 1} EARNED
             </span>
             <span className="mt-5 block text-xs font-bold tracking-[0.18em] text-slate-300">
               NEXT TARGET: {formatNumber(getRecordTarget(celebration + 1))}
@@ -1129,8 +1130,8 @@ export function App() {
               </div>
               <p className="text-sm text-slate-300">
                 Tokens, upgrades, and active abilities reset. Your records,
-                trophies, achievements, lifetime statistics, Usage Credits, and
-                permanent perks remain.
+                Performance Bonuses, achievements, lifetime statistics, Usage
+                Credits, and permanent perks remain.
               </p>
               <div className="grid gap-2 sm:grid-cols-2">
                 {PERKS.map((perk) => {

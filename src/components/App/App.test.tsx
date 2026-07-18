@@ -110,7 +110,7 @@ describe('Tokenmaxxer dashboard', () => {
     save.progress.stats.clicks = 1;
     save.progress.stats.prestiges = 1;
     save.progress.recordIndex = 6;
-    save.progress.trophies = [0, 1, 2, 3, 4, 5];
+    save.progress.bonuses = [0, 1, 2, 3, 4, 5];
     localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
     const user = userEvent.setup();
     render(<App />);
@@ -264,7 +264,7 @@ describe('Tokenmaxxer dashboard', () => {
     save.progress.stats.tokens = 5_000;
     save.progress.stats.clicks = 20;
     save.progress.recordIndex = 1;
-    save.progress.trophies = [0];
+    save.progress.bonuses = [0];
     save.progress.upgrades.keyboard = 1;
     save.progress.upgrades.gpu = 1;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
@@ -283,7 +283,7 @@ describe('Tokenmaxxer dashboard', () => {
     save.progress.tokens = 10_000;
     save.progress.stats.tokens = 10_000;
     save.progress.recordIndex = 2;
-    save.progress.trophies = [0, 1];
+    save.progress.bonuses = [0, 1];
     localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
     render(<App />);
     expect(screen.getByText('ACTIVE PROTOCOLS')).toBeInTheDocument();
@@ -291,12 +291,12 @@ describe('Tokenmaxxer dashboard', () => {
     expect(screen.getByText('Hyperfocus')).toBeInTheDocument();
   });
 
-  it('reveals Prestige after the 10M trophy', () => {
+  it('reveals Prestige after the 10M Performance Bonus', () => {
     const save = createInitialSave();
     save.progress.tokens = 10_000_000;
     save.progress.stats.tokens = 10_000_000;
     save.progress.recordIndex = 5;
-    save.progress.trophies = [0, 1, 2, 3, 4];
+    save.progress.bonuses = [0, 1, 2, 3, 4];
     localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
     render(<App />);
     expect(screen.getByText('PRESTIGE PROTOCOL')).toBeInTheDocument();
@@ -359,6 +359,9 @@ describe('Tokenmaxxer dashboard', () => {
     window.history.replaceState({}, '', '/?preview=high-score');
     render(<App />);
     expect(screen.getByRole('status')).toHaveTextContent('NEW HIGH SCORE');
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'PERFORMANCE BONUS #1 EARNED',
+    );
     expect(screen.getByRole('status')).toHaveTextContent('1.00K');
     expect(screen.getByRole('status')).toHaveTextContent('NEXT TARGET: 10.0K');
     await user.click(
@@ -372,7 +375,7 @@ describe('Tokenmaxxer dashboard', () => {
   it('opens archive, stats, settings, and save dialogs', async () => {
     const save = createInitialSave();
     save.progress.recordIndex = 1;
-    save.progress.trophies = [0];
+    save.progress.bonuses = [0];
     localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
     const user = userEvent.setup();
     render(<App />);
@@ -405,7 +408,7 @@ describe('Tokenmaxxer dashboard', () => {
     advanced.progress.recordIndex = 6;
     advanced.progress.pendingCredits = 3;
     advanced.progress.usageCredits = 10;
-    advanced.progress.trophies = [0, 1, 2, 3, 4, 5];
+    advanced.progress.bonuses = [0, 1, 2, 3, 4, 5];
     advanced.progress.achievements = ['record'];
     advanced.progress.abilities.hyperfocus.remaining = 2;
     advanced.progress.perks.cooldownOptimization = 8;
@@ -533,11 +536,11 @@ describe('Tokenmaxxer dashboard', () => {
   it('opens the archive and statistics from every dashboard shortcut', async () => {
     const save = createInitialSave();
     save.progress.recordIndex = 1;
-    save.progress.trophies = [0];
+    save.progress.bonuses = [0];
     localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
     const user = userEvent.setup();
     render(<App />);
-    await user.click(screen.getByRole('button', { name: /1Trophies/i }));
+    await user.click(screen.getByRole('button', { name: /1Bonuses/i }));
     await user.click(screen.getByRole('button', { name: 'Close dialog' }));
     await user.click(screen.getByRole('button', { name: /0Prestiges/i }));
     expect(screen.getByRole('dialog')).toHaveTextContent('Lifetime Statistics');

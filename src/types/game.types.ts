@@ -70,7 +70,7 @@ export interface GameProgress {
   recordIndex: number;
   upgrades: Record<UpgradeId, number>;
   abilities: Record<AbilityId, AbilityState>;
-  trophies: number[];
+  bonuses: number[];
   achievements: string[];
   usageCredits: number;
   pendingCredits: number;

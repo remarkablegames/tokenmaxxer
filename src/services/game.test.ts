@@ -98,13 +98,13 @@ describe('game calculations', () => {
     expect(getUpgradeCost(progress, keyboard, 0)).toBe(10);
   });
 
-  it('processes clicks, criticals, milestones, trophies, and credit payouts', () => {
+  it('processes clicks, criticals, milestones, bonuses, and credit payouts', () => {
     let progress = createInitialProgress();
     progress.tokens = 999;
     const normal = clickReactor(progress, 1);
     expect(normal.critical).toBe(false);
     expect(normal.amount).toBe(1);
-    expect(normal.progress).toMatchObject({ recordIndex: 1, trophies: [0] });
+    expect(normal.progress).toMatchObject({ recordIndex: 1, bonuses: [0] });
 
     progress = richProgress();
     progress.tokens = 99_999_999;
@@ -117,10 +117,10 @@ describe('game calculations', () => {
 
     progress.tokens = 1_100_000_000;
     progress.recordIndex = 0;
-    progress.trophies = [0];
+    progress.bonuses = [0];
     const multiple = tickGame(progress, 0);
     expect(multiple.recordIndex).toBe(7);
-    expect(new Set(multiple.trophies).size).toBe(multiple.trophies.length);
+    expect(new Set(multiple.bonuses).size).toBe(multiple.bonuses.length);
   });
 
   it('ticks production and clamps unsafe elapsed times', () => {
@@ -170,7 +170,7 @@ describe('game actions', () => {
     expect(prestige(progress)).toBe(progress);
     progress.recordIndex = 6;
     progress.pendingCredits = 3;
-    progress.trophies = [0, 1, 2, 3, 4, 5];
+    progress.bonuses = [0, 1, 2, 3, 4, 5];
     progress.achievements = ['record'];
     const next = prestige(progress);
     expect(next.tokens).toBe(250);
@@ -203,7 +203,7 @@ describe('game actions', () => {
     progress.stats.tokens = 1_000_000;
     progress.stats.abilitiesUsed = 1;
     progress.stats.prestiges = 1;
-    progress.trophies = [0, 2];
+    progress.bonuses = [0, 2];
     progress.abilities.hyperfocus.cooldown = 1;
     const unlocked = unlockAchievements(progress);
     expect(unlocked.achievements).toHaveLength(ACHIEVEMENTS.length);
@@ -259,7 +259,7 @@ describe('formatting and save validation', () => {
           null as unknown as SaveEnvelope['progress']['abilities']['surge'];
       },
       (save: SaveEnvelope) => {
-        save.progress.trophies = [-1];
+        save.progress.bonuses = [-1];
       },
       (save: SaveEnvelope) => {
         save.progress.achievements = [1 as unknown as string];

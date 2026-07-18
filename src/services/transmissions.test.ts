@@ -45,7 +45,7 @@ describe('narrative transmissions', () => {
     progress.upgrades.orbital = 1;
     progress.abilities.surge.cooldown = 1;
     progress.abilities.hyperfocus.remaining = 1;
-    progress.trophies = [0, 1, 2, 3, 4, 5, 6];
+    progress.bonuses = [0, 1, 2, 3, 4, 5, 6];
 
     expect(getEligibleTransmissions(progress).map(({ id }) => id)).toEqual(
       TRANSMISSIONS.filter(({ unlock }) => unlock.type !== 'session').map(

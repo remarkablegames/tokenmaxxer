@@ -233,7 +233,7 @@ export function createInitialProgress(
       surge: { remaining: 0, cooldown: 0 },
       hyperfocus: { remaining: 0, cooldown: 0 },
     },
-    trophies: [],
+    bonuses: [],
     achievements: [],
     usageCredits: 0,
     pendingCredits: 0,
@@ -330,9 +330,9 @@ function processMilestones(progress: GameProgress): GameProgress {
     next = {
       ...next,
       recordIndex: index + 1,
-      trophies: next.trophies.includes(index)
-        ? next.trophies
-        : [...next.trophies, index],
+      bonuses: next.bonuses.includes(index)
+        ? next.bonuses
+        : [...next.bonuses, index],
       pendingCredits:
         next.pendingCredits + (index >= PRESTIGE_RECORD_INDEX ? index - 2 : 0),
     };
@@ -386,14 +386,14 @@ export const ACHIEVEMENTS: AchievementDefinition[] = [
   {
     id: 'record',
     name: 'Record Breaker',
-    description: 'Claim a High Score trophy',
-    test: (p) => p.trophies.length >= 1,
+    description: 'Earn a High Score Performance Bonus',
+    test: (p) => p.bonuses.length >= 1,
   },
   {
     id: 'six-figures',
     name: 'Six Figures',
-    description: 'Claim the 100,000 trophy',
-    test: (p) => p.trophies.includes(2),
+    description: 'Earn the 100,000 Performance Bonus',
+    test: (p) => p.bonuses.includes(2),
   },
   {
     id: 'surging',
@@ -556,7 +556,7 @@ export function prestige(progress: GameProgress): GameProgress {
   return unlockAchievements({
     ...fresh,
     recordIndex: progress.recordIndex,
-    trophies: [...progress.trophies],
+    bonuses: [...progress.bonuses],
     achievements: [...progress.achievements],
     usageCredits: progress.usageCredits + progress.pendingCredits,
     stats: { ...progress.stats, prestiges: progress.stats.prestiges + 1 },
@@ -628,7 +628,7 @@ export function parseSave(raw: string): SaveEnvelope | null {
       progress.recordIndex < 0 ||
       !isRecord(progress.upgrades) ||
       !isRecord(progress.abilities) ||
-      !Array.isArray(progress.trophies) ||
+      !Array.isArray(progress.bonuses) ||
       !Array.isArray(progress.achievements) ||
       !isRecord(progress.perks) ||
       !isRecord(progress.stats) ||
@@ -673,9 +673,7 @@ export function parseSave(raw: string): SaveEnvelope | null {
     )
       return null;
     if (
-      progress.trophies.some(
-        (value) => !Number.isInteger(value) || value < 0,
-      ) ||
+      progress.bonuses.some((value) => !Number.isInteger(value) || value < 0) ||
       progress.achievements.some((value) => typeof value !== 'string')
     )
       return null;

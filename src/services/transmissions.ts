@@ -264,7 +264,7 @@ export function isTransmissionUnlocked(
     case 'click':
       return progress.stats.clicks >= unlock.value;
     case 'record':
-      return progress.trophies.some(
+      return progress.bonuses.some(
         (index) => getRecordTarget(index) === unlock.value,
       );
     case 'prestige':
