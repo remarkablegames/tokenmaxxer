@@ -306,7 +306,7 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     sender: 'Max Chen',
     role: 'PERFORMANCE LEAD',
     initials: 'MC',
-    message: 'You still there? Campbell just refreshed the dashboard.',
+    message: 'You still there? Campbell just refreshed the AI leaderboard.',
     priority: 40,
     unlock: { type: 'session', value: 'idle' },
   },
