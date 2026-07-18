@@ -11,17 +11,14 @@ import {
   formatDuration,
   formatNumber,
   getAiModelDeployment,
-  getPerkCost,
+  getPerformanceMultiplier,
   getPurchaseQuote,
   getReactorStage,
   getRecordTarget,
-  getSeedTokens,
   getUpgradeCost,
   getUpgradeDescription,
   parseSave,
-  PERKS,
   prestige,
-  purchasePerk,
   purchaseUpgrade,
   tickGame,
   unlockAchievements,
@@ -29,14 +26,10 @@ import {
 } from './game';
 
 function richProgress(): GameProgress {
-  const progress = createInitialProgress({
-    seedFunding: 1,
-    manualCalibration: 2,
-    automationRouting: 2,
-    cooldownOptimization: 2,
-  });
+  const progress = createInitialProgress();
   progress.tokens = 1_000_000_000;
   progress.stats.tokens = 20_000_000;
+  progress.performanceRating = 5;
   progress.upgrades = {
     keyboard: 2,
     templates: 1,
@@ -85,8 +78,8 @@ describe('game calculations', () => {
     expect(getRecordTarget(2)).toBe(100_000);
     expect(getReactorStage(-1)).toBe(0);
     expect(getReactorStage(20)).toBe(5);
-    expect(getSeedTokens(0)).toBe(0);
-    expect(getSeedTokens(2)).toBe(1_000);
+    expect(getPerformanceMultiplier(0)).toBe(1);
+    expect(getPerformanceMultiplier(5)).toBe(1.5);
     expect(getAiModelDeployment(0)).toBeNull();
     expect(getAiModelDeployment(1)).toBe('GoPilot');
     expect(getAiModelDeployment(5)).toBe('TalkGPT');
@@ -135,7 +128,7 @@ describe('game calculations', () => {
     expect(getUpgradeCost(progress, keyboard, 0)).toBe(10);
   });
 
-  it('processes clicks, criticals, milestones, bonuses, and credit payouts', () => {
+  it('processes clicks, criticals, milestones, bonuses, and rating payouts', () => {
     let progress = createInitialProgress();
     progress.tokens = 999;
     const normal = clickReactor(progress, 1);
@@ -149,7 +142,7 @@ describe('game calculations', () => {
     const critical = clickReactor(progress, 0);
     expect(critical.critical).toBe(true);
     expect(critical.progress.recordIndex).toBe(6);
-    expect(critical.progress.pendingCredits).toBe(3);
+    expect(critical.progress.pendingRating).toBe(3);
     expect(critical.progress.stats.criticalClicks).toBe(1);
 
     progress.tokens = 1_100_000_000;
@@ -188,13 +181,12 @@ describe('game actions', () => {
     );
   });
 
-  it('activates unlocked abilities with permanent cooldown reductions', () => {
+  it('activates unlocked abilities and enforces cooldowns', () => {
     const progress = createInitialProgress();
     expect(activateAbility(progress, 'surge')).toBe(progress);
     progress.recordIndex = 3;
-    progress.perks.cooldownOptimization = 2;
     const active = activateAbility(progress, 'surge');
-    expect(active.abilities.surge).toEqual({ remaining: 20, cooldown: 81 });
+    expect(active.abilities.surge).toEqual({ remaining: 20, cooldown: 90 });
     expect(active.stats.abilitiesUsed).toBe(1);
     expect(activateAbility(active, 'surge')).toBe(active);
     expect(activateAbility(progress, 'missing' as 'surge')).toBe(progress);
@@ -202,35 +194,20 @@ describe('game actions', () => {
     expect(expired.abilities.surge.remaining).toBe(19);
   });
 
-  it('prestiges only with a payout and preserves permanent progress', () => {
+  it('prestiges only with a payout, resets the ladder, and raises rating', () => {
     const progress = richProgress();
     expect(prestige(progress)).toBe(progress);
     progress.recordIndex = 6;
-    progress.pendingCredits = 3;
+    progress.pendingRating = 3;
     progress.bonuses = [0, 1, 2, 3, 4, 5];
     progress.achievements = ['record'];
     const next = prestige(progress);
-    expect(next.tokens).toBe(250);
-    expect(next.recordIndex).toBe(6);
-    expect(next.usageCredits).toBe(3);
-    expect(next.pendingCredits).toBe(0);
+    expect(next.tokens).toBe(0);
+    expect(next.recordIndex).toBe(0);
+    expect(next.performanceRating).toBe(8);
+    expect(next.pendingRating).toBe(0);
     expect(next.stats.prestiges).toBe(1);
     expect(next.achievements).toContain('new-era');
-  });
-
-  it('purchases permanent perks and enforces cost and level limits', () => {
-    const progress = createInitialProgress();
-    progress.usageCredits = 100;
-    expect(getPerkCost(PERKS[0], 2)).toBe(3);
-    const bought = purchasePerk(progress, 'manualCalibration');
-    expect(bought.perks.manualCalibration).toBe(1);
-    expect(bought.usageCredits).toBe(98);
-    expect(
-      purchasePerk({ ...progress, usageCredits: 0 }, 'seedFunding'),
-    ).toEqual({ ...progress, usageCredits: 0 });
-    progress.perks.cooldownOptimization = 8;
-    expect(purchasePerk(progress, 'cooldownOptimization')).toBe(progress);
-    expect(purchasePerk(progress, 'missing' as 'seedFunding')).toBe(progress);
   });
 
   it('unlocks every achievement and preserves an unchanged collection', () => {
@@ -278,7 +255,13 @@ describe('formatting and save validation', () => {
         save.preferences.volume = 2;
       },
       (save: SaveEnvelope) => {
-        save.progress.usageCredits = Number.NaN;
+        save.progress.performanceRating = Number.NaN;
+      },
+      (save: SaveEnvelope) => {
+        save.progress.pendingRating = 0.5;
+      },
+      (save: SaveEnvelope) => {
+        save.version = 2 as 1;
       },
       (save: SaveEnvelope) => {
         delete (

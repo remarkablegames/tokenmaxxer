@@ -45,6 +45,9 @@ describe('Tokenmaxxer dashboard', () => {
     expect(screen.queryByText('CHAMPION ARCHIVE')).not.toBeInTheDocument();
     expect(screen.queryByText('RUN TELEMETRY')).not.toBeInTheDocument();
     expect(screen.queryByText('PRESTIGE PROTOCOL')).not.toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Statistics' }));
+    expect(screen.getByRole('dialog')).toHaveTextContent('Lifetime Record0');
+    await user.click(screen.getByRole('button', { name: 'Close dialog' }));
     const reactor = screen.getByRole('button', { name: /activate reactor/i });
     await user.click(reactor);
     expect(screen.getByText('+1')).toBeInTheDocument();
@@ -449,17 +452,16 @@ describe('Tokenmaxxer dashboard', () => {
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
-  it('loads advanced progress and uses upgrades, abilities, perks, and prestige', async () => {
+  it('loads advanced progress and applies automatic rating on prestige', async () => {
     const advanced = createInitialSave();
     advanced.progress.tokens = 1_000_000_000;
     advanced.progress.stats.tokens = 20_000_000;
     advanced.progress.recordIndex = 6;
-    advanced.progress.pendingCredits = 3;
-    advanced.progress.usageCredits = 10;
+    advanced.progress.pendingRating = 3;
+    advanced.progress.performanceRating = 2;
     advanced.progress.bonuses = [0, 1, 2, 3, 4, 5];
     advanced.progress.achievements = ['record'];
     advanced.progress.abilities.hyperfocus.remaining = 2;
-    advanced.progress.perks.cooldownOptimization = 8;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(advanced));
     const user = userEvent.setup();
     render(<App />);
@@ -474,26 +476,60 @@ describe('Tokenmaxxer dashboard', () => {
     expect(screen.getByText('SURGE ×3')).toBeInTheDocument();
     expect(screen.getByText('HYPERFOCUS ×5')).toBeInTheDocument();
     await user.click(
-      screen.getByRole('button', { name: /set a new record.*\+3 credits/i }),
+      screen.getByRole('button', { name: /set a new record.*\+3 rating/i }),
     );
-    expect(screen.getByText('MAX LEVEL')).toBeInTheDocument();
+    expect(screen.getByText('2 → 5')).toBeInTheDocument();
+    expect(screen.getByText(/\+20% → \+50%/)).toBeInTheDocument();
     await user.click(screen.getByRole('dialog'));
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     await user.click(
-      screen.getByRole('button', { name: /set a new record.*\+3 credits/i }),
-    );
-    await user.click(
-      screen.getByRole('button', { name: /manual calibration/i }),
+      screen.getByRole('button', { name: /set a new record.*\+3 rating/i }),
     );
     await user.click(
       screen.getByRole('button', { name: '🏆 Set a New Record' }),
     );
-    expect(screen.getByText(/NEW ERA INITIALIZED/i)).toBeInTheDocument();
+    expect(screen.getByText(/PERFORMANCE RATING \+3/i)).toBeInTheDocument();
+    expect(screen.getByText('Performance Rating')).toBeInTheDocument();
+    expect(screen.getByText('5 · +50%')).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', {
+        level: 2,
+        name: /0 \/ 1\.00K TOKENS/i,
+      }),
+    ).toBeInTheDocument();
+    await user.click(
+      screen.getByRole('button', {
+        name: /5 · \+50%Performance Rating/i,
+      }),
+    );
+    expect(screen.getByRole('dialog')).toHaveTextContent('Performance Rating5');
+    expect(screen.getByRole('dialog')).toHaveTextContent('Lifetime Record100M');
+    await user.click(screen.getByRole('dialog'));
     expect(screen.getByRole('status')).toHaveAccessibleName(
       'New message from R.E.A.C.T.O.R.',
     );
     await user.click(screen.getByRole('button', { name: /Achievements/i }));
     expect(screen.getAllByText('◆')).not.toHaveLength(0);
+  });
+
+  it('labels a previously earned milestone as reclaimed after prestige', async () => {
+    const save = createInitialSave();
+    save.progress.tokens = 999;
+    save.progress.stats.tokens = 1_000;
+    save.progress.bonuses = [0];
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
+    const user = userEvent.setup();
+    const { unmount } = render(<App />);
+
+    await user.click(
+      screen.getByRole('button', { name: /activate reactor for 1 token/i }),
+    );
+    const celebration = screen.getByRole('dialog', {
+      name: 'RECORD RECLAIMED',
+    });
+    expect(celebration).toHaveTextContent('MILESTONE #1 RECLAIMED');
+    expect(celebration).not.toHaveTextContent('PERFORMANCE BONUS #1 EARNED');
+    unmount();
   });
 
   it('runs visible frames, pauses hidden frames, saves lifecycle state, and celebrates records', () => {

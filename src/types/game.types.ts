@@ -16,11 +16,6 @@ export type UpgradeId =
   | 'optimization';
 
 export type AbilityId = 'surge' | 'hyperfocus';
-export type PerkId =
-  | 'seedFunding'
-  | 'manualCalibration'
-  | 'automationRouting'
-  | 'cooldownOptimization';
 export type BuyMode = 1 | 10 | 'max';
 
 export interface UpgradeDefinition {
@@ -74,9 +69,8 @@ export interface GameProgress {
   abilities: Record<AbilityId, AbilityState>;
   bonuses: number[];
   achievements: string[];
-  usageCredits: number;
-  pendingCredits: number;
-  perks: Record<PerkId, number>;
+  performanceRating: number;
+  pendingRating: number;
   stats: LifetimeStats;
 }
 
@@ -104,12 +98,4 @@ export interface AchievementDefinition {
   name: string;
   description: string;
   test: (progress: GameProgress, metrics: ProductionMetrics) => boolean;
-}
-
-export interface PerkDefinition {
-  id: PerkId;
-  name: string;
-  description: string;
-  maxLevel?: number;
-  baseCost: number;
 }

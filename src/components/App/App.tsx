@@ -11,15 +11,13 @@ import {
   clickReactor,
   formatDuration,
   formatNumber,
-  getPerkCost,
+  getPerformanceMultiplier,
   getPurchaseQuote,
   getReactorStage,
   getRecordTarget,
   getUpgradeDescription,
   parseSave,
-  PERKS,
   prestige,
-  purchasePerk,
   purchaseUpgrade,
   tickGame,
   UPGRADES,
@@ -37,7 +35,6 @@ import type {
   AbilityId,
   BuyMode,
   GameProgress,
-  PerkId,
   SaveEnvelope,
   UpgradeCategory,
   UpgradeDefinition,
@@ -55,6 +52,10 @@ interface OnboardingObjective {
   step: number;
   title: string;
   description: string;
+}
+interface CelebrationState {
+  index: number;
+  isNew: boolean;
 }
 type Modal =
   | 'none'
@@ -190,9 +191,9 @@ export function App() {
   const [buyMode, setBuyMode] = useState<BuyMode>(1);
   const [modal, setModal] = useState<Modal>('none');
   const [floats, setFloats] = useState<FloatText[]>([]);
-  const [celebration, setCelebration] = useState<number | null>(() =>
+  const [celebration, setCelebration] = useState<CelebrationState | null>(() =>
     new URLSearchParams(window.location.search).get('preview') === 'high-score'
-      ? Math.max(0, save.progress.recordIndex - 1)
+      ? { index: Math.max(0, save.progress.recordIndex - 1), isNew: true }
       : null,
   );
   const [notice, setNotice] = useState('SYSTEM ONLINE');
@@ -208,7 +209,9 @@ export function App() {
   >(null);
   const lastFrame = useRef(0);
   const previousRecord = useRef(save.progress.recordIndex);
+  const previousBonusIndices = useRef(new Set(save.progress.bonuses));
   const floatId = useRef(0);
+  const floatTimers = useRef(new Set<number>());
   const progressRef = useRef(save.progress);
   const saveRef = useRef(save);
   const knownTransmissionIds = useRef(new Set(initialNarrative.knownIds));
@@ -230,7 +233,10 @@ export function App() {
   const showAbilities = visibleAbilities.some((ability) =>
     isAbilityUnlocked(progress, ability),
   );
-  const showPrestige = progress.recordIndex >= 5 || progress.pendingCredits > 0;
+  const showPrestige = progress.recordIndex >= 5 || progress.pendingRating > 0;
+  const productionBonus = Math.round(
+    (getPerformanceMultiplier(progress.performanceRating) - 1) * 100,
+  );
   const visibleCategories: UpgradeCategory[] = [
     'manual',
     ...(progress.upgrades.keyboard > 0
@@ -302,6 +308,7 @@ export function App() {
 
   useEffect(() => {
     let frame = 0;
+    const activeFloatTimers = floatTimers.current;
     lastFrame.current = performance.now();
     const loop = (now: number) => {
       const delta = (now - lastFrame.current) / 1_000;
@@ -320,6 +327,10 @@ export function App() {
     document.addEventListener('visibilitychange', onVisibility);
     return () => {
       cancelAnimationFrame(frame);
+      activeFloatTimers.forEach((timer) => {
+        window.clearTimeout(timer);
+      });
+      activeFloatTimers.clear();
       document.removeEventListener('visibilitychange', onVisibility);
     };
   }, []);
@@ -377,20 +388,23 @@ export function App() {
   useEffect(() => {
     if (progress.recordIndex > previousRecord.current) {
       const won = progress.recordIndex - 1;
-      setCelebration(won);
-      setNotice('NEW HIGH SCORE');
+      const isNew = !previousBonusIndices.current.has(won);
+      setCelebration({ index: won, isNew });
+      setNotice(isNew ? 'NEW HIGH SCORE' : 'RECORD RECLAIMED');
       playSound('milestone', save.preferences.volume, save.preferences.muted);
       const timer = window.setTimeout(() => {
         setCelebration(null);
         setNotice('SYSTEM ONLINE');
       }, 3_200);
       previousRecord.current = progress.recordIndex;
+      previousBonusIndices.current = new Set(progress.bonuses);
       return () => {
         window.clearTimeout(timer);
       };
     }
     previousRecord.current = progress.recordIndex;
-  }, [progress.recordIndex, save.preferences]);
+    previousBonusIndices.current = new Set(progress.bonuses);
+  }, [progress.bonuses, progress.recordIndex, save.preferences]);
 
   const updateProgress = (next: GameProgress) => {
     setSave((current) => ({ ...current, progress: next }));
@@ -407,6 +421,7 @@ export function App() {
       ]),
     ];
     knownTransmissionIds.current = new Set(unlockedIds);
+    previousBonusIndices.current = new Set(next.bonuses);
     soundedTransmissionIds.current = new Set();
     idleTriggered.current = false;
     setTransmissionQueue([]);
@@ -457,9 +472,11 @@ export function App() {
         y: event.clientY,
       },
     ]);
-    window.setTimeout(() => {
+    const timer = window.setTimeout(() => {
+      floatTimers.current.delete(timer);
       setFloats((current) => current.filter((item) => item.id !== id));
     }, 900);
+    floatTimers.current.add(timer);
   };
 
   const handlePurchase = (id: UpgradeId) => {
@@ -487,12 +504,8 @@ export function App() {
       updateProgress(next);
       setModal('none');
       playSound('prestige', save.preferences.volume, save.preferences.muted);
-      setNotice('NEW ERA INITIALIZED');
+      setNotice(`PERFORMANCE RATING +${String(progress.pendingRating)}`);
     }
-  };
-
-  const handlePerk = (id: PerkId) => {
-    updateProgress(purchasePerk(progress, id));
   };
 
   const handleVolume = (event: ChangeEvent<HTMLInputElement>) => {
@@ -540,7 +553,7 @@ export function App() {
     /* v8 ignore next -- native confirmation is exercised manually */
     if (
       !window.confirm(
-        'Reset all game progress? Performance Bonuses, records, and perks will be erased.',
+        'Reset all game progress? Performance Bonuses, records, and Performance Rating will be erased.',
       )
     )
       return;
@@ -762,7 +775,7 @@ export function App() {
                 title="CHAMPION ARCHIVE"
                 eyebrow="PROGRESS"
               >
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-2 gap-2">
                   <ArchiveButton
                     label="Bonuses"
                     value={String(progress.bonuses.length)}
@@ -784,12 +797,19 @@ export function App() {
                       setModal('stats');
                     }}
                   />
+                  <ArchiveButton
+                    label="Performance Rating"
+                    value={`${String(progress.performanceRating)} · +${String(productionBonus)}%`}
+                    onClick={() => {
+                      setModal('stats');
+                    }}
+                  />
                 </div>
               </Panel>
               {showPrestige && (
                 <button
                   className="flex w-full animate-[modal-in_.35s_ease-out] cursor-pointer items-center justify-between gap-4 rounded-2xl border border-amber-300/30 bg-linear-to-r from-amber-900/25 to-violet-900/20 p-4 text-left disabled:cursor-not-allowed disabled:opacity-75 disabled:saturate-50 [&_small]:block [&_small]:text-xs [&_small]:tracking-[0.15em] [&_small]:text-amber-300 [&_strong]:mt-1 [&_strong]:block [&>span:last-child]:text-xs [&>span:last-child]:text-amber-200"
-                  disabled={progress.pendingCredits <= 0}
+                  disabled={progress.pendingRating <= 0}
                   onClick={() => {
                     setModal('prestige');
                   }}
@@ -800,8 +820,8 @@ export function App() {
                     <strong>🏆 Set a New Record</strong>
                   </span>
                   <span>
-                    {progress.pendingCredits > 0
-                      ? `+${String(progress.pendingCredits)} credits`
+                    {progress.pendingRating > 0
+                      ? `+${String(progress.pendingRating)} rating`
                       : `Unlock at ${formatNumber(getRecordTarget(5))}`}
                   </span>
                 </button>
@@ -1037,16 +1057,19 @@ export function App() {
               className="text-sm font-black tracking-[0.4em] text-cyan-300"
               id="high-score-title"
             >
-              NEW HIGH SCORE
+              {celebration.isNew ? 'NEW HIGH SCORE' : 'RECORD RECLAIMED'}
             </p>
             <strong className="my-2 block text-[clamp(3.5rem,8vw,7rem)] leading-none text-white [text-shadow:0_0_28px_#0891b2]">
-              {formatNumber(getRecordTarget(celebration))}
+              {formatNumber(getRecordTarget(celebration.index))}
             </strong>
             <span className="block text-base font-extrabold tracking-[0.15em] text-amber-300 sm:text-lg">
-              PERFORMANCE BONUS #{celebration + 1} EARNED
+              {celebration.isNew
+                ? `PERFORMANCE BONUS #${String(celebration.index + 1)} EARNED`
+                : `MILESTONE #${String(celebration.index + 1)} RECLAIMED`}
             </span>
             <span className="mt-3 block text-sm font-bold tracking-[0.18em] text-slate-300">
-              NEXT TARGET: {formatNumber(getRecordTarget(celebration + 1))}
+              NEXT TARGET:{' '}
+              {formatNumber(getRecordTarget(celebration.index + 1))}
             </span>
             <button
               autoFocus
@@ -1144,54 +1167,36 @@ export function App() {
             <div className="space-y-4">
               <div className="flex items-center justify-between rounded-xl border border-amber-300/20 bg-amber-300/7 p-4">
                 <span className="text-xs tracking-[0.15em] text-slate-400">
-                  PENDING PAYOUT
+                  PERFORMANCE RATING
                 </span>
                 <strong className="text-amber-300">
-                  +{progress.pendingCredits} Usage Credits
+                  {progress.performanceRating} →{' '}
+                  {progress.performanceRating + progress.pendingRating}
                 </strong>
               </div>
               <p className="text-sm text-slate-300">
-                Tokens, upgrades, and active abilities reset. Your records,
-                Performance Bonuses, achievements, lifetime statistics, Usage
-                Credits, and permanent perks remain.
+                Your tokens, upgrades, active abilities, and current High Score
+                ladder reset. Lifetime records, Performance Bonuses,
+                achievements, statistics, and Performance Rating remain.
               </p>
-              <div className="grid gap-2 sm:grid-cols-2">
-                {PERKS.map((perk) => {
-                  const level = progress.perks[perk.id];
-                  const maxed =
-                    perk.maxLevel !== undefined && level >= perk.maxLevel;
-                  const cost = getPerkCost(perk, level);
-                  return (
-                    <button
-                      className="flex cursor-pointer flex-col items-start rounded-xl border border-white/8 bg-white/3 p-3 text-left hover:border-amber-300/35 disabled:cursor-not-allowed disabled:opacity-45 [&_small]:mt-2 [&_small]:text-amber-300 [&_span]:text-xs [&_span]:text-slate-400"
-                      disabled={maxed || progress.usageCredits < cost}
-                      key={perk.id}
-                      onClick={() => {
-                        handlePerk(perk.id);
-                      }}
-                      type="button"
-                    >
-                      <strong>
-                        {perk.name} · LV. {level}
-                      </strong>
-                      <span>{perk.description}</span>
-                      <small>
-                        {maxed ? 'MAX LEVEL' : `${String(cost)} Usage Credits`}
-                      </small>
-                    </button>
-                  );
-                })}
-              </div>
-              <div className="flex items-center justify-between rounded-xl bg-white/4 p-3">
-                <span>
-                  Available credits:{' '}
-                  <strong className="text-amber-300">
-                    {progress.usageCredits}
+              <div className="flex items-center justify-between gap-4 rounded-xl bg-white/4 p-3">
+                <span className="text-sm text-slate-300">
+                  Permanent production bonus:{' '}
+                  <strong className="text-cyan-300">
+                    +{productionBonus}% → +
+                    {Math.round(
+                      (getPerformanceMultiplier(
+                        progress.performanceRating + progress.pendingRating,
+                      ) -
+                        1) *
+                        100,
+                    )}
+                    %
                   </strong>
                 </span>
                 <button
                   className={`${ACTION_BUTTON_CLASS} bg-linear-to-r from-cyan-600 to-violet-600 text-white`}
-                  disabled={progress.pendingCredits <= 0}
+                  disabled={progress.pendingRating <= 0}
                   onClick={handlePrestige}
                   type="button"
                 >
@@ -1255,6 +1260,24 @@ export function App() {
               <StatTile
                 label="Active Time"
                 value={formatDuration(progress.stats.playTime)}
+              />
+              <StatTile
+                label="Performance Rating"
+                value={String(progress.performanceRating)}
+              />
+              <StatTile
+                label="Rating Bonus"
+                value={`+${String(productionBonus)}%`}
+              />
+              <StatTile
+                label="Lifetime Record"
+                value={
+                  progress.bonuses.length === 0
+                    ? '0'
+                    : formatNumber(
+                        getRecordTarget(Math.max(...progress.bonuses)),
+                      )
+                }
               />
             </div>
           )}

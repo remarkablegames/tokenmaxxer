@@ -4,8 +4,6 @@ import type {
   AchievementDefinition,
   BuyMode,
   GameProgress,
-  PerkDefinition,
-  PerkId,
   Preferences,
   ProductionMetrics,
   PurchaseQuote,
@@ -17,6 +15,7 @@ import type {
 export const STORAGE_KEY = 'org.remarkablegames.tokenmaxxer';
 export const CRITICAL_MULTIPLIER = 5;
 export const PRESTIGE_RECORD_INDEX = 5;
+export const PERFORMANCE_RATING_BONUS = 0.1;
 
 export const UPGRADES: UpgradeDefinition[] = [
   {
@@ -172,34 +171,6 @@ export const ABILITIES: AbilityDefinition[] = [
   },
 ];
 
-export const PERKS: PerkDefinition[] = [
-  {
-    id: 'seedFunding',
-    name: 'Seed Funding',
-    description: 'Begin every run with more tokens',
-    baseCost: 1,
-  },
-  {
-    id: 'manualCalibration',
-    name: 'Manual Calibration',
-    description: '+25% permanent manual output',
-    baseCost: 2,
-  },
-  {
-    id: 'automationRouting',
-    name: 'Automation Routing',
-    description: '+25% permanent automation output',
-    baseCost: 2,
-  },
-  {
-    id: 'cooldownOptimization',
-    name: 'Cooldown Optimization',
-    description: '-5% permanent ability cooldown',
-    baseCost: 3,
-    maxLevel: 8,
-  },
-];
-
 const EMPTY_UPGRADES: Record<UpgradeId, number> = {
   keyboard: 0,
   templates: 0,
@@ -216,23 +187,12 @@ const EMPTY_UPGRADES: Record<UpgradeId, number> = {
   optimization: 0,
 };
 
-const EMPTY_PERKS: Record<PerkId, number> = {
-  seedFunding: 0,
-  manualCalibration: 0,
-  automationRouting: 0,
-  cooldownOptimization: 0,
-};
-
 export function getRecordTarget(index: number): number {
   return 1_000 * 10 ** index;
 }
 
 export function getReactorStage(recordIndex: number): number {
   return Math.min(5, Math.max(0, recordIndex));
-}
-
-export function getSeedTokens(level: number): number {
-  return level === 0 ? 0 : 250 * 4 ** (level - 1);
 }
 
 export function getAiModelDeployment(level: number): string | null {
@@ -256,11 +216,9 @@ export function getUpgradeDescription(
     : `${deployment} active · ${upgrade.description}`;
 }
 
-export function createInitialProgress(
-  perks: Record<PerkId, number> = EMPTY_PERKS,
-): GameProgress {
+export function createInitialProgress(): GameProgress {
   return {
-    tokens: getSeedTokens(perks.seedFunding),
+    tokens: 0,
     recordIndex: 0,
     upgrades: { ...EMPTY_UPGRADES },
     abilities: {
@@ -269,9 +227,8 @@ export function createInitialProgress(
     },
     bonuses: [],
     achievements: [],
-    usageCredits: 0,
-    pendingCredits: 0,
-    perks: { ...perks },
+    performanceRating: 0,
+    pendingRating: 0,
     stats: {
       tokens: 0,
       manualTokens: 0,
@@ -300,9 +257,7 @@ export function calculateMetrics(progress: GameProgress): ProductionMetrics {
   const u = progress.upgrades;
   const manualBase = 1 + u.keyboard + u.multifinger * 5;
   const manualMultiplier =
-    (1 + u.templates * 0.25) *
-    (1 + u.contextCompaction * 0.2) *
-    (1 + progress.perks.manualCalibration * 0.25);
+    (1 + u.templates * 0.25) * (1 + u.contextCompaction * 0.2);
   const automationBase =
     u.gpu +
     u.model * 4 +
@@ -311,14 +266,15 @@ export function calculateMetrics(progress: GameProgress): ProductionMetrics {
     u.agentSwarm * 900 +
     u.orbital * 8_000;
   const automationMultiplier =
-    (1 + u.overclock * 0.35) *
-    (1 + u.contextCompaction * 0.2) *
-    (1 + progress.perks.automationRouting * 0.25);
+    (1 + u.overclock * 0.35) * (1 + u.contextCompaction * 0.2);
+  const ratingMultiplier = getPerformanceMultiplier(progress.performanceRating);
   const surge = progress.abilities.surge.remaining > 0 ? 3 : 1;
   const hyperfocus = progress.abilities.hyperfocus.remaining > 0 ? 5 : 1;
   return {
-    tokensPerClick: manualBase * manualMultiplier * surge * hyperfocus,
-    tokensPerSecond: automationBase * automationMultiplier * surge,
+    tokensPerClick:
+      manualBase * manualMultiplier * ratingMultiplier * surge * hyperfocus,
+    tokensPerSecond:
+      automationBase * automationMultiplier * ratingMultiplier * surge,
     criticalChance: Math.min(
       0.35,
       0.05 +
@@ -326,6 +282,10 @@ export function calculateMetrics(progress: GameProgress): ProductionMetrics {
         (progress.abilities.hyperfocus.remaining > 0 ? 0.3 : 0),
     ),
   };
+}
+
+export function getPerformanceMultiplier(rating: number): number {
+  return 1 + rating * PERFORMANCE_RATING_BONUS;
 }
 
 export function getUpgradeCost(
@@ -368,8 +328,8 @@ function processMilestones(progress: GameProgress): GameProgress {
       bonuses: next.bonuses.includes(index)
         ? next.bonuses
         : [...next.bonuses, index],
-      pendingCredits:
-        next.pendingCredits + (index >= PRESTIGE_RECORD_INDEX ? index - 2 : 0),
+      pendingRating:
+        next.pendingRating + (index >= PRESTIGE_RECORD_INDEX ? index - 2 : 0),
     };
   }
   return next;
@@ -564,14 +524,13 @@ export function activateAbility(
     state.cooldown > 0
   )
     return progress;
-  const cooldownScale = 1 - progress.perks.cooldownOptimization * 0.05;
   return unlockAchievements({
     ...progress,
     abilities: {
       ...progress.abilities,
       [id]: {
         remaining: definition.duration,
-        cooldown: definition.cooldown * cooldownScale,
+        cooldown: definition.cooldown,
       },
     },
     stats: {
@@ -584,40 +543,18 @@ export function activateAbility(
 export function prestige(progress: GameProgress): GameProgress {
   if (
     progress.recordIndex <= PRESTIGE_RECORD_INDEX ||
-    progress.pendingCredits <= 0
+    progress.pendingRating <= 0
   )
     return progress;
-  const fresh = createInitialProgress(progress.perks);
+  const fresh = createInitialProgress();
   return unlockAchievements({
     ...fresh,
-    recordIndex: progress.recordIndex,
+    recordIndex: 0,
     bonuses: [...progress.bonuses],
     achievements: [...progress.achievements],
-    usageCredits: progress.usageCredits + progress.pendingCredits,
+    performanceRating: progress.performanceRating + progress.pendingRating,
     stats: { ...progress.stats, prestiges: progress.stats.prestiges + 1 },
-    perks: { ...progress.perks },
   });
-}
-
-export function getPerkCost(perk: PerkDefinition, level: number): number {
-  return perk.baseCost * (level + 1);
-}
-
-export function purchasePerk(progress: GameProgress, id: PerkId): GameProgress {
-  const perk = PERKS.find((item) => item.id === id);
-  if (!perk) return progress;
-  const level = progress.perks[id];
-  const cost = getPerkCost(perk, level);
-  if (
-    progress.usageCredits < cost ||
-    (perk.maxLevel !== undefined && level >= perk.maxLevel)
-  )
-    return progress;
-  return {
-    ...progress,
-    usageCredits: progress.usageCredits - cost,
-    perks: { ...progress.perks, [id]: level + 1 },
-  };
 }
 
 export function formatNumber(value: number): string {
@@ -665,7 +602,6 @@ export function parseSave(raw: string): SaveEnvelope | null {
       !isRecord(progress.abilities) ||
       !Array.isArray(progress.bonuses) ||
       !Array.isArray(progress.achievements) ||
-      !isRecord(progress.perks) ||
       !isRecord(progress.stats) ||
       typeof preferences.muted !== 'boolean' ||
       !Number.isFinite(preferences.volume) ||
@@ -685,10 +621,9 @@ export function parseSave(raw: string): SaveEnvelope | null {
     });
     const numericValues = [
       ...UPGRADES.map((upgrade) => progress.upgrades[upgrade.id]),
-      ...PERKS.map((perk) => progress.perks[perk.id]),
       ...abilityValues,
-      progress.usageCredits,
-      progress.pendingCredits,
+      progress.performanceRating,
+      progress.pendingRating,
       progress.stats.tokens,
       progress.stats.manualTokens,
       progress.stats.clicks,
@@ -708,6 +643,8 @@ export function parseSave(raw: string): SaveEnvelope | null {
     )
       return null;
     if (
+      !Number.isInteger(progress.performanceRating) ||
+      !Number.isInteger(progress.pendingRating) ||
       progress.bonuses.some((value) => !Number.isInteger(value) || value < 0) ||
       progress.achievements.some((value) => typeof value !== 'string')
     )
