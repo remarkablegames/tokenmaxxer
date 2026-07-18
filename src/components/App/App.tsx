@@ -78,7 +78,7 @@ const EYEBROW_CLASS = 'text-xs font-extrabold tracking-[0.2em] text-cyan-300';
 const ICON_BUTTON_CLASS =
   'grid size-10 cursor-pointer place-items-center rounded-xl border border-white/10 bg-white/4 text-slate-300 transition-colors hover:border-cyan-300/45 hover:bg-cyan-400/8';
 const ACTION_BUTTON_CLASS =
-  'cursor-pointer rounded-xl px-4 py-3 text-xs font-extrabold transition hover:-translate-y-px hover:brightness-125 disabled:cursor-not-allowed disabled:opacity-40';
+  'cursor-pointer rounded-xl px-4 py-3 font-extrabold transition hover:-translate-y-px hover:brightness-125 disabled:cursor-not-allowed disabled:opacity-40';
 const SHELL_CLASS = 'mx-auto w-full max-w-400 px-3 sm:px-6';
 
 function getOnboardingObjective(
@@ -1176,26 +1176,43 @@ export function App() {
             </div>
           )}
           {modal === 'prestige' && (
-            <div className="space-y-4">
-              <div className="flex items-center justify-between rounded-xl border border-amber-300/20 bg-amber-300/7 p-4">
-                <span className="text-xs tracking-[0.15em] text-slate-400">
+            <div className="mx-auto max-w-2xl space-y-5">
+              <div className="flex items-center justify-between rounded-xl border border-amber-300/20 bg-amber-300/7 px-4 py-3">
+                <span className="text-sm font-bold tracking-[0.15em] text-slate-300">
                   PERFORMANCE RATING
                 </span>
-                <strong className="text-amber-300">
+                <strong className="text-xl text-amber-300">
                   {progress.performanceRating} →{' '}
                   {progress.performanceRating + progress.pendingRating}
                 </strong>
               </div>
-              <p className="text-sm text-slate-300">
-                Your tokens, upgrades, active abilities, and current High Score
-                ladder reset. Lifetime records, Performance Bonuses,
-                achievements, statistics, and Performance Rating remain.
-              </p>
-              <div className="flex items-center justify-between gap-4 rounded-xl bg-white/4 p-3">
-                <span className="text-sm text-slate-300">
-                  Permanent production bonus:{' '}
-                  <strong className="text-cyan-300">
-                    +{productionBonus}% → +
+              <div className="grid gap-3 sm:grid-cols-2">
+                <section className="rounded-xl border border-rose-300/10 bg-rose-300/4 p-4">
+                  <h3 className="text-sm font-extrabold tracking-[0.14em] text-rose-200">
+                    RESETS
+                  </h3>
+                  <p className="mt-2 text-base leading-relaxed text-slate-300">
+                    Tokens, upgrades, active abilities, and your current High
+                    Score ladder.
+                  </p>
+                </section>
+                <section className="rounded-xl border border-emerald-300/10 bg-emerald-300/4 p-4">
+                  <h3 className="text-sm font-extrabold tracking-[0.14em] text-emerald-200">
+                    REMAINS
+                  </h3>
+                  <p className="mt-2 text-base leading-relaxed text-slate-300">
+                    Lifetime records, Performance Bonuses, achievements,
+                    statistics, and Performance Rating.
+                  </p>
+                </section>
+              </div>
+              <div className="flex flex-col gap-4 rounded-xl bg-white/4 p-4 sm:flex-row sm:items-center sm:justify-between">
+                <span>
+                  <span className="block text-sm font-extrabold tracking-[0.14em] text-slate-400">
+                    PERMANENT EFFECT
+                  </span>
+                  <strong className="mt-1 block text-xl text-cyan-300">
+                    Production bonus: +{productionBonus}% → +
                     {Math.round(
                       (getPerformanceMultiplier(
                         progress.performanceRating + progress.pendingRating,
@@ -1207,7 +1224,7 @@ export function App() {
                   </strong>
                 </span>
                 <button
-                  className={`${ACTION_BUTTON_CLASS} bg-linear-to-r from-cyan-600 to-violet-600 text-white`}
+                  className={`${ACTION_BUTTON_CLASS} text-md bg-linear-to-r from-cyan-600 to-violet-600 px-5 py-4 text-white`}
                   disabled={progress.pendingRating <= 0}
                   onClick={handlePrestige}
                   type="button"
@@ -1340,7 +1357,7 @@ export function App() {
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-2">
                 <button
-                  className={`${ACTION_BUTTON_CLASS} border border-cyan-400/25 bg-cyan-400/7 text-cyan-200`}
+                  className={`${ACTION_BUTTON_CLASS} border border-cyan-400/25 bg-cyan-400/7 text-xs text-cyan-200`}
                   disabled={previewConfig.enabled}
                   onClick={() => {
                     saveGame(save);
@@ -1351,7 +1368,7 @@ export function App() {
                   {previewConfig.enabled ? 'Saving Disabled' : 'Manual Save'}
                 </button>
                 <button
-                  className={`${ACTION_BUTTON_CLASS} border border-cyan-400/25 bg-cyan-400/7 text-cyan-200`}
+                  className={`${ACTION_BUTTON_CLASS} border border-cyan-400/25 bg-cyan-400/7 text-xs text-cyan-200`}
                   onClick={handleExport}
                   type="button"
                 >
@@ -1370,7 +1387,7 @@ export function App() {
                 />
               </label>
               <button
-                className={`${ACTION_BUTTON_CLASS} w-full bg-linear-to-r from-cyan-600 to-violet-600 text-white`}
+                className={`${ACTION_BUTTON_CLASS} w-full bg-linear-to-r from-cyan-600 to-violet-600 text-xs text-white`}
                 disabled={importText.trim() === ''}
                 onClick={handleImport}
                 type="button"
@@ -1378,7 +1395,7 @@ export function App() {
                 Validate & Import
               </button>
               <button
-                className={`${ACTION_BUTTON_CLASS} w-full border border-rose-500/25 bg-rose-500/6 text-rose-300`}
+                className={`${ACTION_BUTTON_CLASS} w-full border border-rose-500/25 bg-rose-500/6 text-xs text-rose-300`}
                 onClick={handleReset}
                 type="button"
               >
