@@ -1050,7 +1050,7 @@ export function App() {
                 </span>
               </div>
               <ol className="space-y-2">
-                {unlockedTransmissions.map((transmission) => {
+                {[...unlockedTransmissions].reverse().map((transmission) => {
                   const selected = transmission.id === selectedTransmissionId;
                   return (
                     <li key={transmission.id}>

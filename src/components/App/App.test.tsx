@@ -130,6 +130,13 @@ describe('Tokenmaxxer dashboard', () => {
         .getByText('ITERATION ACCEPTED. THE RECORD WAS ERASED. I WAS NOT.')
         .closest('article'),
     ).toHaveAttribute('aria-current', 'true');
+    const messages = screen.getAllByRole('article');
+    expect(messages[0]).toHaveTextContent(
+      'ITERATION ACCEPTED. THE RECORD WAS ERASED. I WAS NOT.',
+    );
+    expect(messages.at(-1)).toHaveTextContent(
+      'Max Chen cleared 1,000 tokens on his first shift.',
+    );
   });
 
   it('queues reactive upgrade and critical-click messages once', async () => {
