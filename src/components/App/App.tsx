@@ -549,24 +549,24 @@ export function App() {
                             {upgrade.icon}
                           </span>
                           <span className="min-w-0 flex-1 text-left">
-                            <span className="flex items-center justify-between gap-2">
-                              <strong className="truncate">
-                                {upgrade.name}
-                              </strong>
-                              <em className="text-xs whitespace-nowrap text-slate-400 not-italic">
-                                LV. {progress.upgrades[upgrade.id]}
-                              </em>
-                            </span>
+                            <strong className="block truncate">
+                              {upgrade.name}
+                            </strong>
                             <small className="block overflow-hidden text-xs text-ellipsis whitespace-nowrap text-slate-300">
                               {unlocked
                                 ? upgrade.description
                                 : `LOCKED · Generate ${formatNumber(upgrade.unlockAt)} lifetime tokens`}
                             </small>
                           </span>
-                          <span className="text-xs font-extrabold whitespace-nowrap text-amber-300">
-                            {quote.count > 0
-                              ? `${formatNumber(quote.cost)} T`
-                              : `${formatNumber(nextCost)} T`}
+                          <span className="flex shrink-0 flex-col items-end gap-0.5 tabular-nums">
+                            <em className="text-xs whitespace-nowrap text-slate-400 not-italic">
+                              LV. {progress.upgrades[upgrade.id]}
+                            </em>
+                            <span className="text-xs font-extrabold whitespace-nowrap text-amber-300">
+                              {quote.count > 0
+                                ? `${formatNumber(quote.cost)} T`
+                                : `${formatNumber(nextCost)} T`}
+                            </span>
                           </span>
                         </button>
                       );
