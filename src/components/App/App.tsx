@@ -50,8 +50,7 @@ const CATEGORY_LABELS: Record<UpgradeCategory, string> = {
 };
 const PANEL_CLASS =
   'rounded-2xl border border-white/8 bg-linear-to-br from-[#0f1e31]/90 to-[#060e1c]/95 shadow-[inset_0_1px_0_rgb(255_255_255/0.035),0_18px_60px_rgb(0_0_0/0.22)]';
-const EYEBROW_CLASS =
-  'text-[0.64rem] font-extrabold tracking-[0.2em] text-cyan-300';
+const EYEBROW_CLASS = 'text-xs font-extrabold tracking-[0.2em] text-cyan-300';
 const ICON_BUTTON_CLASS =
   'grid size-10 cursor-pointer place-items-center rounded-xl border border-white/10 bg-white/4 text-slate-300 transition-colors hover:border-cyan-300/45 hover:bg-cyan-400/8';
 const ACTION_BUTTON_CLASS =
@@ -264,7 +263,7 @@ export function App() {
             <h1 className="text-xl font-black tracking-tight sm:text-2xl">
               <span className="text-amber-300">🏆</span> TOKENMAXXER
             </h1>
-            <p className="status text-[10px] tracking-[.28em] text-cyan-300">
+            <p className="status text-xs tracking-[.28em] text-cyan-300">
               ● {notice}
             </p>
           </div>
@@ -309,7 +308,7 @@ export function App() {
               </span>
             </h2>
             <div className="shrink-0 pb-1 text-right">
-              <span className="block text-[0.65rem] font-bold tracking-wider text-slate-400">
+              <span className="block text-xs font-bold tracking-wider text-slate-400">
                 PROGRESS
               </span>
               <strong className="text-sm text-amber-300 sm:text-base">
@@ -373,7 +372,7 @@ export function App() {
                               : ability.description}
                       </small>
                     </span>
-                    <span className="text-[0.7rem] font-extrabold text-cyan-300">
+                    <span className="text-xs font-extrabold text-cyan-300">
                       {!unlocked
                         ? 'LOCKED'
                         : state.cooldown > 0
@@ -411,7 +410,7 @@ export function App() {
             </div>
           </Panel>
           <button
-            className="flex w-full cursor-pointer items-center justify-between gap-4 rounded-2xl border border-amber-300/30 bg-linear-to-r from-amber-900/25 to-violet-900/20 p-4 text-left disabled:cursor-not-allowed disabled:opacity-75 disabled:saturate-50 [&_small]:block [&_small]:text-[0.68rem] [&_small]:tracking-[0.15em] [&_small]:text-amber-300 [&_strong]:mt-1 [&_strong]:block [&>span:last-child]:text-[0.72rem] [&>span:last-child]:text-amber-200"
+            className="flex w-full cursor-pointer items-center justify-between gap-4 rounded-2xl border border-amber-300/30 bg-linear-to-r from-amber-900/25 to-violet-900/20 p-4 text-left disabled:cursor-not-allowed disabled:opacity-75 disabled:saturate-50 [&_small]:block [&_small]:text-xs [&_small]:tracking-[0.15em] [&_small]:text-amber-300 [&_strong]:mt-1 [&_strong]:block [&>span:last-child]:text-xs [&>span:last-child]:text-amber-200"
             disabled={progress.pendingCredits <= 0}
             onClick={() => {
               setModal('prestige');
@@ -501,7 +500,7 @@ export function App() {
               {([1, 10, 'max'] as const).map((mode) => (
                 <button
                   aria-pressed={buyMode === mode}
-                  className="cursor-pointer rounded-md px-2 py-1 text-[0.68rem] font-extrabold text-slate-400 aria-pressed:bg-cyan-700 aria-pressed:text-white"
+                  className="cursor-pointer rounded-md px-2 py-1 text-xs font-extrabold text-slate-400 aria-pressed:bg-cyan-700 aria-pressed:text-white"
                   key={mode}
                   onClick={() => {
                     setBuyMode(mode);
@@ -554,7 +553,7 @@ export function App() {
                               <strong className="truncate">
                                 {upgrade.name}
                               </strong>
-                              <em className="text-[0.68rem] whitespace-nowrap text-slate-400 not-italic">
+                              <em className="text-xs whitespace-nowrap text-slate-400 not-italic">
                                 LV. {progress.upgrades[upgrade.id]}
                               </em>
                             </span>
@@ -564,7 +563,7 @@ export function App() {
                                 : `LOCKED · Generate ${formatNumber(upgrade.unlockAt)} lifetime tokens`}
                             </small>
                           </span>
-                          <span className="text-[0.72rem] font-extrabold whitespace-nowrap text-amber-300">
+                          <span className="text-xs font-extrabold whitespace-nowrap text-amber-300">
                             {quote.count > 0
                               ? `${formatNumber(quote.cost)} T`
                               : `${formatNumber(nextCost)} T`}
@@ -667,7 +666,7 @@ export function App() {
           {modal === 'prestige' && (
             <div className="space-y-4">
               <div className="flex items-center justify-between rounded-xl border border-amber-300/20 bg-amber-300/7 p-4">
-                <span className="text-[0.68rem] tracking-[0.15em] text-slate-400">
+                <span className="text-xs tracking-[0.15em] text-slate-400">
                   PENDING PAYOUT
                 </span>
                 <strong className="text-amber-300">
@@ -793,7 +792,7 @@ export function App() {
                 </span>
                 <button
                   aria-pressed={!save.preferences.muted}
-                  className="min-w-18 cursor-pointer rounded-full border border-cyan-400/25 bg-cyan-400/10 px-3 py-2 text-[0.65rem] font-extrabold text-cyan-300"
+                  className="min-w-18 cursor-pointer rounded-full border border-cyan-400/25 bg-cyan-400/10 px-3 py-2 text-xs font-extrabold text-cyan-300"
                   onClick={() => {
                     setSave((current) => ({
                       ...current,
@@ -908,7 +907,7 @@ function Stat({
 }) {
   return (
     <div className="min-w-20 border-l border-white/9 pl-3 max-sm:order-3 max-sm:min-w-0 max-sm:flex-1">
-      <small className="block text-[0.65rem] tracking-[0.12em] text-slate-400">
+      <small className="block text-xs tracking-[0.12em] text-slate-400">
         {label}
       </small>
       <strong
@@ -935,9 +934,7 @@ function ArchiveButton({
       type="button"
     >
       <strong className="block text-amber-300">{value}</strong>
-      <small className="mt-0.5 block text-[0.66rem] text-slate-400">
-        {label}
-      </small>
+      <small className="mt-0.5 block text-xs text-slate-400">{label}</small>
     </button>
   );
 }
@@ -952,7 +949,7 @@ function StatTile({ label, value }: { label: string; value: string }) {
 function MiniMetric({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-lg border border-white/7 bg-black/15 p-2.5">
-      <small className="block text-[0.68rem] tracking-wide text-slate-300">
+      <small className="block text-xs tracking-wide text-slate-300">
         {label}
       </small>
       <strong className="mt-0.5 block text-sm text-cyan-100">{value}</strong>
