@@ -258,7 +258,7 @@ export function createInitialSave(): SaveEnvelope {
     version: 1,
     progress: createInitialProgress(),
     preferences: { muted: false, volume: 0.45 },
-    transmissions: [],
+    transmissions: {},
   };
 }
 
@@ -639,12 +639,6 @@ export function parseSave(raw: string): SaveEnvelope | null {
     )
       return null;
     if (
-      data.transmissions !== undefined &&
-      (!Array.isArray(data.transmissions) ||
-        data.transmissions.some((value) => typeof value !== 'string'))
-    )
-      return null;
-    if (
       data.savedAt !== undefined &&
       (typeof data.savedAt !== 'number' || !Number.isFinite(data.savedAt))
     )
@@ -685,14 +679,18 @@ export function parseSave(raw: string): SaveEnvelope | null {
       progress.achievements.some((value) => typeof value !== 'string')
     )
       return null;
-    const transmissions: string[] = Array.isArray(data.transmissions)
-      ? data.transmissions.filter(
-          (value: unknown): value is string => typeof value === 'string',
-        )
-      : [];
+    if (
+      !isRecord(data.transmissions) ||
+      Array.isArray(data.transmissions) ||
+      Object.values(data.transmissions).some(
+        (value) =>
+          typeof value !== 'number' || !Number.isFinite(value) || value < 0,
+      )
+    )
+      return null;
     return {
       ...(data as unknown as SaveEnvelope),
-      transmissions,
+      transmissions: data.transmissions as Record<string, number>,
     };
   } catch {
     return null;

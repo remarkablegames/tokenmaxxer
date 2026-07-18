@@ -148,6 +148,7 @@ function getVisibleAbilities(progress: GameProgress): AbilityDefinition[] {
 export function App() {
   const [initialNarrative] = useState(() => {
     const loaded = loadSave();
+    const initializedAt = Date.now();
     const eligibleIds = getEligibleTransmissions(loaded.progress).map(
       ({ id }) => id,
     );
@@ -156,18 +157,26 @@ export function App() {
       Date.now() - loaded.savedAt >= 60_000 &&
       loaded.progress.stats.clicks > 0;
     const offlineTransmission = getSessionTransmission('offline-return');
+    const loadedIds = Object.keys(loaded.transmissions);
     const shouldUnlockOffline =
-      returnedAfterAbsence &&
-      !loaded.transmissions.includes(offlineTransmission.id);
+      returnedAfterAbsence && !loadedIds.includes(offlineTransmission.id);
     const unlockedIds = [
       ...new Set([
-        ...loaded.transmissions,
+        ...loadedIds,
         ...eligibleIds,
         ...(shouldUnlockOffline ? [offlineTransmission.id] : []),
       ]),
     ];
+    const transmissionUnlocks = Object.fromEntries(
+      unlockedIds.map((id) => [
+        id,
+        shouldUnlockOffline && id === offlineTransmission.id
+          ? initializedAt
+          : (loaded.transmissions[id] ?? initializedAt),
+      ]),
+    );
     return {
-      save: { ...loaded, transmissions: unlockedIds },
+      save: { ...loaded, transmissions: transmissionUnlocks },
       knownIds: unlockedIds,
       readIds: shouldUnlockOffline
         ? unlockedIds.filter((id) => id !== offlineTransmission.id)
@@ -230,13 +239,19 @@ export function App() {
       : []),
   ];
   const eligibleTransmissions = getEligibleTransmissions(progress);
-  const unlockedTransmissionIds = [
-    ...new Set([
-      ...save.transmissions,
-      ...eligibleTransmissions.map(({ id }) => id),
-    ]),
-  ];
+  const unlockedTransmissionIds = Object.keys(save.transmissions);
   const unlockedTransmissions = getTransmissionsById(unlockedTransmissionIds);
+  const orderedTransmissions = unlockedTransmissions
+    .map((transmission, authoredIndex) => ({
+      transmission,
+      authoredIndex,
+      unlockedAt: save.transmissions[transmission.id],
+    }))
+    .sort(
+      (first, second) =>
+        second.unlockedAt - first.unlockedAt ||
+        second.authoredIndex - first.authoredIndex,
+    );
   const activeTransmission = transmissionQueue.at(0);
   const transmissionBlocked = celebration !== null || modal !== 'none';
   const unreadTransmissionCount = unlockedTransmissions.filter(
@@ -259,14 +274,13 @@ export function App() {
     newlyUnlocked.forEach(({ id }) => {
       knownTransmissionIds.current.add(id);
     });
+    const unlockedAt = Date.now();
     setSave((current) => ({
       ...current,
-      transmissions: [
-        ...new Set([
-          ...current.transmissions,
-          ...newlyUnlocked.map(({ id }) => id),
-        ]),
-      ],
+      transmissions: {
+        ...current.transmissions,
+        ...Object.fromEntries(newlyUnlocked.map(({ id }) => [id, unlockedAt])),
+      },
     }));
     setTransmissionQueue((current) =>
       sortTransmissionsByPriority([...current, ...newlyUnlocked]),
@@ -319,9 +333,10 @@ export function App() {
         knownTransmissionIds.current.add(transmission.id);
         setSave((current) => ({
           ...current,
-          transmissions: [
-            ...new Set([...current.transmissions, transmission.id]),
-          ],
+          transmissions: {
+            ...current.transmissions,
+            [transmission.id]: Date.now(),
+          },
         }));
         setTransmissionQueue((current) =>
           sortTransmissionsByPriority([...current, transmission]),
@@ -381,11 +396,11 @@ export function App() {
 
   const syncNarrativeProgress = (
     next: GameProgress,
-    persistedIds: readonly string[] = [],
+    persistedUnlocks: Readonly<Record<string, number>> = {},
   ) => {
     const unlockedIds = [
       ...new Set([
-        ...persistedIds,
+        ...Object.keys(persistedUnlocks),
         ...getEligibleTransmissions(next).map(({ id }) => id),
       ]),
     ];
@@ -412,7 +427,7 @@ export function App() {
   };
 
   const openCommsLog = () => {
-    const latest = unlockedTransmissions.at(-1);
+    const latest = orderedTransmissions.at(0)?.transmission;
     /* v8 ignore next -- header control only renders with unlocked messages */
     if (latest === undefined) return;
     setReadTransmissionIds(new Set(unlockedTransmissions.map(({ id }) => id)));
@@ -494,8 +509,14 @@ export function App() {
       setNotice('IMPORT REJECTED');
       return;
     }
-    syncNarrativeProgress(imported.progress, imported.transmissions);
-    setSave(imported);
+    const importedAt = Date.now();
+    const transmissions = { ...imported.transmissions };
+    getEligibleTransmissions(imported.progress).forEach(({ id }) => {
+      transmissions[id] ??= importedAt;
+    });
+    const normalized = { ...imported, transmissions };
+    syncNarrativeProgress(normalized.progress, normalized.transmissions);
+    setSave(normalized);
     setImportText('');
     setModal('none');
     setNotice('SAVE IMPORTED');
@@ -1050,7 +1071,7 @@ export function App() {
                 </span>
               </div>
               <ol className="space-y-2">
-                {[...unlockedTransmissions].reverse().map((transmission) => {
+                {orderedTransmissions.map(({ transmission, unlockedAt }) => {
                   const selected = transmission.id === selectedTransmissionId;
                   return (
                     <li key={transmission.id}>
@@ -1069,6 +1090,15 @@ export function App() {
                             <small className="text-xs font-bold tracking-wide text-slate-500">
                               {transmission.role}
                             </small>
+                            <time
+                              className="ml-auto text-xs text-slate-500"
+                              dateTime={new Date(unlockedAt).toISOString()}
+                            >
+                              {new Date(unlockedAt).toLocaleString([], {
+                                dateStyle: 'medium',
+                                timeStyle: 'short',
+                              })}
+                            </time>
                           </span>
                           {transmission.sender === 'R.E.A.C.T.O.R.' && (
                             <small className="mt-0.5 block text-xs text-cyan-500">

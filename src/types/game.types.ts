@@ -82,7 +82,7 @@ export interface SaveEnvelope {
   version: 1;
   progress: GameProgress;
   preferences: Preferences;
-  transmissions: string[];
+  transmissions: Record<string, number>;
   savedAt?: number;
 }
 

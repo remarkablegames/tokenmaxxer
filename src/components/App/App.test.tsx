@@ -137,6 +137,31 @@ describe('Tokenmaxxer dashboard', () => {
     expect(messages.at(-1)).toHaveTextContent(
       'Max Chen cleared 1,000 tokens on his first shift.',
     );
+    expect(messages[0].querySelector('time')).toBeInTheDocument();
+  });
+
+  it('sorts comms by persisted unlock date and displays the timestamp', async () => {
+    const save = createInitialSave();
+    save.progress.stats.clicks = 1;
+    save.progress.upgrades.keyboard = 1;
+    save.transmissions = {
+      'first-click': Date.parse('2026-07-17T10:00:00Z'),
+      'keyboard-purchased': Date.parse('2026-07-18T10:00:00Z'),
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.click(screen.getByRole('button', { name: 'Open Ops Comms' }));
+    const messages = screen.getAllByRole('article');
+    expect(messages[0]).toHaveTextContent('Mechanical keyboard? Nice.');
+    expect(messages[1]).toHaveTextContent(
+      'Max Chen cleared 1,000 tokens on his first shift.',
+    );
+    expect(messages[0].querySelector('time')).toHaveAttribute(
+      'datetime',
+      '2026-07-18T10:00:00.000Z',
+    );
   });
 
   it('queues reactive upgrade and critical-click messages once', async () => {
