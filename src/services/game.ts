@@ -258,6 +258,7 @@ export function createInitialSave(): SaveEnvelope {
     version: 1,
     progress: createInitialProgress(),
     preferences: { muted: false, volume: 0.45 },
+    transmissions: [],
   };
 }
 
@@ -637,6 +638,17 @@ export function parseSave(raw: string): SaveEnvelope | null {
       preferences.volume > 1
     )
       return null;
+    if (
+      data.transmissions !== undefined &&
+      (!Array.isArray(data.transmissions) ||
+        data.transmissions.some((value) => typeof value !== 'string'))
+    )
+      return null;
+    if (
+      data.savedAt !== undefined &&
+      (typeof data.savedAt !== 'number' || !Number.isFinite(data.savedAt))
+    )
+      return null;
 
     const abilityValues = ABILITIES.flatMap((ability) => {
       const state: unknown = progress.abilities[ability.id];
@@ -673,7 +685,15 @@ export function parseSave(raw: string): SaveEnvelope | null {
       progress.achievements.some((value) => typeof value !== 'string')
     )
       return null;
-    return data as unknown as SaveEnvelope;
+    const transmissions: string[] = Array.isArray(data.transmissions)
+      ? data.transmissions.filter(
+          (value: unknown): value is string => typeof value === 'string',
+        )
+      : [];
+    return {
+      ...(data as unknown as SaveEnvelope),
+      transmissions,
+    };
   } catch {
     return null;
   }

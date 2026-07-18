@@ -1,35 +1,71 @@
 import { createInitialProgress } from './game';
-import { getUnlockedTransmissions, TRANSMISSIONS } from './transmissions';
+import {
+  getEligibleTransmissions,
+  getSessionTransmission,
+  getTransmissionsById,
+  sortTransmissionsByPriority,
+  TRANSMISSIONS,
+} from './transmissions';
 
 describe('narrative transmissions', () => {
-  it('describes unlocks as typed progression data', () => {
-    expect(TRANSMISSIONS.map(({ unlock }) => unlock)).toEqual([
-      { type: 'click', value: 1 },
-      { type: 'record', value: 1_000 },
-      { type: 'record', value: 10_000 },
-      { type: 'record', value: 100_000 },
-      { type: 'record', value: 1_000_000 },
-      { type: 'record', value: 10_000_000 },
-      { type: 'record', value: 100_000_000 },
-      { type: 'prestige', value: 1 },
-    ]);
+  it('defines a varied, prioritized office narrative', () => {
+    expect(TRANSMISSIONS).toHaveLength(22);
+    expect(new Set(TRANSMISSIONS.map(({ id }) => id)).size).toBe(22);
+    expect(new Set(TRANSMISSIONS.map(({ sender }) => sender)).size).toBe(10);
+    expect(TRANSMISSIONS.every(({ priority }) => priority > 0)).toBe(true);
+    expect(TRANSMISSIONS.map(({ unlock }) => unlock.type)).toEqual(
+      expect.arrayContaining([
+        'click',
+        'record',
+        'prestige',
+        'critical-click',
+        'lifetime-tokens',
+        'upgrade',
+        'ability',
+        'session',
+      ]),
+    );
   });
 
-  it('unlocks the Goodhart Systems story in progression order', () => {
+  it('derives permanent unlocks from every kind of game progress', () => {
     const progress = createInitialProgress();
-    expect(getUnlockedTransmissions(progress)).toEqual([]);
+    expect(getEligibleTransmissions(progress)).toEqual([]);
 
     progress.stats.clicks = 1;
-    expect(getUnlockedTransmissions(progress).map(({ id }) => id)).toEqual([
-      'first-click',
-    ]);
-
-    progress.trophies = [0, 1, 2, 3, 4, 5];
-    expect(getUnlockedTransmissions(progress).map(({ id }) => id)).toEqual(
-      TRANSMISSIONS.slice(0, 7).map(({ id }) => id),
-    );
-
+    progress.stats.criticalClicks = 1;
+    progress.stats.tokens = 500_000;
     progress.stats.prestiges = 1;
-    expect(getUnlockedTransmissions(progress)).toEqual(TRANSMISSIONS);
+    progress.upgrades.keyboard = 1;
+    progress.upgrades.gpu = 1;
+    progress.upgrades.rack = 1;
+    progress.upgrades.multifinger = 1;
+    progress.upgrades.compression = 1;
+    progress.upgrades.engineer = 1;
+    progress.upgrades.cluster = 1;
+    progress.upgrades.orbital = 1;
+    progress.abilities.surge.cooldown = 1;
+    progress.abilities.hyperfocus.remaining = 1;
+    progress.trophies = [0, 1, 2, 3, 4, 5, 6];
+
+    expect(getEligibleTransmissions(progress).map(({ id }) => id)).toEqual(
+      TRANSMISSIONS.filter(({ unlock }) => unlock.type !== 'session').map(
+        ({ id }) => id,
+      ),
+    );
+  });
+
+  it('selects persisted and session transmissions safely', () => {
+    expect(
+      getTransmissionsById(['offline-return', 'missing', 'first-click']).map(
+        ({ id }) => id,
+      ),
+    ).toEqual(['first-click', 'offline-return']);
+    expect(getSessionTransmission('idle').id).toBe('idle-review');
+    expect(getSessionTransmission('offline-return').id).toBe('offline-return');
+    expect(
+      sortTransmissionsByPriority([TRANSMISSIONS[1], TRANSMISSIONS[0]]).map(
+        ({ id }) => id,
+      ),
+    ).toEqual(['first-click', 'keyboard-purchased']);
   });
 });

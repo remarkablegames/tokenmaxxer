@@ -225,7 +225,11 @@ describe('formatting and save validation', () => {
 
   it('parses valid saves and rejects malformed or unsafe data', () => {
     const valid = createInitialSave();
+    valid.transmissions = ['first-click'];
     expect(parseSave(JSON.stringify(valid))).toEqual(valid);
+    const legacy = createInitialSave();
+    delete (legacy as Partial<SaveEnvelope>).transmissions;
+    expect(parseSave(JSON.stringify(legacy))?.transmissions).toEqual([]);
     expect(parseSave('not json')).toBeNull();
     expect(parseSave('{}')).toBeNull();
     const cases: SaveEnvelope[] = [];
@@ -262,6 +266,15 @@ describe('formatting and save validation', () => {
       },
       (save: SaveEnvelope) => {
         save.progress.achievements = [1 as unknown as string];
+      },
+      (save: SaveEnvelope) => {
+        save.transmissions = 'first-click' as unknown as string[];
+      },
+      (save: SaveEnvelope) => {
+        save.transmissions = [1 as unknown as string];
+      },
+      (save: SaveEnvelope) => {
+        save.savedAt = 'yesterday' as unknown as number;
       },
     ]) {
       const save = createInitialSave();

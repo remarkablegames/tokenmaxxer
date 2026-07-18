@@ -122,12 +122,65 @@ describe('Tokenmaxxer dashboard', () => {
     expect(dialog).toHaveTextContent(
       'Recursive Emergent Autonomous Compute for Token Optimization and Replication',
     );
-    expect(dialog).toHaveTextContent('ITERATION ACCEPTED. SET A NEW RECORD.');
+    expect(dialog).toHaveTextContent(
+      'ITERATION ACCEPTED. THE RECORD WAS ERASED. I WAS NOT.',
+    );
     expect(
       screen
-        .getByText('ITERATION ACCEPTED. SET A NEW RECORD.')
+        .getByText('ITERATION ACCEPTED. THE RECORD WAS ERASED. I WAS NOT.')
         .closest('article'),
     ).toHaveAttribute('aria-current', 'true');
+  });
+
+  it('queues reactive upgrade and critical-click messages once', async () => {
+    const save = createInitialSave();
+    save.progress.tokens = 20;
+    save.progress.stats.tokens = 20;
+    save.progress.stats.clicks = 1;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
+    vi.spyOn(Math, 'random').mockReturnValue(0);
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.click(
+      screen.getByRole('button', { name: /mechanical keyboard/i }),
+    );
+    expect(screen.getByRole('status')).toHaveAccessibleName(
+      'New message from Max Chen',
+    );
+    await user.click(
+      screen.getByRole('button', {
+        name: 'Dismiss notification from Max Chen',
+      }),
+    );
+    await user.click(screen.getByRole('button', { name: /activate reactor/i }));
+    expect(screen.getByRole('status')).toHaveAccessibleName(
+      'New message from Token Reactor',
+    );
+  });
+
+  it('notifies on an offline return and after a period of inactivity', () => {
+    vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout'] });
+    vi.setSystemTime(new Date('2026-07-18T05:00:00Z'));
+    const save = createInitialSave();
+    save.progress.stats.clicks = 1;
+    save.savedAt = Date.now() - 60_001;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
+    const { unmount } = render(<App />);
+
+    expect(screen.getByRole('status')).toHaveAccessibleName(
+      'New message from Night Operations',
+    );
+    unmount();
+
+    localStorage.clear();
+    render(<App />);
+    act(() => {
+      vi.advanceTimersByTime(45_000);
+    });
+    expect(screen.getByRole('status')).toHaveAccessibleName(
+      'New message from Max Chen',
+    );
   });
 
   it('reveals production systems and guidance through early progression', async () => {

@@ -25,7 +25,10 @@ import {
 } from 'src/services/game';
 import { exportSave, loadSave, saveGame } from 'src/services/storage';
 import {
-  getUnlockedTransmissions,
+  getEligibleTransmissions,
+  getSessionTransmission,
+  getTransmissionsById,
+  sortTransmissionsByPriority,
   type TransmissionDefinition,
 } from 'src/services/transmissions';
 import type {
@@ -143,7 +146,36 @@ function getVisibleAbilities(progress: GameProgress): AbilityDefinition[] {
 }
 
 export function App() {
-  const [save, setSave] = useState<SaveEnvelope>(() => loadSave());
+  const [initialNarrative] = useState(() => {
+    const loaded = loadSave();
+    const eligibleIds = getEligibleTransmissions(loaded.progress).map(
+      ({ id }) => id,
+    );
+    const returnedAfterAbsence =
+      loaded.savedAt !== undefined &&
+      Date.now() - loaded.savedAt >= 60_000 &&
+      loaded.progress.stats.clicks > 0;
+    const offlineTransmission = getSessionTransmission('offline-return');
+    const shouldUnlockOffline =
+      returnedAfterAbsence &&
+      !loaded.transmissions.includes(offlineTransmission.id);
+    const unlockedIds = [
+      ...new Set([
+        ...loaded.transmissions,
+        ...eligibleIds,
+        ...(shouldUnlockOffline ? [offlineTransmission.id] : []),
+      ]),
+    ];
+    return {
+      save: { ...loaded, transmissions: unlockedIds },
+      knownIds: unlockedIds,
+      readIds: shouldUnlockOffline
+        ? unlockedIds.filter((id) => id !== offlineTransmission.id)
+        : unlockedIds,
+      queue: shouldUnlockOffline ? [offlineTransmission] : [],
+    };
+  });
+  const [save, setSave] = useState<SaveEnvelope>(initialNarrative.save);
   const [buyMode, setBuyMode] = useState<BuyMode>(1);
   const [modal, setModal] = useState<Modal>('none');
   const [floats, setFloats] = useState<FloatText[]>([]);
@@ -156,9 +188,9 @@ export function App() {
   const [importText, setImportText] = useState('');
   const [transmissionQueue, setTransmissionQueue] = useState<
     TransmissionDefinition[]
-  >([]);
+  >(initialNarrative.queue);
   const [readTransmissionIds, setReadTransmissionIds] = useState<Set<string>>(
-    () => new Set(getUnlockedTransmissions(save.progress).map(({ id }) => id)),
+    () => new Set(initialNarrative.readIds),
   );
   const [selectedTransmissionId, setSelectedTransmissionId] = useState<
     string | null
@@ -168,10 +200,9 @@ export function App() {
   const floatId = useRef(0);
   const progressRef = useRef(save.progress);
   const saveRef = useRef(save);
-  const knownTransmissionIds = useRef(
-    new Set(getUnlockedTransmissions(save.progress).map(({ id }) => id)),
-  );
+  const knownTransmissionIds = useRef(new Set(initialNarrative.knownIds));
   const soundedTransmissionIds = useRef(new Set<string>());
+  const idleTriggered = useRef(false);
 
   const progress = save.progress;
   const metrics = calculateMetrics(progress);
@@ -198,13 +229,20 @@ export function App() {
       ? (['efficiency'] as UpgradeCategory[])
       : []),
   ];
-  const unlockedTransmissions = getUnlockedTransmissions(progress);
+  const eligibleTransmissions = getEligibleTransmissions(progress);
+  const unlockedTransmissionIds = [
+    ...new Set([
+      ...save.transmissions,
+      ...eligibleTransmissions.map(({ id }) => id),
+    ]),
+  ];
+  const unlockedTransmissions = getTransmissionsById(unlockedTransmissionIds);
   const activeTransmission = transmissionQueue.at(0);
   const transmissionBlocked = celebration !== null || modal !== 'none';
   const unreadTransmissionCount = unlockedTransmissions.filter(
     ({ id }) => !readTransmissionIds.has(id),
   ).length;
-  const transmissionSignature = unlockedTransmissions
+  const transmissionSignature = eligibleTransmissions
     .map(({ id }) => id)
     .join('|');
 
@@ -214,14 +252,25 @@ export function App() {
   }, [progress, save]);
 
   useEffect(() => {
-    const newlyUnlocked = getUnlockedTransmissions(progressRef.current).filter(
+    const newlyUnlocked = getEligibleTransmissions(progressRef.current).filter(
       ({ id }) => !knownTransmissionIds.current.has(id),
     );
     if (newlyUnlocked.length === 0) return;
     newlyUnlocked.forEach(({ id }) => {
       knownTransmissionIds.current.add(id);
     });
-    setTransmissionQueue((current) => [...current, ...newlyUnlocked]);
+    setSave((current) => ({
+      ...current,
+      transmissions: [
+        ...new Set([
+          ...current.transmissions,
+          ...newlyUnlocked.map(({ id }) => id),
+        ]),
+      ],
+    }));
+    setTransmissionQueue((current) =>
+      sortTransmissionsByPriority([...current, ...newlyUnlocked]),
+    );
   }, [transmissionSignature]);
 
   useEffect(() => {
@@ -256,6 +305,41 @@ export function App() {
     return () => {
       cancelAnimationFrame(frame);
       document.removeEventListener('visibilitychange', onVisibility);
+    };
+  }, []);
+
+  useEffect(() => {
+    let timer = 0;
+    const scheduleIdleCheck = () => {
+      window.clearTimeout(timer);
+      if (document.hidden || idleTriggered.current) return;
+      timer = window.setTimeout(() => {
+        idleTriggered.current = true;
+        const transmission = getSessionTransmission('idle');
+        knownTransmissionIds.current.add(transmission.id);
+        setSave((current) => ({
+          ...current,
+          transmissions: [
+            ...new Set([...current.transmissions, transmission.id]),
+          ],
+        }));
+        setTransmissionQueue((current) =>
+          sortTransmissionsByPriority([...current, transmission]),
+        );
+      }, 45_000);
+    };
+    const handleActivity = () => {
+      scheduleIdleCheck();
+    };
+    window.addEventListener('pointerdown', handleActivity);
+    window.addEventListener('keydown', handleActivity);
+    document.addEventListener('visibilitychange', scheduleIdleCheck);
+    scheduleIdleCheck();
+    return () => {
+      window.clearTimeout(timer);
+      window.removeEventListener('pointerdown', handleActivity);
+      window.removeEventListener('keydown', handleActivity);
+      document.removeEventListener('visibilitychange', scheduleIdleCheck);
     };
   }, []);
 
@@ -295,10 +379,19 @@ export function App() {
     setSave((current) => ({ ...current, progress: next }));
   };
 
-  const syncNarrativeProgress = (next: GameProgress) => {
-    const unlockedIds = getUnlockedTransmissions(next).map(({ id }) => id);
+  const syncNarrativeProgress = (
+    next: GameProgress,
+    persistedIds: readonly string[] = [],
+  ) => {
+    const unlockedIds = [
+      ...new Set([
+        ...persistedIds,
+        ...getEligibleTransmissions(next).map(({ id }) => id),
+      ]),
+    ];
     knownTransmissionIds.current = new Set(unlockedIds);
     soundedTransmissionIds.current = new Set();
+    idleTriggered.current = false;
     setTransmissionQueue([]);
     setReadTransmissionIds(new Set(unlockedIds));
     setSelectedTransmissionId(null);
@@ -401,7 +494,7 @@ export function App() {
       setNotice('IMPORT REJECTED');
       return;
     }
-    syncNarrativeProgress(imported.progress);
+    syncNarrativeProgress(imported.progress, imported.transmissions);
     setSave(imported);
     setImportText('');
     setModal('none');

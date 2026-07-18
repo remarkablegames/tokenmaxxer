@@ -14,8 +14,12 @@ describe('save storage', () => {
   it('saves and exports the versioned envelope', () => {
     const save = createInitialSave();
     const setItem = vi.fn();
+    vi.spyOn(Date, 'now').mockReturnValue(123_456);
     saveGame(save, { setItem });
-    expect(setItem).toHaveBeenCalledWith(STORAGE_KEY, JSON.stringify(save));
+    expect(setItem).toHaveBeenCalledWith(
+      STORAGE_KEY,
+      JSON.stringify({ ...save, savedAt: 123_456 }),
+    );
     expect(JSON.parse(exportSave(save))).toEqual(save);
   });
 });

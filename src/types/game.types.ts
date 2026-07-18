@@ -82,6 +82,8 @@ export interface SaveEnvelope {
   version: 1;
   progress: GameProgress;
   preferences: Preferences;
+  transmissions: string[];
+  savedAt?: number;
 }
 
 export interface ProductionMetrics {

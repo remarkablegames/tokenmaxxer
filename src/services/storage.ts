@@ -15,7 +15,10 @@ export function saveGame(
   save: SaveEnvelope,
   storage: Pick<Storage, 'setItem'> = localStorage,
 ): void {
-  storage.setItem(STORAGE_KEY, JSON.stringify(save));
+  storage.setItem(
+    STORAGE_KEY,
+    JSON.stringify({ ...save, savedAt: Date.now() }),
+  );
 }
 
 export function exportSave(save: SaveEnvelope): string {
