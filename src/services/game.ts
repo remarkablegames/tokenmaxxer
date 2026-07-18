@@ -60,6 +60,16 @@ export const UPGRADES: UpgradeDefinition[] = [
     icon: 'icons/upgrades/gpu.svg',
   },
   {
+    id: 'model',
+    name: 'AI Model',
+    description: '+4 tokens per second',
+    category: 'automation',
+    baseCost: 350,
+    growth: 1.12,
+    unlockAt: 250,
+    icon: 'icons/upgrades/model.svg',
+  },
+  {
     id: 'rack',
     name: 'Server Rack',
     description: '+12 tokens per second',
@@ -195,6 +205,7 @@ const EMPTY_UPGRADES: Record<UpgradeId, number> = {
   templates: 0,
   multifinger: 0,
   gpu: 0,
+  model: 0,
   rack: 0,
   engineer: 0,
   cluster: 0,
@@ -222,6 +233,26 @@ export function getReactorStage(recordIndex: number): number {
 
 export function getSeedTokens(level: number): number {
   return level === 0 ? 0 : 250 * 4 ** (level - 1);
+}
+
+export function getAiModelDeployment(level: number): string | null {
+  if (level >= 30) return 'MythOS';
+  if (level >= 20) return 'DeepThunk';
+  if (level >= 10) return 'Claudio';
+  if (level >= 5) return 'TalkGTP';
+  if (level >= 1) return 'GoPilot';
+  return null;
+}
+
+export function getUpgradeDescription(
+  upgrade: UpgradeDefinition,
+  level: number,
+): string {
+  const deployment =
+    upgrade.id === 'model' ? getAiModelDeployment(level) : null;
+  return deployment === null
+    ? upgrade.description
+    : `${deployment} active · ${upgrade.description}`;
 }
 
 export function createInitialProgress(
@@ -273,6 +304,7 @@ export function calculateMetrics(progress: GameProgress): ProductionMetrics {
     (1 + progress.perks.manualCalibration * 0.25);
   const automationBase =
     u.gpu +
+    u.model * 4 +
     u.rack * 12 +
     u.engineer * 100 +
     u.cluster * 900 +

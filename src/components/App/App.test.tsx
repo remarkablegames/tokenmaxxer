@@ -265,7 +265,7 @@ describe('Tokenmaxxer dashboard', () => {
     expect(gpu).toHaveAttribute('data-guided', 'true');
     await user.click(gpu);
     expect(screen.getByText('Chase the First Record')).toBeInTheDocument();
-    expect(screen.getByText('Server Rack')).toBeInTheDocument();
+    expect(screen.getByText('AI Model')).toBeInTheDocument();
   });
 
   it('reveals advanced dashboard sections at their progression thresholds', () => {

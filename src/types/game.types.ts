@@ -5,6 +5,7 @@ export type UpgradeId =
   | 'templates'
   | 'multifinger'
   | 'gpu'
+  | 'model'
   | 'rack'
   | 'engineer'
   | 'cluster'

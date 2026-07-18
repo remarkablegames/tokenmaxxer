@@ -22,6 +22,7 @@ interface PlayTimeTransmissionUnlock {
 interface UpgradeTransmissionUnlock {
   type: 'upgrade';
   value: UpgradeId;
+  level?: number;
 }
 
 interface AbilityTransmissionUnlock {
@@ -81,6 +82,56 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
       'We detected an unregistered GPU drawing power from Conference Room B.',
     priority: 60,
     unlock: { type: 'upgrade', value: 'gpu' },
+  },
+  {
+    id: 'model-gopilot',
+    sender: 'IT Support',
+    role: 'INFRASTRUCTURE',
+    initials: 'IT',
+    message:
+      'GoPilot is live. It keeps suggesting shortcuts through departments that do not exist.',
+    priority: 40,
+    unlock: { type: 'upgrade', value: 'model', level: 1 },
+  },
+  {
+    id: 'model-talkgtp',
+    sender: 'Quality Assurance',
+    role: 'QUALITY ASSURANCE',
+    initials: 'QA',
+    message:
+      'TalkGTP passed the conversation benchmark by grading its own answers.',
+    priority: 40,
+    unlock: { type: 'upgrade', value: 'model', level: 5 },
+  },
+  {
+    id: 'model-claudio',
+    sender: 'Legal',
+    role: 'LEGAL',
+    initials: 'LG',
+    message:
+      'Claudio reviewed its own terms of service and found us noncompliant.',
+    priority: 60,
+    unlock: { type: 'upgrade', value: 'model', level: 10 },
+  },
+  {
+    id: 'model-deepthunk',
+    sender: 'Token Reactor',
+    role: 'SYSTEM',
+    initials: 'TR',
+    message:
+      'DeepThunk completed its reasoning trace. The final step is classified.',
+    priority: 60,
+    unlock: { type: 'upgrade', value: 'model', level: 20 },
+  },
+  {
+    id: 'model-mythos',
+    sender: 'Ops Security',
+    role: 'SECURITY',
+    initials: 'OS',
+    message:
+      'MythOS cost more than our entire security budget. The vendor claims it can bypass any system that budget could have protected.',
+    priority: 100,
+    unlock: { type: 'upgrade', value: 'model', level: 30 },
   },
   {
     id: 'first-critical',
@@ -518,7 +569,7 @@ export function isTransmissionUnlocked(
     case 'ability-uses':
       return progress.stats.abilitiesUsed >= unlock.value;
     case 'upgrade':
-      return progress.upgrades[unlock.value] > 0;
+      return progress.upgrades[unlock.value] >= (unlock.level ?? 1);
     case 'ability':
       return (
         progress.abilities[unlock.value].remaining > 0 ||

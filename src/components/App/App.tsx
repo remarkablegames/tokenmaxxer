@@ -15,6 +15,7 @@ import {
   getPurchaseQuote,
   getReactorStage,
   getRecordTarget,
+  getUpgradeDescription,
   parseSave,
   PERKS,
   prestige,
@@ -948,7 +949,10 @@ export function App() {
                           </strong>
                           <small className="block overflow-hidden text-xs text-ellipsis whitespace-nowrap text-slate-400">
                             {unlocked
-                              ? upgrade.description
+                              ? getUpgradeDescription(
+                                  upgrade,
+                                  progress.upgrades[upgrade.id],
+                                )
                               : `LOCKED · Generate ${formatNumber(upgrade.unlockAt)} lifetime tokens`}
                           </small>
                         </span>

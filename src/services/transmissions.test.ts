@@ -9,8 +9,8 @@ import {
 
 describe('narrative transmissions', () => {
   it('defines a varied, prioritized office narrative', () => {
-    expect(TRANSMISSIONS).toHaveLength(45);
-    expect(new Set(TRANSMISSIONS.map(({ id }) => id)).size).toBe(45);
+    expect(TRANSMISSIONS).toHaveLength(50);
+    expect(new Set(TRANSMISSIONS.map(({ id }) => id)).size).toBe(50);
     expect(new Set(TRANSMISSIONS.map(({ sender }) => sender)).size).toBe(13);
     expect(TRANSMISSIONS.every(({ priority }) => priority > 0)).toBe(true);
     expect(TRANSMISSIONS.map(({ unlock }) => unlock.type)).toEqual(
@@ -44,6 +44,7 @@ describe('narrative transmissions', () => {
     progress.upgrades.keyboard = 1;
     progress.upgrades.templates = 1;
     progress.upgrades.gpu = 1;
+    progress.upgrades.model = 30;
     progress.upgrades.rack = 1;
     progress.upgrades.multifinger = 1;
     progress.upgrades.compression = 1;
@@ -62,6 +63,29 @@ describe('narrative transmissions', () => {
         ({ id }) => id,
       ),
     );
+  });
+
+  it('unlocks named AI model deployments at their upgrade levels', () => {
+    const progress = createInitialProgress();
+    progress.upgrades.model = 9;
+    expect(
+      getEligibleTransmissions(progress)
+        .filter(({ id }) => id.startsWith('model-'))
+        .map(({ id }) => id),
+    ).toEqual(['model-gopilot', 'model-talkgtp']);
+
+    progress.upgrades.model = 30;
+    expect(
+      getEligibleTransmissions(progress)
+        .filter(({ id }) => id.startsWith('model-'))
+        .map(({ id }) => id),
+    ).toEqual([
+      'model-gopilot',
+      'model-talkgtp',
+      'model-claudio',
+      'model-deepthunk',
+      'model-mythos',
+    ]);
   });
 
   it('requires meaningful input before unlocking active-playtime chatter', () => {

@@ -10,12 +10,14 @@ import {
   createInitialSave,
   formatDuration,
   formatNumber,
+  getAiModelDeployment,
   getPerkCost,
   getPurchaseQuote,
   getReactorStage,
   getRecordTarget,
   getSeedTokens,
   getUpgradeCost,
+  getUpgradeDescription,
   parseSave,
   PERKS,
   prestige,
@@ -40,6 +42,7 @@ function richProgress(): GameProgress {
     templates: 1,
     multifinger: 1,
     gpu: 1,
+    model: 1,
     rack: 1,
     engineer: 1,
     cluster: 1,
@@ -75,6 +78,19 @@ describe('game calculations', () => {
     expect(getReactorStage(20)).toBe(5);
     expect(getSeedTokens(0)).toBe(0);
     expect(getSeedTokens(2)).toBe(1_000);
+    expect(getAiModelDeployment(0)).toBeNull();
+    expect(getAiModelDeployment(1)).toBe('GoPilot');
+    expect(getAiModelDeployment(5)).toBe('TalkGTP');
+    expect(getAiModelDeployment(10)).toBe('Claudio');
+    expect(getAiModelDeployment(20)).toBe('DeepThunk');
+    expect(getAiModelDeployment(30)).toBe('MythOS');
+    expect(getUpgradeDescription(UPGRADES[0], 1)).toBe(
+      '+1 base token per click',
+    );
+    expect(getUpgradeDescription(UPGRADES[4], 0)).toBe('+4 tokens per second');
+    expect(getUpgradeDescription(UPGRADES[4], 1)).toBe(
+      'GoPilot active · +4 tokens per second',
+    );
   });
 
   it('calculates combined production and capped critical chance', () => {
@@ -83,7 +99,7 @@ describe('game calculations', () => {
     progress.abilities.hyperfocus.remaining = 1;
     const metrics = calculateMetrics(progress);
     expect(metrics.tokensPerClick).toBeCloseTo(8 * 1.25 * 1.2 * 1.5 * 3 * 5);
-    expect(metrics.tokensPerSecond).toBeCloseTo(9_013 * 1.35 * 1.2 * 1.5 * 3);
+    expect(metrics.tokensPerSecond).toBeCloseTo(9_017 * 1.35 * 1.2 * 1.5 * 3);
     expect(metrics.criticalChance).toBe(0.35);
   });
 
