@@ -48,7 +48,14 @@ const CATEGORY_LABELS: Record<UpgradeCategory, string> = {
   automation: 'Automation Fleet',
   efficiency: 'Efficiency Lab',
 };
-const STAGE_COLORS = ['cyan', 'cyan', 'violet', 'violet', 'amber', 'fuchsia'];
+const PANEL_CLASS =
+  'rounded-2xl border border-white/8 bg-linear-to-br from-[#0f1e31]/90 to-[#060e1c]/95 shadow-[inset_0_1px_0_rgb(255_255_255/0.035),0_18px_60px_rgb(0_0_0/0.22)]';
+const EYEBROW_CLASS =
+  'text-[0.64rem] font-extrabold tracking-[0.2em] text-cyan-300';
+const ICON_BUTTON_CLASS =
+  'grid size-10 cursor-pointer place-items-center rounded-xl border border-white/10 bg-white/4 text-slate-300 transition-colors hover:border-cyan-300/45 hover:bg-cyan-400/8';
+const ACTION_BUTTON_CLASS =
+  'cursor-pointer rounded-xl px-4 py-3 text-xs font-extrabold transition hover:-translate-y-px hover:brightness-125 disabled:cursor-not-allowed disabled:opacity-40';
 
 export function App() {
   const [save, setSave] = useState<SaveEnvelope>(() => loadSave());
@@ -250,9 +257,7 @@ export function App() {
   };
 
   return (
-    <main
-      className={`min-h-screen bg-[#050914] text-slate-100 stage-${STAGE_COLORS[stage]}`}
-    >
+    <main className="min-h-screen bg-[#050914] text-slate-100">
       <div className="noise pointer-events-none fixed inset-0" />
       <header className="sticky top-0 z-30 border-b border-cyan-400/15 bg-[#050914]/95 px-3 py-3 backdrop-blur-xl sm:px-6">
         <div className="mx-auto flex max-w-400 flex-wrap items-center gap-3">
@@ -278,7 +283,7 @@ export function App() {
             value={formatNumber(metrics.tokensPerClick)}
           />
           <button
-            className="icon-button"
+            className={ICON_BUTTON_CLASS}
             aria-label="Open settings"
             onClick={() => {
               setModal('settings');
@@ -294,7 +299,7 @@ export function App() {
         <div className="mx-auto max-w-400">
           <div className="mb-2 flex items-end justify-between gap-4">
             <div>
-              <p className="eyebrow text-amber-300">
+              <p className={`${EYEBROW_CLASS} text-amber-300`}>
                 CURRENT HIGH SCORE TARGET
               </p>
               <h2 className="text-3xl font-black tabular-nums sm:text-5xl">
@@ -311,9 +316,9 @@ export function App() {
               </strong>
             </div>
           </div>
-          <div className="progress-track h-3">
+          <div className="h-3 overflow-hidden rounded-full border border-white/8 bg-black/45 shadow-[inset_0_2px_5px_rgb(0_0_0/0.55)]">
             <div
-              className="progress-fill"
+              className="h-full rounded-[inherit] bg-linear-to-r from-cyan-600 via-cyan-300 to-amber-400 shadow-[0_0_20px_#22d3ee] transition-[width] duration-300 ease-out"
               style={{ width: `${String(recordProgress)}%` }}
             />
           </div>
@@ -336,19 +341,21 @@ export function App() {
                 return (
                   <button
                     key={ability.id}
-                    className={`ability-card ${state.remaining > 0 ? 'ability-live' : ''}`}
+                    className={`flex w-full cursor-pointer items-center gap-3 rounded-xl border p-3 transition hover:-translate-y-px active:scale-[0.985] disabled:cursor-not-allowed disabled:opacity-60 ${state.remaining > 0 ? 'border-cyan-400/50 bg-cyan-400/6 shadow-[inset_0_0_24px_rgb(34_211_238/0.08)]' : 'border-white/8 bg-white/3 hover:border-cyan-400/45 hover:bg-cyan-400/6'}`}
                     disabled={!unlocked || state.cooldown > 0}
                     onClick={() => {
                       handleAbility(ability.id);
                     }}
                     type="button"
                   >
-                    <span className="ability-icon">
+                    <span
+                      className={`grid size-9 shrink-0 place-items-center rounded-lg border border-cyan-300/20 bg-cyan-500/8 text-lg text-cyan-300 ${state.remaining > 0 ? 'glow-pulse' : ''}`}
+                    >
                       {ability.id === 'surge' ? 'ϟ' : '◉'}
                     </span>
                     <span className="min-w-0 flex-1 text-left">
                       <strong className="block">{ability.name}</strong>
-                      <small>
+                      <small className="block overflow-hidden text-[0.7rem] text-ellipsis whitespace-nowrap text-slate-500">
                         {!unlocked
                           ? `Unlock at ${formatNumber(ability.unlockAt)}`
                           : state.remaining > 0
@@ -358,7 +365,7 @@ export function App() {
                               : ability.description}
                       </small>
                     </span>
-                    <span className="text-cyan-300">
+                    <span className="text-[0.62rem] font-extrabold text-cyan-300">
                       {state.cooldown > 0
                         ? `${String(Math.ceil(state.cooldown))}s`
                         : 'READY'}
@@ -394,7 +401,7 @@ export function App() {
             </div>
           </Panel>
           <button
-            className="prestige-banner"
+            className="flex w-full cursor-pointer items-center justify-between gap-4 rounded-2xl border border-amber-300/30 bg-linear-to-r from-amber-900/25 to-violet-900/20 p-4 text-left disabled:cursor-not-allowed disabled:opacity-60 disabled:saturate-50 [&_small]:block [&_small]:text-[0.6rem] [&_small]:tracking-[0.15em] [&_small]:text-amber-400 [&_strong]:mt-1 [&_strong]:block [&>span:last-child]:text-[0.65rem] [&>span:last-child]:text-amber-300"
             disabled={progress.pendingCredits <= 0}
             onClick={() => {
               setModal('prestige');
@@ -413,10 +420,14 @@ export function App() {
           </button>
         </aside>
 
-        <section className="panel relative flex min-h-125 flex-col items-center justify-center overflow-hidden p-4">
+        <section
+          className={`${PANEL_CLASS} relative flex min-h-125 flex-col items-center justify-center overflow-hidden p-4`}
+        >
           <div className="absolute inset-x-8 top-5 flex justify-between">
-            <span className="eyebrow">REACTOR STAGE {stage + 1}/6</span>
-            <span className="eyebrow text-emerald-300">● STABLE</span>
+            <span className={EYEBROW_CLASS}>REACTOR STAGE {stage + 1}/6</span>
+            <span className={`${EYEBROW_CLASS} text-emerald-300`}>
+              ● STABLE
+            </span>
           </div>
           <Reactor
             active={progress.abilities.surge.remaining > 0}
@@ -431,28 +442,36 @@ export function App() {
             +{formatNumber(metrics.tokensPerClick)} TOKENS
           </strong>
           <div className="mt-4 flex gap-2 text-xs">
-            <span className="chip">
+            <span className="rounded-full border border-cyan-300/15 bg-cyan-400/6 px-3 py-1.5 text-slate-400">
               CRIT {(metrics.criticalChance * 100).toFixed(0)}%
             </span>
             {progress.abilities.surge.remaining > 0 && (
-              <span className="chip chip-live">SURGE ×3</span>
+              <span className="glow-pulse rounded-full border border-amber-300/30 bg-cyan-400/6 px-3 py-1.5 text-amber-300">
+                SURGE ×3
+              </span>
             )}
             {progress.abilities.hyperfocus.remaining > 0 && (
-              <span className="chip chip-live">HYPERFOCUS ×5</span>
+              <span className="glow-pulse rounded-full border border-amber-300/30 bg-cyan-400/6 px-3 py-1.5 text-amber-300">
+                HYPERFOCUS ×5
+              </span>
             )}
           </div>
         </section>
 
-        <section className="panel min-h-125 overflow-hidden">
+        <section className={`${PANEL_CLASS} min-h-125 overflow-hidden`}>
           <div className="flex items-center justify-between border-b border-white/8 p-4">
             <div>
-              <p className="eyebrow">PRODUCTION MARKET</p>
+              <p className={EYEBROW_CLASS}>PRODUCTION MARKET</p>
               <h2 className="text-lg font-bold">SYSTEM UPGRADES</h2>
             </div>
-            <div className="segmented" aria-label="Purchase amount">
+            <div
+              className="flex rounded-lg border border-white/8 bg-black/25 p-0.5"
+              aria-label="Purchase amount"
+            >
               {([1, 10, 'max'] as const).map((mode) => (
                 <button
                   aria-pressed={buyMode === mode}
+                  className="cursor-pointer rounded-md px-2 py-1 text-[0.62rem] font-extrabold text-slate-500 aria-pressed:bg-cyan-700 aria-pressed:text-white"
                   key={mode}
                   onClick={() => {
                     setBuyMode(mode);
@@ -489,7 +508,7 @@ export function App() {
                       ).cost;
                       return (
                         <button
-                          className="upgrade-card"
+                          className="flex w-full cursor-pointer items-center gap-3 rounded-xl border border-white/8 bg-white/3 p-3 transition hover:-translate-y-px hover:border-cyan-400/45 hover:bg-cyan-400/6 active:scale-[0.985] disabled:cursor-not-allowed disabled:opacity-60"
                           disabled={!unlocked || quote.count === 0}
                           key={upgrade.id}
                           onClick={() => {
@@ -497,21 +516,25 @@ export function App() {
                           }}
                           type="button"
                         >
-                          <span className="upgrade-icon">{upgrade.icon}</span>
+                          <span className="grid size-9 shrink-0 place-items-center rounded-lg border border-cyan-300/20 bg-cyan-500/8 text-lg text-cyan-300">
+                            {upgrade.icon}
+                          </span>
                           <span className="min-w-0 flex-1 text-left">
                             <span className="flex items-center justify-between gap-2">
                               <strong className="truncate">
                                 {upgrade.name}
                               </strong>
-                              <em>LV. {progress.upgrades[upgrade.id]}</em>
+                              <em className="text-[0.62rem] whitespace-nowrap text-slate-500 not-italic">
+                                LV. {progress.upgrades[upgrade.id]}
+                              </em>
                             </span>
-                            <small>
+                            <small className="block overflow-hidden text-[0.7rem] text-ellipsis whitespace-nowrap text-slate-500">
                               {unlocked
                                 ? upgrade.description
                                 : `LOCKED · Generate ${formatNumber(upgrade.unlockAt)} lifetime tokens`}
                             </small>
                           </span>
-                          <span className="cost">
+                          <span className="text-[0.68rem] font-extrabold whitespace-nowrap text-amber-300">
                             {quote.count > 0
                               ? `${formatNumber(quote.cost)} T`
                               : `${formatNumber(nextCost)} T`}
@@ -551,7 +574,7 @@ export function App() {
 
       {floats.map((item) => (
         <span
-          className={`float-token ${item.critical ? 'float-critical' : ''}`}
+          className={`float-token pointer-events-none fixed z-80 font-black ${item.critical ? 'text-lg text-yellow-300 [text-shadow:0_0_16px_#f59e0b]' : 'text-base text-cyan-300 [text-shadow:0_0_12px_#0891b2]'}`}
           key={item.id}
           style={{ left: item.x, top: item.y }}
         >
@@ -560,11 +583,20 @@ export function App() {
         </span>
       ))}
       {celebration !== null && (
-        <div className="celebration" role="status">
-          <div className="trophy-burst">🏆</div>
-          <p>NEW HIGH SCORE</p>
-          <strong>{formatNumber(getRecordTarget(celebration))}</strong>
-          <span>TROPHY #{celebration + 1} SECURED</span>
+        <div
+          className="celebration fixed inset-0 z-90 flex flex-col items-center justify-center bg-[radial-gradient(circle,rgb(6_182_212/0.24),rgb(5_9_20/0.92)_60%)] text-center"
+          role="status"
+        >
+          <div className="trophy-burst text-7xl">🏆</div>
+          <p className="text-xs font-black tracking-[0.4em] text-cyan-300">
+            NEW HIGH SCORE
+          </p>
+          <strong className="text-[clamp(3rem,11vw,8rem)] leading-none text-white [text-shadow:0_0_35px_#22d3ee]">
+            {formatNumber(getRecordTarget(celebration))}
+          </strong>
+          <span className="mt-4 font-extrabold tracking-[0.15em] text-amber-300">
+            TROPHY #{celebration + 1} SECURED
+          </span>
         </div>
       )}
       {modal !== 'none' && (
@@ -586,9 +618,13 @@ export function App() {
         >
           {modal === 'prestige' && (
             <div className="space-y-4">
-              <div className="credit-payout">
-                <span>PENDING PAYOUT</span>
-                <strong>+{progress.pendingCredits} Usage Credits</strong>
+              <div className="flex items-center justify-between rounded-xl border border-amber-300/20 bg-amber-300/7 p-4">
+                <span className="text-[0.68rem] tracking-[0.15em] text-slate-400">
+                  PENDING PAYOUT
+                </span>
+                <strong className="text-amber-300">
+                  +{progress.pendingCredits} Usage Credits
+                </strong>
               </div>
               <p className="text-sm text-slate-300">
                 Tokens, upgrades, and active abilities reset. Your records,
@@ -603,7 +639,7 @@ export function App() {
                   const cost = getPerkCost(perk, level);
                   return (
                     <button
-                      className="perk-card"
+                      className="flex cursor-pointer flex-col items-start rounded-xl border border-white/8 bg-white/3 p-3 text-left hover:border-amber-300/35 disabled:cursor-not-allowed disabled:opacity-45 [&_small]:mt-2 [&_small]:text-amber-300 [&_span]:text-xs [&_span]:text-slate-400"
                       disabled={maxed || progress.usageCredits < cost}
                       key={perk.id}
                       onClick={() => {
@@ -630,7 +666,7 @@ export function App() {
                   </strong>
                 </span>
                 <button
-                  className="primary-button"
+                  className={`${ACTION_BUTTON_CLASS} bg-linear-to-r from-cyan-600 to-violet-600 text-white`}
                   disabled={progress.pendingCredits <= 0}
                   onClick={handlePrestige}
                   type="button"
@@ -644,13 +680,13 @@ export function App() {
             <div className="grid gap-2 sm:grid-cols-2">
               {ACHIEVEMENTS.map((achievement) => (
                 <div
-                  className={`achievement ${progress.achievements.includes(achievement.id) ? 'achievement-unlocked' : ''}`}
+                  className={`flex items-center gap-3 rounded-xl border p-3 ${progress.achievements.includes(achievement.id) ? 'border-amber-300/25 bg-amber-300/5 opacity-100' : 'border-white/6 opacity-45'}`}
                   key={achievement.id}
                 >
-                  <span>
+                  <span className="text-amber-400">
                     {progress.achievements.includes(achievement.id) ? '◆' : '◇'}
                   </span>
-                  <div>
+                  <div className="[&_small]:block [&_small]:text-[0.7rem] [&_small]:text-slate-500 [&_strong]:block">
                     <strong>{achievement.name}</strong>
                     <small>{achievement.description}</small>
                   </div>
@@ -709,7 +745,7 @@ export function App() {
                 </span>
                 <button
                   aria-pressed={!save.preferences.muted}
-                  className="toggle"
+                  className="min-w-18 cursor-pointer rounded-full border border-cyan-400/25 bg-cyan-400/10 px-3 py-2 text-[0.65rem] font-extrabold text-cyan-300"
                   onClick={() => {
                     setSave((current) => ({
                       ...current,
@@ -745,7 +781,7 @@ export function App() {
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-2">
                 <button
-                  className="secondary-button"
+                  className={`${ACTION_BUTTON_CLASS} border border-cyan-400/25 bg-cyan-400/7 text-cyan-200`}
                   onClick={() => {
                     saveGame(save);
                     setNotice('GAME SAVED');
@@ -755,7 +791,7 @@ export function App() {
                   Manual Save
                 </button>
                 <button
-                  className="secondary-button"
+                  className={`${ACTION_BUTTON_CLASS} border border-cyan-400/25 bg-cyan-400/7 text-cyan-200`}
                   onClick={handleExport}
                   type="button"
                 >
@@ -763,7 +799,7 @@ export function App() {
                 </button>
               </div>
               <label className="block">
-                <span className="eyebrow">IMPORT SAVE JSON</span>
+                <span className={EYEBROW_CLASS}>IMPORT SAVE JSON</span>
                 <textarea
                   className="mt-2 h-28 w-full rounded-xl border border-white/10 bg-black/30 p-3 text-xs"
                   onChange={(event) => {
@@ -774,7 +810,7 @@ export function App() {
                 />
               </label>
               <button
-                className="primary-button w-full"
+                className={`${ACTION_BUTTON_CLASS} w-full bg-linear-to-r from-cyan-600 to-violet-600 text-white`}
                 disabled={importText.trim() === ''}
                 onClick={handleImport}
                 type="button"
@@ -782,7 +818,7 @@ export function App() {
                 Validate & Import
               </button>
               <button
-                className="danger-button w-full"
+                className={`${ACTION_BUTTON_CLASS} w-full border border-rose-500/25 bg-rose-500/6 text-rose-300`}
                 onClick={handleReset}
                 type="button"
               >
@@ -806,8 +842,8 @@ function Panel({
   children: React.ReactNode;
 }) {
   return (
-    <section className="panel p-4">
-      <p className="eyebrow">{eyebrow}</p>
+    <section className={`${PANEL_CLASS} p-4`}>
+      <p className={EYEBROW_CLASS}>{eyebrow}</p>
       <h2 className="mb-3 text-lg font-bold">{title}</h2>
       {children}
     </section>
@@ -823,9 +859,15 @@ function Stat({
   highlight?: boolean;
 }) {
   return (
-    <div className="header-stat">
-      <small>{label}</small>
-      <strong className={highlight ? 'text-cyan-200' : ''}>{value}</strong>
+    <div className="min-w-20 border-l border-white/9 pl-3 max-sm:order-3 max-sm:min-w-0 max-sm:flex-1">
+      <small className="block text-[0.58rem] tracking-[0.12em] text-slate-500">
+        {label}
+      </small>
+      <strong
+        className={`text-base tabular-nums max-sm:text-sm ${highlight ? 'text-cyan-200' : ''}`}
+      >
+        {value}
+      </strong>
     </div>
   );
 }
@@ -839,17 +881,23 @@ function ArchiveButton({
   onClick: () => void;
 }) {
   return (
-    <button className="archive-button" onClick={onClick} type="button">
-      <strong>{value}</strong>
-      <small>{label}</small>
+    <button
+      className="cursor-pointer rounded-xl border border-white/7 bg-white/3 px-1 py-3 text-center hover:border-amber-300/35"
+      onClick={onClick}
+      type="button"
+    >
+      <strong className="block text-amber-300">{value}</strong>
+      <small className="mt-0.5 block text-[0.58rem] text-slate-500">
+        {label}
+      </small>
     </button>
   );
 }
 function StatTile({ label, value }: { label: string; value: string }) {
   return (
-    <div className="stat-tile">
-      <small>{label}</small>
-      <strong>{value}</strong>
+    <div className="rounded-xl border border-white/7 bg-white/3 p-3">
+      <small className="block text-[0.66rem] text-slate-500">{label}</small>
+      <strong className="mt-1 block text-lg text-cyan-100">{value}</strong>
     </div>
   );
 }
@@ -863,16 +911,20 @@ function ModalShell({
   onClose: () => void;
 }) {
   return (
-    <div aria-modal="true" className="modal-backdrop" role="dialog">
-      <section className="modal-card">
-        <header>
+    <div
+      aria-modal="true"
+      className="fixed inset-0 z-100 grid place-items-center overflow-y-auto bg-[#020610]/85 p-4 backdrop-blur-lg"
+      role="dialog"
+    >
+      <section className="modal-card max-h-[calc(100vh-2rem)] w-full max-w-184 overflow-y-auto rounded-2xl border border-cyan-300/20 bg-[#0a1221] shadow-[0_25px_100px_#000]">
+        <header className="flex items-center justify-between border-b border-white/8 px-5 py-4">
           <div>
-            <p className="eyebrow">TOKENMAXXER CONTROL</p>
+            <p className={EYEBROW_CLASS}>TOKENMAXXER CONTROL</p>
             <h2 className="text-2xl font-black">{title}</h2>
           </div>
           <button
             aria-label="Close dialog"
-            className="icon-button"
+            className={ICON_BUTTON_CLASS}
             onClick={onClose}
             type="button"
           >

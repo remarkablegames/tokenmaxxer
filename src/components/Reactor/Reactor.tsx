@@ -22,7 +22,7 @@ export function Reactor({ stage, label, active, onActivate }: ReactorProps) {
   return (
     <button
       aria-label={label}
-      className={`reactor group relative mx-auto block aspect-square w-full max-w-96 rounded-full focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-cyan-300 ${active ? 'reactor-active' : ''}`}
+      className={`group relative mx-auto block aspect-square w-full max-w-96 cursor-pointer rounded-full transition-transform hover:scale-[1.015] focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-cyan-300 active:scale-[.97] max-sm:max-w-76 ${active ? 'saturate-150 [&_.core-aura]:[animation-duration:.28s]' : ''}`}
       onClick={onActivate}
       type="button"
     >
