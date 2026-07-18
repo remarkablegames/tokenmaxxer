@@ -613,7 +613,7 @@ export function App() {
         </span>
       ))}
       {celebration !== null && (
-        <div className="celebration fixed inset-0 z-90 grid place-items-center bg-[radial-gradient(circle,rgb(8_38_56/0.82),rgb(3_7_18/0.97)_65%)] p-4 text-center backdrop-blur-sm">
+        <div className="celebration fixed inset-0 z-90 grid place-items-center bg-[radial-gradient(circle,rgb(8_38_56/0.50),rgb(3_7_18/0.82)_65%)] p-4 text-center backdrop-blur-sm">
           <button
             aria-label="Dismiss High Score celebration"
             className="absolute inset-0 cursor-pointer"
@@ -641,7 +641,7 @@ export function App() {
             <span className="mt-5 block text-xs font-bold tracking-[0.18em] text-slate-300">
               NEXT TARGET: {formatNumber(getRecordTarget(celebration + 1))}
             </span>
-            <small className="mt-7 block text-[0.65rem] tracking-[0.14em] text-slate-500">
+            <small className="mt-7 block text-xs tracking-[0.14em] text-slate-400">
               CLICK ANYWHERE TO CONTINUE
             </small>
           </div>
