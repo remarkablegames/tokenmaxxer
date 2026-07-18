@@ -1,5 +1,6 @@
 import type { ChangeEvent, MouseEvent } from 'react';
 import { useEffect, useRef, useState } from 'react';
+import { CommsNotification } from 'src/components/CommsNotification';
 import { Reactor } from 'src/components/Reactor';
 import { playSound } from 'src/services/audio';
 import {
@@ -23,6 +24,10 @@ import {
   UPGRADES,
 } from 'src/services/game';
 import { exportSave, loadSave, saveGame } from 'src/services/storage';
+import {
+  getUnlockedTransmissions,
+  type TransmissionDefinition,
+} from 'src/services/transmissions';
 import type {
   AbilityDefinition,
   AbilityId,
@@ -48,7 +53,13 @@ interface OnboardingObjective {
   description: string;
 }
 type Modal =
-  'none' | 'prestige' | 'achievements' | 'stats' | 'settings' | 'save';
+  | 'none'
+  | 'prestige'
+  | 'achievements'
+  | 'stats'
+  | 'settings'
+  | 'save'
+  | 'comms';
 
 const CATEGORY_LABELS: Record<UpgradeCategory, string> = {
   manual: 'Manual Systems',
@@ -143,11 +154,24 @@ export function App() {
   );
   const [notice, setNotice] = useState('SYSTEM ONLINE');
   const [importText, setImportText] = useState('');
+  const [transmissionQueue, setTransmissionQueue] = useState<
+    TransmissionDefinition[]
+  >([]);
+  const [readTransmissionIds, setReadTransmissionIds] = useState<Set<string>>(
+    () => new Set(getUnlockedTransmissions(save.progress).map(({ id }) => id)),
+  );
+  const [selectedTransmissionId, setSelectedTransmissionId] = useState<
+    string | null
+  >(null);
   const lastFrame = useRef(0);
   const previousRecord = useRef(save.progress.recordIndex);
   const floatId = useRef(0);
   const progressRef = useRef(save.progress);
   const saveRef = useRef(save);
+  const knownTransmissionIds = useRef(
+    new Set(getUnlockedTransmissions(save.progress).map(({ id }) => id)),
+  );
+  const soundedTransmissionIds = useRef(new Set<string>());
 
   const progress = save.progress;
   const metrics = calculateMetrics(progress);
@@ -174,11 +198,42 @@ export function App() {
       ? (['efficiency'] as UpgradeCategory[])
       : []),
   ];
+  const unlockedTransmissions = getUnlockedTransmissions(progress);
+  const activeTransmission = transmissionQueue.at(0);
+  const transmissionBlocked = celebration !== null || modal !== 'none';
+  const unreadTransmissionCount = unlockedTransmissions.filter(
+    ({ id }) => !readTransmissionIds.has(id),
+  ).length;
+  const transmissionSignature = unlockedTransmissions
+    .map(({ id }) => id)
+    .join('|');
 
   useEffect(() => {
     progressRef.current = progress;
     saveRef.current = save;
   }, [progress, save]);
+
+  useEffect(() => {
+    const newlyUnlocked = getUnlockedTransmissions(progressRef.current).filter(
+      ({ id }) => !knownTransmissionIds.current.has(id),
+    );
+    if (newlyUnlocked.length === 0) return;
+    newlyUnlocked.forEach(({ id }) => {
+      knownTransmissionIds.current.add(id);
+    });
+    setTransmissionQueue((current) => [...current, ...newlyUnlocked]);
+  }, [transmissionSignature]);
+
+  useEffect(() => {
+    if (
+      activeTransmission === undefined ||
+      transmissionBlocked ||
+      soundedTransmissionIds.current.has(activeTransmission.id)
+    )
+      return;
+    soundedTransmissionIds.current.add(activeTransmission.id);
+    playSound('message', save.preferences.volume, save.preferences.muted);
+  }, [activeTransmission, save.preferences, transmissionBlocked]);
 
   useEffect(() => {
     let frame = 0;
@@ -238,6 +293,39 @@ export function App() {
 
   const updateProgress = (next: GameProgress) => {
     setSave((current) => ({ ...current, progress: next }));
+  };
+
+  const syncNarrativeProgress = (next: GameProgress) => {
+    const unlockedIds = getUnlockedTransmissions(next).map(({ id }) => id);
+    knownTransmissionIds.current = new Set(unlockedIds);
+    soundedTransmissionIds.current = new Set();
+    setTransmissionQueue([]);
+    setReadTransmissionIds(new Set(unlockedIds));
+    setSelectedTransmissionId(null);
+  };
+
+  const dismissActiveTransmission = () => {
+    setTransmissionQueue((current) => current.slice(1));
+  };
+
+  const openActiveTransmission = () => {
+    const transmission = transmissionQueue.at(0);
+    /* v8 ignore next -- notification only renders with a queued transmission */
+    if (transmission === undefined) return;
+    setReadTransmissionIds((current) => new Set([...current, transmission.id]));
+    setSelectedTransmissionId(transmission.id);
+    dismissActiveTransmission();
+    setModal('comms');
+  };
+
+  const openCommsLog = () => {
+    const latest = unlockedTransmissions.at(-1);
+    /* v8 ignore next -- header control only renders with unlocked messages */
+    if (latest === undefined) return;
+    setReadTransmissionIds(new Set(unlockedTransmissions.map(({ id }) => id)));
+    setTransmissionQueue([]);
+    setSelectedTransmissionId(latest.id);
+    setModal('comms');
   };
 
   const handleReactor = (event: MouseEvent<HTMLButtonElement>) => {
@@ -313,6 +401,7 @@ export function App() {
       setNotice('IMPORT REJECTED');
       return;
     }
+    syncNarrativeProgress(imported.progress);
     setSave(imported);
     setImportText('');
     setModal('none');
@@ -341,6 +430,7 @@ export function App() {
       return;
     const fresh = loadSave({ getItem: () => null });
     fresh.preferences = save.preferences;
+    syncNarrativeProgress(fresh.progress);
     setSave(fresh);
     setModal('none');
     setNotice('PROGRESS RESET');
@@ -372,6 +462,39 @@ export function App() {
             label="PER CLICK"
             value={formatNumber(metrics.tokensPerClick)}
           />
+          {unlockedTransmissions.length > 0 && (
+            <button
+              aria-label={`Open Ops Comms${unreadTransmissionCount > 0 ? `, ${String(unreadTransmissionCount)} unread` : ''}`}
+              className={`${ICON_BUTTON_CLASS} relative`}
+              onClick={openCommsLog}
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                className="size-5"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M5 5h14v10H9l-4 4V5Z"
+                  stroke="currentColor"
+                  strokeLinejoin="round"
+                  strokeWidth="1.8"
+                />
+                <path
+                  d="M8 9h8M8 12h5"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeWidth="1.8"
+                />
+              </svg>
+              {unreadTransmissionCount > 0 && (
+                <span className="absolute -top-1 -right-1 grid min-w-5 place-items-center rounded-full bg-amber-400 px-1 text-xs font-black text-[#07111f] shadow-[0_0_12px_rgb(251_191_36/0.55)]">
+                  {unreadTransmissionCount}
+                </span>
+              )}
+            </button>
+          )}
           <button
             className={ICON_BUTTON_CLASS}
             aria-label="Open settings"
@@ -756,6 +879,16 @@ export function App() {
           {formatNumber(item.amount)}
         </span>
       ))}
+      {activeTransmission !== undefined && (
+        <CommsNotification
+          blocked={transmissionBlocked}
+          key={activeTransmission.id}
+          onDismiss={dismissActiveTransmission}
+          onOpen={openActiveTransmission}
+          onTimeout={dismissActiveTransmission}
+          transmission={activeTransmission}
+        />
+      )}
       {celebration !== null && (
         <div className="celebration fixed inset-0 z-90 grid place-items-center bg-[radial-gradient(circle,rgb(8_38_56/0.50),rgb(3_7_18/0.82)_65%)] p-4 text-center backdrop-blur-sm">
           <button
@@ -805,9 +938,62 @@ export function App() {
                   ? 'Lifetime Statistics'
                   : modal === 'settings'
                     ? 'System Settings'
-                    : 'Save Operations'
+                    : modal === 'comms'
+                      ? 'Ops Comms'
+                      : 'Save Operations'
           }
         >
+          {modal === 'comms' && (
+            <div>
+              <div className="mb-4 flex items-center justify-between gap-3 rounded-xl border border-cyan-300/15 bg-cyan-400/5 p-3">
+                <span>
+                  <small className="block text-xs font-bold tracking-[0.16em] text-cyan-400">
+                    GOODHART SYSTEMS
+                  </small>
+                  <strong className="text-lg">#token-ops</strong>
+                </span>
+                <span className="text-xs text-slate-500">
+                  {unlockedTransmissions.length} TRANSMISSIONS
+                </span>
+              </div>
+              <ol className="space-y-2">
+                {unlockedTransmissions.map((transmission) => {
+                  const selected = transmission.id === selectedTransmissionId;
+                  return (
+                    <li key={transmission.id}>
+                      <article
+                        aria-current={selected ? 'true' : undefined}
+                        autoFocus={selected}
+                        className={`flex gap-3 rounded-xl border p-3 transition outline-none focus:border-cyan-300/45 ${selected ? 'border-cyan-300/35 bg-cyan-400/7' : 'border-white/7 bg-white/3'}`}
+                        tabIndex={-1}
+                      >
+                        <span className="grid size-10 shrink-0 place-items-center rounded-xl border border-cyan-300/20 bg-cyan-400/8 text-xs font-black text-cyan-200">
+                          {transmission.initials}
+                        </span>
+                        <span className="min-w-0 flex-1">
+                          <span className="flex flex-wrap items-baseline gap-x-2">
+                            <strong>{transmission.sender}</strong>
+                            <small className="text-xs font-bold tracking-wide text-slate-500">
+                              {transmission.role}
+                            </small>
+                          </span>
+                          {transmission.sender === 'R.E.A.C.T.O.R.' && (
+                            <small className="mt-0.5 block text-xs text-cyan-500">
+                              Recursive Emergent Autonomous Compute for Token
+                              Optimization and Replication
+                            </small>
+                          )}
+                          <p className="mt-1 text-sm leading-relaxed text-slate-300">
+                            {transmission.message}
+                          </p>
+                        </span>
+                      </article>
+                    </li>
+                  );
+                })}
+              </ol>
+            </div>
+          )}
           {modal === 'prestige' && (
             <div className="space-y-4">
               <div className="flex items-center justify-between rounded-xl border border-amber-300/20 bg-amber-300/7 p-4">

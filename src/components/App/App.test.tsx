@@ -42,6 +42,92 @@ describe('Tokenmaxxer dashboard', () => {
     await user.click(reactor);
     expect(screen.getByText('+1')).toBeInTheDocument();
     expect(screen.getByText('Upgrade Manual Output')).toBeInTheDocument();
+    expect(screen.getByRole('status')).toHaveAccessibleName(
+      'New message from Director Campbell',
+    );
+  });
+
+  it('dismisses a live transmission but keeps it unread in Ops Comms', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await user.click(screen.getByRole('button', { name: /activate reactor/i }));
+
+    expect(
+      screen.getByRole('button', { name: /open ops comms, 1 unread/i }),
+    ).toBeInTheDocument();
+    await user.click(
+      screen.getByRole('button', {
+        name: 'Dismiss notification from Director Campbell',
+      }),
+    );
+    expect(screen.queryByRole('status')).not.toBeInTheDocument();
+    const commsButton = screen.getByRole('button', {
+      name: /open ops comms, 1 unread/i,
+    });
+    await user.click(commsButton);
+    expect(screen.getByRole('dialog')).toHaveTextContent('Ops Comms');
+    expect(screen.getByRole('dialog')).toHaveTextContent(
+      'Max Chen cleared 1,000 tokens on his first shift.',
+    );
+    await user.click(screen.getByRole('button', { name: 'Close dialog' }));
+    expect(
+      screen.getByRole('button', { name: 'Open Ops Comms' }),
+    ).toBeInTheDocument();
+  });
+
+  it('opens a notification directly and marks its transmission read', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await user.click(screen.getByRole('button', { name: /activate reactor/i }));
+    await user.click(
+      screen.getByRole('button', {
+        name: 'Open message from Director Campbell',
+      }),
+    );
+    expect(screen.getByRole('dialog')).toHaveTextContent('#token-ops');
+    expect(screen.queryByRole('status')).not.toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Close dialog' }));
+    expect(
+      screen.getByRole('button', { name: 'Open Ops Comms' }),
+    ).toBeInTheDocument();
+  });
+
+  it('clears pending live notifications when the full Comms log is opened', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await user.click(screen.getByRole('button', { name: /activate reactor/i }));
+    await user.click(
+      screen.getByRole('button', { name: /open ops comms, 1 unread/i }),
+    );
+    expect(screen.getByRole('dialog')).toHaveTextContent('Ops Comms');
+    expect(
+      screen.queryByRole('status', { hidden: true }),
+    ).not.toBeInTheDocument();
+  });
+
+  it('loads earned history without replaying notifications', async () => {
+    const save = createInitialSave();
+    save.progress.stats.clicks = 1;
+    save.progress.stats.prestiges = 1;
+    save.progress.recordIndex = 6;
+    save.progress.trophies = [0, 1, 2, 3, 4, 5];
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
+    const user = userEvent.setup();
+    render(<App />);
+
+    expect(screen.queryByRole('status')).not.toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Open Ops Comms' }));
+    const dialog = screen.getByRole('dialog');
+    expect(dialog).toHaveTextContent('8 TRANSMISSIONS');
+    expect(dialog).toHaveTextContent(
+      'Recursive Emergent Autonomous Compute for Token Optimization and Replication',
+    );
+    expect(dialog).toHaveTextContent('ITERATION ACCEPTED. SET A NEW RECORD.');
+    expect(
+      screen
+        .getByText('ITERATION ACCEPTED. SET A NEW RECORD.')
+        .closest('article'),
+    ).toHaveAttribute('aria-current', 'true');
   });
 
   it('reveals production systems and guidance through early progression', async () => {
@@ -262,6 +348,9 @@ describe('Tokenmaxxer dashboard', () => {
       screen.getByRole('button', { name: '🏆 Set a New Record' }),
     );
     expect(screen.getByText(/NEW ERA INITIALIZED/i)).toBeInTheDocument();
+    expect(screen.getByRole('status')).toHaveAccessibleName(
+      'New message from R.E.A.C.T.O.R.',
+    );
     await user.click(screen.getByRole('button', { name: /Achievements/i }));
     expect(screen.getAllByText('◆')).not.toHaveLength(0);
   });
@@ -284,6 +373,9 @@ describe('Tokenmaxxer dashboard', () => {
       frameCallback(performance.now() + 2_000);
     });
     expect(screen.getAllByText(/NEW HIGH SCORE/i)).not.toHaveLength(0);
+    expect(
+      screen.getByLabelText('New message from Director Campbell'),
+    ).toHaveAttribute('aria-hidden', 'true');
     hidden.mockReturnValue(true);
     document.dispatchEvent(new Event('visibilitychange'));
     act(() => {
@@ -296,6 +388,9 @@ describe('Tokenmaxxer dashboard', () => {
       vi.advanceTimersByTime(5_000);
     });
     expect(screen.queryByText(/NEW HIGH SCORE/i)).not.toBeInTheDocument();
+    expect(
+      screen.getByLabelText('New message from Director Campbell'),
+    ).toHaveAttribute('aria-hidden', 'false');
   });
 
   it('handles critical feedback, amount selection, volume, import, export, and reset', async () => {
@@ -329,11 +424,17 @@ describe('Tokenmaxxer dashboard', () => {
     fireEvent.change(textarea, { target: { value: 'invalid' } });
     await user.click(screen.getByRole('button', { name: 'Validate & Import' }));
     expect(screen.getByText(/IMPORT REJECTED/i)).toBeInTheDocument();
+    const imported = createInitialSave();
+    imported.progress.stats.clicks = 1;
     fireEvent.change(textarea, {
-      target: { value: JSON.stringify(createInitialSave()) },
+      target: { value: JSON.stringify(imported) },
     });
     await user.click(screen.getByRole('button', { name: 'Validate & Import' }));
     expect(screen.getByText(/SAVE IMPORTED/i)).toBeInTheDocument();
+    expect(screen.queryByRole('status')).not.toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Open Ops Comms' }),
+    ).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: 'Save Data' }));
     await user.click(screen.getByRole('button', { name: 'Export JSON' }));

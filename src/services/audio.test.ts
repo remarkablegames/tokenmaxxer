@@ -47,6 +47,7 @@ describe('audio effects', () => {
     'milestone',
     'ability',
     'prestige',
+    'message',
   ] as const)('synthesizes %s', (sound) => {
     playSound(sound, 0.5, false);
     expect(start).toHaveBeenCalled();

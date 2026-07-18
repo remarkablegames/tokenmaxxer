@@ -61,6 +61,10 @@
   animation: modal-in 0.2s ease-out;
 }
 
+.comms-toast {
+  animation: comms-in 0.28s ease-out;
+}
+
 @keyframes spin {
   to {
     transform: rotate(360deg);
@@ -135,6 +139,13 @@
 @keyframes modal-in {
   from {
     transform: translateY(12px) scale(0.98);
+    opacity: 0;
+  }
+}
+
+@keyframes comms-in {
+  from {
+    transform: translateX(24px) scale(0.98);
     opacity: 0;
   }
 }
