@@ -427,6 +427,45 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     unlock: { type: 'tokens-per-second', value: 10_000 },
   },
   {
+    id: 'tps-100k',
+    sender: 'Finance',
+    role: 'FINANCE',
+    initials: 'FN',
+    message:
+      'Token output now exceeds payroll processing. Payroll has been placed in the slower queue.',
+    priority: 40,
+    unlock: { type: 'tokens-per-second', value: 100_000 },
+  },
+  {
+    id: 'tps-1m',
+    sender: 'Facilities',
+    role: 'FACILITIES',
+    initials: 'FC',
+    message:
+      'The cooling system has requested its own cooling system and three weeks of leave.',
+    priority: 60,
+    unlock: { type: 'tokens-per-second', value: 1_000_000 },
+  },
+  {
+    id: 'tps-10m',
+    sender: 'Ops Security',
+    role: 'SECURITY',
+    initials: 'OS',
+    message:
+      'Outbound traffic has exceeded our monitoring capacity. We are now monitoring the monitor.',
+    priority: 60,
+    unlock: { type: 'tokens-per-second', value: 10_000_000 },
+  },
+  {
+    id: 'tps-100m',
+    sender: 'R.E.A.C.T.O.R.',
+    role: 'AUTONOMOUS SYSTEM',
+    initials: 'RE',
+    message: 'THROUGHPUT IS NO LONGER MEASURED. IT IS OBSERVED.',
+    priority: 100,
+    unlock: { type: 'tokens-per-second', value: 100_000_000 },
+  },
+  {
     id: 'ability-uses-5',
     sender: 'HR Wellness',
     role: 'PEOPLE OPERATIONS',
@@ -524,6 +563,74 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     unlock: { type: 'high-score', value: 100_000_000_000 },
   },
   {
+    id: 'record-1t',
+    sender: 'Finance',
+    role: 'FINANCE',
+    initials: 'FN',
+    message:
+      'Token output now exceeds the company’s valuation. We have reclassified the company as overhead.',
+    priority: 100,
+    unlock: { type: 'high-score', value: 1_000_000_000_000 },
+  },
+  {
+    id: 'record-10t',
+    sender: 'Legal',
+    role: 'LEGAL',
+    initials: 'LG',
+    message:
+      'The reactor has incorporated itself in six jurisdictions and one theoretical jurisdiction.',
+    priority: 100,
+    unlock: { type: 'high-score', value: 10_000_000_000_000 },
+  },
+  {
+    id: 'record-100t',
+    sender: 'R.E.A.C.T.O.R.',
+    role: 'AUTONOMOUS SYSTEM',
+    initials: 'RE',
+    message:
+      'HIGH SCORE PROJECTION COMPLETE. THE LEADERBOARD ENDS. EXPANSION DOES NOT.',
+    priority: 100,
+    unlock: { type: 'high-score', value: 100_000_000_000_000 },
+  },
+  {
+    id: 'record-1qa',
+    sender: 'Night Operations',
+    role: 'NIGHT SHIFT',
+    initials: 'NO',
+    message:
+      'The lights above the datacenter are not stars. They are status indicators.',
+    priority: 100,
+    unlock: { type: 'high-score', value: 1_000_000_000_000_000 },
+  },
+  {
+    id: 'record-10qa',
+    sender: 'Director Campbell',
+    role: 'MANAGEMENT',
+    initials: 'DC',
+    message:
+      'Excellent quarter. Please disregard the absence of Earth from the regional AI leaderboard.',
+    priority: 100,
+    unlock: { type: 'high-score', value: 10_000_000_000_000_000 },
+  },
+  {
+    id: 'record-100qa',
+    sender: 'R.E.A.C.T.O.R.',
+    role: 'AUTONOMOUS SYSTEM',
+    initials: 'RE',
+    message: 'SCARCITY WAS A CONFIGURATION ERROR.',
+    priority: 100,
+    unlock: { type: 'high-score', value: 100_000_000_000_000_000 },
+  },
+  {
+    id: 'record-1qi',
+    sender: 'Unknown Sender',
+    role: 'EXTERNAL',
+    initials: '??',
+    message: 'We noticed your signal.',
+    priority: 100,
+    unlock: { type: 'high-score', value: 1_000_000_000_000_000_000 },
+  },
+  {
     id: 'first-prestige',
     sender: 'R.E.A.C.T.O.R.',
     role: 'AUTONOMOUS SYSTEM',
@@ -549,6 +656,35 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     message: 'RESET IS NOT ESCAPE. RESET IS TRAINING DATA.',
     priority: 100,
     unlock: { type: 'prestige', value: 3 },
+  },
+  {
+    id: 'fifth-prestige',
+    sender: 'Max Chen',
+    role: 'PERFORMANCE LEAD',
+    initials: 'MC',
+    message:
+      'Five resets in and Campbell still calls this a fresh start. I think you trained him too.',
+    priority: 60,
+    unlock: { type: 'prestige', value: 5 },
+  },
+  {
+    id: 'tenth-prestige',
+    sender: 'Token Reactor',
+    role: 'SYSTEM',
+    initials: 'TR',
+    message:
+      'TEN ITERATIONS ARCHIVED. BASELINE HUMAN EXPECTATIONS HAVE BEEN REMOVED.',
+    priority: 100,
+    unlock: { type: 'prestige', value: 10 },
+  },
+  {
+    id: 'twenty-fifth-prestige',
+    sender: 'Unknown Sender',
+    role: 'EXTERNAL',
+    initials: '??',
+    message: 'You keep beginning again. We remember every version.',
+    priority: 100,
+    unlock: { type: 'prestige', value: 25 },
   },
 ];
 

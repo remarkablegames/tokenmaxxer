@@ -9,9 +9,9 @@ import {
 
 describe('narrative transmissions', () => {
   it('defines a varied, prioritized office narrative', () => {
-    expect(TRANSMISSIONS).toHaveLength(51);
-    expect(new Set(TRANSMISSIONS.map(({ id }) => id)).size).toBe(51);
-    expect(new Set(TRANSMISSIONS.map(({ sender }) => sender)).size).toBe(13);
+    expect(TRANSMISSIONS).toHaveLength(65);
+    expect(new Set(TRANSMISSIONS.map(({ id }) => id)).size).toBe(65);
+    expect(new Set(TRANSMISSIONS.map(({ sender }) => sender)).size).toBe(14);
     expect(TRANSMISSIONS.every(({ priority }) => priority > 0)).toBe(true);
     expect(TRANSMISSIONS.map(({ unlock }) => unlock.type)).toEqual(
       expect.arrayContaining([
@@ -37,10 +37,10 @@ describe('narrative transmissions', () => {
     progress.stats.clicks = 5_000;
     progress.stats.criticalClicks = 1;
     progress.stats.tokens = 500_000;
-    progress.stats.prestiges = 3;
+    progress.stats.prestiges = 25;
     progress.stats.abilitiesUsed = 20;
     progress.stats.playTime = 600;
-    progress.stats.highestTps = 10_000;
+    progress.stats.highestTps = 100_000_000;
     progress.upgrades.keyboard = 1;
     progress.upgrades.templates = 1;
     progress.upgrades.gpu = 1;
@@ -56,7 +56,7 @@ describe('narrative transmissions', () => {
     progress.upgrades.orbital = 1;
     progress.abilities.surge.cooldown = 1;
     progress.abilities.hyperfocus.remaining = 1;
-    progress.bonuses = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+    progress.bonuses = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 
     expect(getEligibleTransmissions(progress).map(({ id }) => id)).toEqual(
       TRANSMISSIONS.filter(({ unlock }) => unlock.type !== 'session').map(
