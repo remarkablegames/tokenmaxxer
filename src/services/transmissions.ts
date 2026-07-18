@@ -8,10 +8,15 @@ interface NumericTransmissionUnlock {
     | 'prestige'
     | 'critical-click'
     | 'lifetime-tokens'
-    | 'play-time'
     | 'tokens-per-second'
     | 'ability-uses';
   value: number;
+}
+
+interface PlayTimeTransmissionUnlock {
+  type: 'play-time';
+  value: number;
+  clicks: number;
 }
 
 interface UpgradeTransmissionUnlock {
@@ -31,6 +36,7 @@ interface SessionTransmissionUnlock {
 
 export type TransmissionUnlock =
   | NumericTransmissionUnlock
+  | PlayTimeTransmissionUnlock
   | UpgradeTransmissionUnlock
   | AbilityTransmissionUnlock
   | SessionTransmissionUnlock;
@@ -405,7 +411,7 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     message:
       'Campbell asked whether you plan to keep this pace all quarter. I said you definitely do.',
     priority: 40,
-    unlock: { type: 'play-time', value: 120 },
+    unlock: { type: 'play-time', value: 120, clicks: 25 },
   },
   {
     id: 'play-time-5m',
@@ -415,7 +421,7 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     message:
       'Strong session. I’ve converted your temporary output target into a permanent expectation.',
     priority: 40,
-    unlock: { type: 'play-time', value: 300 },
+    unlock: { type: 'play-time', value: 300, clicks: 50 },
   },
   {
     id: 'play-time-10m',
@@ -425,7 +431,7 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     message:
       'You have been staring at the reactor for ten minutes. It has been staring back.',
     priority: 60,
-    unlock: { type: 'play-time', value: 600 },
+    unlock: { type: 'play-time', value: 600, clicks: 100 },
   },
   {
     id: 'record-1b',
@@ -503,7 +509,10 @@ export function isTransmissionUnlocked(
     case 'lifetime-tokens':
       return progress.stats.tokens >= unlock.value;
     case 'play-time':
-      return progress.stats.playTime >= unlock.value;
+      return (
+        progress.stats.clicks >= unlock.clicks &&
+        progress.stats.playTime >= unlock.value
+      );
     case 'tokens-per-second':
       return progress.stats.highestTps >= unlock.value;
     case 'ability-uses':

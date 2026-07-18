@@ -64,6 +64,38 @@ describe('narrative transmissions', () => {
     );
   });
 
+  it('requires meaningful input before unlocking active-playtime chatter', () => {
+    const progress = createInitialProgress();
+    progress.stats.playTime = 600;
+    progress.stats.clicks = 24;
+    expect(
+      getEligibleTransmissions(progress).filter(
+        ({ unlock }) => unlock.type === 'play-time',
+      ),
+    ).toEqual([]);
+
+    progress.stats.clicks = 25;
+    expect(
+      getEligibleTransmissions(progress)
+        .filter(({ unlock }) => unlock.type === 'play-time')
+        .map(({ id }) => id),
+    ).toEqual(['play-time-2m']);
+
+    progress.stats.clicks = 50;
+    expect(
+      getEligibleTransmissions(progress)
+        .filter(({ unlock }) => unlock.type === 'play-time')
+        .map(({ id }) => id),
+    ).toEqual(['play-time-2m', 'play-time-5m']);
+
+    progress.stats.clicks = 100;
+    expect(
+      getEligibleTransmissions(progress)
+        .filter(({ unlock }) => unlock.type === 'play-time')
+        .map(({ id }) => id),
+    ).toEqual(['play-time-2m', 'play-time-5m', 'play-time-10m']);
+  });
+
   it('selects persisted and session transmissions safely', () => {
     expect(
       getTransmissionsById(['offline-return', 'missing', 'first-click']).map(
