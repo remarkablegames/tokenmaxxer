@@ -374,6 +374,7 @@ describe('Tokenmaxxer dashboard', () => {
     const user = userEvent.setup();
     window.history.replaceState({}, '', '/?preview=high-score');
     render(<App />);
+    expect(screen.getByText('PREVIEW MODE')).toBeInTheDocument();
     const celebration = screen.getByRole('dialog', { name: 'NEW HIGH SCORE' });
     expect(celebration).toHaveTextContent('NEW HIGH SCORE');
     expect(screen.getByText('NEW HIGH SCORE')).toHaveClass('text-sm');
@@ -402,6 +403,44 @@ describe('Tokenmaxxer dashboard', () => {
     expect(
       screen.queryByRole('dialog', { name: 'NEW HIGH SCORE' }),
     ).not.toBeInTheDocument();
+  });
+
+  it('runs prestige previews in a non-persistent sandbox', () => {
+    vi.useFakeTimers({ toFake: ['setInterval', 'clearInterval'] });
+    const setItem = vi.spyOn(Storage.prototype, 'setItem');
+    window.history.replaceState({}, '', '/?preview=prestige&tokens=250000000');
+    render(<App />);
+
+    expect(screen.getByText('PREVIEW MODE')).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', {
+        level: 2,
+        name: /250M \/ 1\.00B TOKENS/i,
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole('dialog')).toHaveTextContent('0 → 3');
+    expect(screen.getByRole('dialog')).toHaveTextContent('+0% → +30%');
+
+    fireEvent.click(
+      screen.getByRole('button', { name: '🏆 Set a New Record' }),
+    );
+    expect(screen.getByText('3 · +30%')).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', {
+        level: 2,
+        name: /0 \/ 1\.00K TOKENS/i,
+      }),
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Save Data' }));
+    expect(
+      screen.getByRole('button', { name: 'Saving Disabled' }),
+    ).toBeDisabled();
+    fireEvent(window, new Event('pagehide'));
+    act(() => {
+      vi.advanceTimersByTime(5_000);
+    });
+    expect(setItem).not.toHaveBeenCalled();
   });
 
   it('closes archive, stats, settings, and save dialogs from their backdrops', async () => {

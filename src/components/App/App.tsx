@@ -22,6 +22,7 @@ import {
   tickGame,
   UPGRADES,
 } from 'src/services/game';
+import { applyPreview, parsePreviewSearch } from 'src/services/preview';
 import { exportSave, loadSave, saveGame } from 'src/services/storage';
 import {
   getEligibleTransmissions,
@@ -149,8 +150,11 @@ function getVisibleAbilities(progress: GameProgress): AbilityDefinition[] {
 }
 
 export function App() {
+  const [previewConfig] = useState(() =>
+    parsePreviewSearch(window.location.search),
+  );
   const [initialNarrative] = useState(() => {
-    const loaded = loadSave();
+    const loaded = applyPreview(loadSave(), previewConfig);
     const initializedAt = Date.now();
     const eligibleIds = getEligibleTransmissions(loaded.progress).map(
       ({ id }) => id,
@@ -189,10 +193,12 @@ export function App() {
   });
   const [save, setSave] = useState<SaveEnvelope>(initialNarrative.save);
   const [buyMode, setBuyMode] = useState<BuyMode>(1);
-  const [modal, setModal] = useState<Modal>('none');
+  const [modal, setModal] = useState<Modal>(() =>
+    previewConfig.mode === 'prestige' ? 'prestige' : 'none',
+  );
   const [floats, setFloats] = useState<FloatText[]>([]);
   const [celebration, setCelebration] = useState<CelebrationState | null>(() =>
-    new URLSearchParams(window.location.search).get('preview') === 'high-score'
+    previewConfig.mode === 'high-score'
       ? { index: Math.max(0, save.progress.recordIndex - 1), isNew: true }
       : null,
   );
@@ -372,6 +378,7 @@ export function App() {
   }, []);
 
   useEffect(() => {
+    if (previewConfig.enabled) return;
     const timer = window.setInterval(() => {
       saveGame({ ...saveRef.current, progress: progressRef.current });
     }, 5_000);
@@ -383,7 +390,7 @@ export function App() {
       window.clearInterval(timer);
       window.removeEventListener('pagehide', onPageHide);
     };
-  }, []);
+  }, [previewConfig.enabled]);
 
   useEffect(() => {
     if (progress.recordIndex > previousRecord.current) {
@@ -579,6 +586,11 @@ export function App() {
             >
               ● {notice}
             </p>
+            {previewConfig.enabled && (
+              <span className="mt-1 inline-flex rounded-full border border-amber-300/35 bg-amber-300/10 px-2 py-0.5 text-xs font-bold tracking-[.18em] text-amber-200">
+                PREVIEW MODE
+              </span>
+            )}
           </div>
           <Stat
             label="TOKENS"
@@ -1329,13 +1341,14 @@ export function App() {
               <div className="grid grid-cols-2 gap-2">
                 <button
                   className={`${ACTION_BUTTON_CLASS} border border-cyan-400/25 bg-cyan-400/7 text-cyan-200`}
+                  disabled={previewConfig.enabled}
                   onClick={() => {
                     saveGame(save);
                     setNotice('GAME SAVED');
                   }}
                   type="button"
                 >
-                  Manual Save
+                  {previewConfig.enabled ? 'Saving Disabled' : 'Manual Save'}
                 </button>
                 <button
                   className={`${ACTION_BUTTON_CLASS} border border-cyan-400/25 bg-cyan-400/7 text-cyan-200`}

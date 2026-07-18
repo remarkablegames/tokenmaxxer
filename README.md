@@ -61,10 +61,26 @@ Runs tests.
 
 ## Testing
 
-Preview High Score celebration:
+Query previews run in a temporary sandbox. They never overwrite the saved game, and removing the query restores the existing save.
+
+Preview the High Score celebration:
 
 ```
 http://localhost:5173/?preview=high-score
+```
+
+Preview a ready-to-confirm prestige or set a temporary token balance:
+
+```
+http://localhost:5173/?preview=prestige
+```
+
+```
+http://localhost:5173/?tokens=100000000
+```
+
+```
+http://localhost:5173/?preview=prestige&tokens=250000000
 ```
 
 ## License
