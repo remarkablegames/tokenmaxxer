@@ -674,7 +674,7 @@ describe('Tokenmaxxer dashboard', () => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
     const user = userEvent.setup();
     render(<App />);
-    await user.click(screen.getByRole('button', { name: /1Bonuses/i }));
+    await user.click(screen.getByRole('button', { name: /1Milestones/i }));
     await user.click(screen.getByRole('button', { name: 'Close dialog' }));
     await user.click(
       screen.getByRole('button', { name: /0Sessions Started/i }),

@@ -788,7 +788,7 @@ export function App() {
               >
                 <div className="grid grid-cols-2 gap-2">
                   <ArchiveButton
-                    label="Bonuses"
+                    label="Milestones"
                     value={String(progress.bonuses.length)}
                     onClick={() => {
                       setModal('achievements');
