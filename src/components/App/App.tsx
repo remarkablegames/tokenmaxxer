@@ -1061,7 +1061,6 @@ export function App() {
       )}
       {modal !== 'none' && (
         <ModalShell
-          closeOnBackdrop={modal === 'comms'}
           onClose={() => {
             setModal('none');
           }}
@@ -1466,15 +1465,13 @@ function ModalShell({
   title,
   children,
   onClose,
-  closeOnBackdrop = false,
 }: {
   title: string;
   children: React.ReactNode;
   onClose: () => void;
-  closeOnBackdrop?: boolean;
 }) {
   const handleBackdropClick = (event: MouseEvent<HTMLDivElement>) => {
-    if (closeOnBackdrop && event.target === event.currentTarget) onClose();
+    if (event.target === event.currentTarget) onClose();
   };
 
   return (

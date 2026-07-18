@@ -400,7 +400,7 @@ describe('Tokenmaxxer dashboard', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('opens archive, stats, settings, and save dialogs', async () => {
+  it('closes archive, stats, settings, and save dialogs from their backdrops', async () => {
     const save = createInitialSave();
     save.progress.recordIndex = 1;
     save.progress.bonuses = [0];
@@ -411,22 +411,31 @@ describe('Tokenmaxxer dashboard', () => {
     await user.click(
       screen.getByRole('button', { name: /0\/12Achievements/i }),
     );
-    expect(screen.getByRole('dialog')).toHaveTextContent('Champion Archive');
-    await user.click(screen.getByRole('button', { name: 'Close dialog' }));
+    let dialog = screen.getByRole('dialog');
+    expect(dialog).toHaveTextContent('Champion Archive');
+    await user.click(dialog);
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: 'Statistics' }));
-    expect(screen.getByRole('dialog')).toHaveTextContent('Lifetime Statistics');
-    await user.click(screen.getByRole('button', { name: 'Close dialog' }));
+    dialog = screen.getByRole('dialog');
+    expect(dialog).toHaveTextContent('Lifetime Statistics');
+    await user.click(dialog);
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: 'Open settings' }));
     const soundToggle = screen.getByRole('button', { name: /sound effects/i });
     await user.click(soundToggle);
     expect(soundToggle).toHaveAttribute('aria-pressed', 'false');
-    await user.click(screen.getByRole('button', { name: 'Close dialog' }));
+    dialog = screen.getByRole('dialog');
+    await user.click(dialog);
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: 'Save Data' }));
     await user.click(screen.getByRole('button', { name: 'Manual Save' }));
     expect(localStorage.getItem(STORAGE_KEY)).not.toBeNull();
+    dialog = screen.getByRole('dialog');
+    await user.click(dialog);
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
   it('loads advanced progress and uses upgrades, abilities, perks, and prestige', async () => {
@@ -457,6 +466,11 @@ describe('Tokenmaxxer dashboard', () => {
       screen.getByRole('button', { name: /set a new record.*\+3 credits/i }),
     );
     expect(screen.getByText('MAX LEVEL')).toBeInTheDocument();
+    await user.click(screen.getByRole('dialog'));
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    await user.click(
+      screen.getByRole('button', { name: /set a new record.*\+3 credits/i }),
+    );
     await user.click(
       screen.getByRole('button', { name: /manual calibration/i }),
     );
