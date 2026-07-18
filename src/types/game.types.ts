@@ -1,0 +1,111 @@
+export type UpgradeCategory = 'manual' | 'automation' | 'efficiency';
+
+export type UpgradeId =
+  | 'keyboard'
+  | 'templates'
+  | 'multifinger'
+  | 'gpu'
+  | 'rack'
+  | 'engineer'
+  | 'cluster'
+  | 'orbital'
+  | 'compression'
+  | 'overclock'
+  | 'critical'
+  | 'optimization';
+
+export type AbilityId = 'surge' | 'hyperfocus';
+export type PerkId =
+  | 'seedFunding'
+  | 'manualCalibration'
+  | 'automationRouting'
+  | 'cooldownOptimization';
+export type BuyMode = 1 | 10 | 'max';
+
+export interface UpgradeDefinition {
+  id: UpgradeId;
+  name: string;
+  description: string;
+  category: UpgradeCategory;
+  baseCost: number;
+  growth: number;
+  unlockAt: number;
+  icon: string;
+}
+
+export interface AbilityDefinition {
+  id: AbilityId;
+  name: string;
+  description: string;
+  unlockAt: number;
+  duration: number;
+  cooldown: number;
+}
+
+export interface AbilityState {
+  remaining: number;
+  cooldown: number;
+}
+
+export interface LifetimeStats {
+  tokens: number;
+  manualTokens: number;
+  clicks: number;
+  criticalClicks: number;
+  upgradesPurchased: number;
+  abilitiesUsed: number;
+  prestiges: number;
+  playTime: number;
+  highestTps: number;
+  highestTpc: number;
+}
+
+export interface Preferences {
+  muted: boolean;
+  volume: number;
+}
+
+export interface GameProgress {
+  tokens: number;
+  recordIndex: number;
+  upgrades: Record<UpgradeId, number>;
+  abilities: Record<AbilityId, AbilityState>;
+  trophies: number[];
+  achievements: string[];
+  usageCredits: number;
+  pendingCredits: number;
+  perks: Record<PerkId, number>;
+  stats: LifetimeStats;
+}
+
+export interface SaveEnvelope {
+  version: 1;
+  progress: GameProgress;
+  preferences: Preferences;
+}
+
+export interface ProductionMetrics {
+  tokensPerClick: number;
+  tokensPerSecond: number;
+  criticalChance: number;
+}
+
+export interface PurchaseQuote {
+  count: number;
+  cost: number;
+}
+
+export interface AchievementDefinition {
+  id: string;
+  name: string;
+  description: string;
+  test: (progress: GameProgress, metrics: ProductionMetrics) => boolean;
+}
+
+export interface PerkDefinition {
+  id: PerkId;
+  name: string;
+  description: string;
+  maxLevel?: number;
+  baseCost: number;
+}

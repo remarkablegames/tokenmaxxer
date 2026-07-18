@@ -4,9 +4,9 @@
   "description": "🏆 An incremental game where you optimize token production to chase the ultimate high score.",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#ffffff",
-  "orientation": "portrait-primary",
+  "background_color": "#050914",
+  "theme_color": "#050914",
+  "orientation": "any",
   "icons": [
     {
       "src": "./logo.svg",
