@@ -21,7 +21,7 @@ describe('CommsNotification', () => {
         transmission={TRANSMISSIONS[0]}
       />,
     );
-    expect(screen.getByRole('status')).toHaveClass('h-32');
+    expect(screen.getByRole('status')).toHaveClass('h-28');
     expect(screen.getByText(TRANSMISSIONS[0].message)).toHaveClass(
       'line-clamp-2',
     );

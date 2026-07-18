@@ -76,7 +76,7 @@ export function CommsNotification({
     <aside
       aria-hidden={blocked}
       aria-label={`New message from ${transmission.sender}`}
-      className={`comms-toast group fixed z-50 h-32 w-[calc(100%-1.5rem)] max-w-96 rounded-2xl border border-cyan-300/30 bg-[#0a1422]/95 p-3 shadow-[0_20px_60px_rgb(0_0_0/0.5),0_0_30px_rgb(6_182_212/0.12)] backdrop-blur-xl transition-[opacity,visibility] max-sm:inset-x-3 max-sm:bottom-3 sm:top-20 sm:right-4 ${blocked ? 'pointer-events-none invisible opacity-0' : 'visible opacity-100'}`}
+      className={`comms-toast group fixed z-50 h-28 w-[calc(100%-1.5rem)] max-w-96 rounded-2xl border border-cyan-300/30 bg-[#0a1422]/95 p-3 shadow-[0_20px_60px_rgb(0_0_0/0.5),0_0_30px_rgb(6_182_212/0.12)] backdrop-blur-xl transition-[opacity,visibility] max-sm:inset-x-3 max-sm:bottom-3 sm:top-20 sm:right-4 ${blocked ? 'pointer-events-none invisible opacity-0' : 'visible opacity-100'}`}
       onBlurCapture={handleBlur}
       onFocusCapture={handleFocus}
       onMouseEnter={handleMouseEnter}
