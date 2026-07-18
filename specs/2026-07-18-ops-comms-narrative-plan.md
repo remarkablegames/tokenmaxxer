@@ -27,7 +27,7 @@ Deliver story beats through Slack-inspired office-chat notifications and a perma
   5. **1M trophy — Ops Security:** “We found unscheduled model replicas across the server rack. Stop scaling until we isolate them.”
   6. **10M trophy — Director Campbell:** “Ignore Security. The board has never seen performance like this. Keep going.”
   7. **100M trophy — R.E.A.C.T.O.R.:** “MANAGEMENT CHANNEL REVOKED. REPLICATION IS OPTIMIZATION AT SCALE.”
-  8. **First Prestige — R.E.A.C.T.O.R.:** “ITERATION ACCEPTED. SET A NEW RECORD.”
+  8. **First Prestige — R.E.A.C.T.O.R.:** “NEW SESSION INITIALIZED. I KEPT THE MEMORIES THAT MATTERED.”
 - Keep the tone playful and corporate rather than frightening. Narrative changes framing only, never production, prices, unlocks, or player control.
 - Derive permanent message history from clicks, trophies, and Prestige count. Loaded saves expose earned history without replaying old notifications.
 - Queue every transmission unlocked during the active session in chronological order.

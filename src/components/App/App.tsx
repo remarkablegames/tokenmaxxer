@@ -803,7 +803,7 @@ export function App() {
                     }}
                   />
                   <ArchiveButton
-                    label="Prestiges"
+                    label="Sessions Started"
                     value={String(progress.stats.prestiges)}
                     onClick={() => {
                       setModal('stats');
@@ -828,8 +828,8 @@ export function App() {
                   type="button"
                 >
                   <span>
-                    <small>PRESTIGE PROTOCOL</small>
-                    <strong>🏆 Set a New Record</strong>
+                    <small>SESSION RESET</small>
+                    <strong>Start a New Session</strong>
                   </span>
                   <span>
                     {progress.pendingRating > 0
@@ -1103,7 +1103,7 @@ export function App() {
           }}
           title={
             modal === 'prestige'
-              ? 'Set a New Record'
+              ? 'Start a New Session'
               : modal === 'achievements'
                 ? 'Champion Archive'
                 : modal === 'stats'
@@ -1201,8 +1201,8 @@ export function App() {
                     REMAINS
                   </h3>
                   <p className="mt-2 text-base leading-relaxed text-slate-300">
-                    Lifetime records, Performance Bonuses, achievements,
-                    statistics, and Performance Rating.
+                    Long-term memory: lifetime records, Performance Bonuses,
+                    achievements, statistics, and Performance Rating.
                   </p>
                 </section>
               </div>
@@ -1229,7 +1229,7 @@ export function App() {
                   onClick={handlePrestige}
                   type="button"
                 >
-                  🏆 Set a New Record
+                  Start a New Session
                 </button>
               </div>
             </div>

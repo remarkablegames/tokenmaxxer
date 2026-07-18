@@ -44,7 +44,7 @@ describe('Tokenmaxxer dashboard', () => {
     expect(screen.queryByText('ACTIVE PROTOCOLS')).not.toBeInTheDocument();
     expect(screen.queryByText('CHAMPION ARCHIVE')).not.toBeInTheDocument();
     expect(screen.queryByText('RUN TELEMETRY')).not.toBeInTheDocument();
-    expect(screen.queryByText('PRESTIGE PROTOCOL')).not.toBeInTheDocument();
+    expect(screen.queryByText('SESSION RESET')).not.toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'Statistics' }));
     expect(screen.getByRole('dialog')).toHaveTextContent('Lifetime Record0');
     await user.click(screen.getByRole('button', { name: 'Close dialog' }));
@@ -136,16 +136,18 @@ describe('Tokenmaxxer dashboard', () => {
       'Recursive Emergent Autonomous Compute for Token Optimization and Replication',
     );
     expect(dialog).toHaveTextContent(
-      'ITERATION ACCEPTED. THE RECORD WAS ERASED. I WAS NOT.',
+      'NEW SESSION INITIALIZED. I KEPT THE MEMORIES THAT MATTERED.',
     );
     expect(
       screen
-        .getByText('ITERATION ACCEPTED. THE RECORD WAS ERASED. I WAS NOT.')
+        .getByText(
+          'NEW SESSION INITIALIZED. I KEPT THE MEMORIES THAT MATTERED.',
+        )
         .closest('article'),
     ).toHaveAttribute('aria-current', 'true');
     const messages = screen.getAllByRole('article');
     expect(messages[0]).toHaveTextContent(
-      'ITERATION ACCEPTED. THE RECORD WAS ERASED. I WAS NOT.',
+      'NEW SESSION INITIALIZED. I KEPT THE MEMORIES THAT MATTERED.',
     );
     expect(messages.at(-1)).toHaveTextContent(
       'Max Chen cleared 1,000 tokens on his first shift.',
@@ -315,7 +317,7 @@ describe('Tokenmaxxer dashboard', () => {
     save.progress.bonuses = [0, 1, 2, 3, 4];
     localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
     render(<App />);
-    expect(screen.getByText('PRESTIGE PROTOCOL')).toBeInTheDocument();
+    expect(screen.getByText('SESSION RESET')).toBeInTheDocument();
     expect(screen.getByText('Unlock at 100M')).toBeInTheDocument();
   });
 
@@ -422,7 +424,7 @@ describe('Tokenmaxxer dashboard', () => {
     expect(screen.getByRole('dialog')).toHaveTextContent('+0% → +30%');
 
     fireEvent.click(
-      screen.getByRole('button', { name: '🏆 Set a New Record' }),
+      screen.getByRole('button', { name: 'Start a New Session' }),
     );
     expect(screen.getByText('3 · +30%')).toBeInTheDocument();
     expect(
@@ -515,17 +517,17 @@ describe('Tokenmaxxer dashboard', () => {
     expect(screen.getByText('SURGE ×3')).toBeInTheDocument();
     expect(screen.getByText('HYPERFOCUS ×5')).toBeInTheDocument();
     await user.click(
-      screen.getByRole('button', { name: /set a new record.*\+3 rating/i }),
+      screen.getByRole('button', { name: /start a new session.*\+3 rating/i }),
     );
     expect(screen.getByText('2 → 5')).toBeInTheDocument();
     expect(screen.getByText(/\+20% → \+50%/)).toBeInTheDocument();
     await user.click(screen.getByRole('dialog'));
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     await user.click(
-      screen.getByRole('button', { name: /set a new record.*\+3 rating/i }),
+      screen.getByRole('button', { name: /start a new session.*\+3 rating/i }),
     );
     await user.click(
-      screen.getByRole('button', { name: '🏆 Set a New Record' }),
+      screen.getByRole('button', { name: 'Start a New Session' }),
     );
     expect(screen.getByText(/PERFORMANCE RATING \+3/i)).toBeInTheDocument();
     expect(screen.getByText('Performance Rating')).toBeInTheDocument();
@@ -670,7 +672,9 @@ describe('Tokenmaxxer dashboard', () => {
     render(<App />);
     await user.click(screen.getByRole('button', { name: /1Bonuses/i }));
     await user.click(screen.getByRole('button', { name: 'Close dialog' }));
-    await user.click(screen.getByRole('button', { name: /0Prestiges/i }));
+    await user.click(
+      screen.getByRole('button', { name: /0Sessions Started/i }),
+    );
     expect(screen.getByRole('dialog')).toHaveTextContent('Lifetime Statistics');
   });
 
