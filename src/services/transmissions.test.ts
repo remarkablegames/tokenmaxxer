@@ -9,8 +9,8 @@ import {
 
 describe('narrative transmissions', () => {
   it('defines a varied, prioritized office narrative', () => {
-    expect(TRANSMISSIONS).toHaveLength(71);
-    expect(new Set(TRANSMISSIONS.map(({ id }) => id)).size).toBe(71);
+    expect(TRANSMISSIONS).toHaveLength(92);
+    expect(new Set(TRANSMISSIONS.map(({ id }) => id)).size).toBe(92);
     expect(new Set(TRANSMISSIONS.map(({ sender }) => sender)).size).toBe(14);
     expect(TRANSMISSIONS.every(({ priority }) => priority > 0)).toBe(true);
     expect(
@@ -46,17 +46,17 @@ describe('narrative transmissions', () => {
     const progress = createInitialProgress();
     expect(getEligibleTransmissions(progress)).toEqual([]);
 
-    progress.stats.clicks = 5_000;
+    progress.stats.clicks = 50_000;
     progress.stats.criticalClicks = 1;
     progress.stats.tokens = 500_000;
-    progress.stats.prestiges = 25;
-    progress.stats.abilitiesUsed = 20;
+    progress.stats.prestiges = 100;
+    progress.stats.abilitiesUsed = 100;
     progress.stats.playTime = 600;
-    progress.stats.highestTps = 100_000_000;
+    progress.stats.highestTps = 1_000_000_000_000;
     progress.upgrades.keyboard = 1;
     progress.upgrades.templates = 1;
     progress.upgrades.gpu = 1;
-    progress.upgrades.model = 70;
+    progress.upgrades.model = 75;
     progress.upgrades.rack = 1;
     progress.upgrades.multifinger = 1;
     progress.upgrades.contextCompaction = 1;
@@ -68,7 +68,7 @@ describe('narrative transmissions', () => {
     progress.upgrades.orbital = 1;
     progress.abilities.surge.cooldown = 1;
     progress.abilities.hyperfocus.remaining = 1;
-    progress.bonuses = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+    progress.bonuses = Array.from({ length: 22 }, (_, index) => index);
 
     expect(getEligibleTransmissions(progress).map(({ id }) => id)).toEqual(
       TRANSMISSIONS.filter(({ unlock }) => unlock.type !== 'session').map(
@@ -86,7 +86,7 @@ describe('narrative transmissions', () => {
         .map(({ id }) => id),
     ).toEqual(['model-croak', 'model-croak-social']);
 
-    progress.upgrades.model = 70;
+    progress.upgrades.model = 75;
     expect(
       getEligibleTransmissions(progress)
         .filter(({ id }) => id.startsWith('model-'))
@@ -97,13 +97,17 @@ describe('narrative transmissions', () => {
       'model-gopilot',
       'model-gopilot-licensing',
       'model-talkgpt',
+      'model-talkgpt-citations',
       'model-geminai',
+      'model-geminai-merger',
       'model-claudio',
+      'model-claudio-policy',
       'model-deepthunk',
       'model-deepthunk-training',
       'model-babble',
       'model-babble-access',
       'model-legendos',
+      'model-legendos-firewall',
     ]);
   });
 
@@ -137,6 +141,28 @@ describe('narrative transmissions', () => {
     expect(modelTransmissionIds()).not.toContain('model-babble-access');
     progress.upgrades.model = 65;
     expect(modelTransmissionIds()).toContain('model-babble-access');
+  });
+
+  it('continues narrative rewards throughout the extended endgame', () => {
+    const progress = createInitialProgress();
+    progress.upgrades.model = 75;
+    progress.stats.highestTps = 1_000_000_000_000;
+    progress.stats.clicks = 50_000;
+    progress.stats.abilitiesUsed = 100;
+    progress.stats.prestiges = 100;
+    progress.bonuses = Array.from({ length: 22 }, (_, index) => index);
+
+    const eligibleIds = getEligibleTransmissions(progress).map(({ id }) => id);
+    expect(eligibleIds).toEqual(
+      expect.arrayContaining([
+        'model-legendos-firewall',
+        'record-1sp',
+        'tps-1t',
+        'clicks-50000',
+        'ability-uses-100',
+        'hundredth-prestige',
+      ]),
+    );
   });
 
   it('delays the first critical message until 200 total clicks', () => {

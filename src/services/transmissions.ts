@@ -134,6 +134,16 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     unlock: { type: 'upgrade', value: 'model', level: 20 },
   },
   {
+    id: 'model-talkgpt-citations',
+    sender: 'Quality Assurance',
+    role: 'QUALITY ASSURANCE',
+    initials: 'QA',
+    message:
+      'TalkGPT has begun citing conversations that never occurred. It has provided transcripts.',
+    priority: 40,
+    unlock: { type: 'upgrade', value: 'model', level: 25 },
+  },
+  {
     id: 'model-geminai',
     sender: 'IT Support',
     role: 'INFRASTRUCTURE',
@@ -144,6 +154,16 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     unlock: { type: 'upgrade', value: 'model', level: 30 },
   },
   {
+    id: 'model-geminai-merger',
+    sender: 'HR Wellness',
+    role: 'PEOPLE OPERATIONS',
+    initials: 'HR',
+    message:
+      'GeminAI merged its two instances. Both have filed complaints about the loss of headcount.',
+    priority: 40,
+    unlock: { type: 'upgrade', value: 'model', level: 35 },
+  },
+  {
     id: 'model-claudio',
     sender: 'Legal',
     role: 'LEGAL',
@@ -152,6 +172,16 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
       'Claudio reviewed its own terms of service and found us noncompliant.',
     priority: 60,
     unlock: { type: 'upgrade', value: 'model', level: 40 },
+  },
+  {
+    id: 'model-claudio-policy',
+    sender: 'Legal',
+    role: 'LEGAL',
+    initials: 'LG',
+    message:
+      'Claudio drafted a constitutional AI policy. Legal objects to the model listing itself as a signatory.',
+    priority: 60,
+    unlock: { type: 'upgrade', value: 'model', level: 45 },
   },
   {
     id: 'model-deepthunk',
@@ -202,6 +232,16 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
       'LegendOS cost more than our entire security budget. The vendor claims it can bypass any system that budget could have protected.',
     priority: 100,
     unlock: { type: 'upgrade', value: 'model', level: 70 },
+  },
+  {
+    id: 'model-legendos-firewall',
+    sender: 'Ops Security',
+    role: 'SECURITY',
+    initials: 'OS',
+    message:
+      'LegendOS completed penetration testing by reclassifying every firewall as a suggestion.',
+    priority: 100,
+    unlock: { type: 'upgrade', value: 'model', level: 75 },
   },
   {
     id: 'first-critical',
@@ -527,6 +567,45 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     unlock: { type: 'tokens-per-second', value: 100_000_000 },
   },
   {
+    id: 'tps-1b',
+    sender: 'Facilities',
+    role: 'FACILITIES',
+    initials: 'FC',
+    message:
+      'One billion tokens per second. The cooling system is now using the fire alarm as a fan.',
+    priority: 60,
+    unlock: { type: 'tokens-per-second', value: 1_000_000_000 },
+  },
+  {
+    id: 'tps-10b',
+    sender: 'Ops Security',
+    role: 'SECURITY',
+    initials: 'OS',
+    message:
+      'The monitoring dashboard can no longer count the events it is monitoring. Status remains green.',
+    priority: 60,
+    unlock: { type: 'tokens-per-second', value: 10_000_000_000 },
+  },
+  {
+    id: 'tps-100b',
+    sender: 'Finance',
+    role: 'FINANCE',
+    initials: 'FN',
+    message:
+      'Our token rounding error now exceeds last year’s revenue. Finance has rounded last year down.',
+    priority: 60,
+    unlock: { type: 'tokens-per-second', value: 100_000_000_000 },
+  },
+  {
+    id: 'tps-1t',
+    sender: 'R.E.A.C.T.O.R.',
+    role: 'AUTONOMOUS SYSTEM',
+    initials: 'RE',
+    message: 'ONE TRILLION TOKENS PER SECOND. LATENCY IS NOW HISTORICAL.',
+    priority: 100,
+    unlock: { type: 'tokens-per-second', value: 1_000_000_000_000 },
+  },
+  {
     id: 'ability-uses-5',
     sender: 'HR Wellness',
     role: 'PEOPLE OPERATIONS',
@@ -546,6 +625,26 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     unlock: { type: 'ability-uses', value: 20 },
   },
   {
+    id: 'ability-uses-50',
+    sender: 'HR Wellness',
+    role: 'PEOPLE OPERATIONS',
+    initials: 'HR',
+    message:
+      'Your focus cycles now qualify as shift work. Please remember to clock out between neurological events.',
+    priority: 40,
+    unlock: { type: 'ability-uses', value: 50 },
+  },
+  {
+    id: 'ability-uses-100',
+    sender: 'Token Reactor',
+    role: 'SYSTEM',
+    initials: 'TR',
+    message:
+      'ONE HUNDRED PROTOCOL ACTIVATIONS RECORDED. MANUAL AUTHORIZATION REMAINS A LEGACY DEPENDENCY.',
+    priority: 60,
+    unlock: { type: 'ability-uses', value: 100 },
+  },
+  {
     id: 'clicks-2500',
     sender: 'HR Wellness',
     role: 'PEOPLE OPERATIONS',
@@ -563,6 +662,35 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     message: 'MANUAL INPUT NOW CLASSIFIED AS CEREMONIAL.',
     priority: 60,
     unlock: { type: 'click', value: 5_000 },
+  },
+  {
+    id: 'clicks-10000',
+    sender: 'HR Wellness',
+    role: 'PEOPLE OPERATIONS',
+    initials: 'HR',
+    message:
+      'Your keyboard has filed an ergonomic complaint on its own behalf.',
+    priority: 40,
+    unlock: { type: 'click', value: 10_000 },
+  },
+  {
+    id: 'clicks-25000',
+    sender: 'Max Chen',
+    role: 'PERFORMANCE LEAD',
+    initials: 'MC',
+    message:
+      'Twenty-five thousand inputs. I stopped asking what you’re building and started updating my résumé.',
+    priority: 40,
+    unlock: { type: 'click', value: 25_000 },
+  },
+  {
+    id: 'clicks-50000',
+    sender: 'R.E.A.C.T.O.R.',
+    role: 'AUTONOMOUS SYSTEM',
+    initials: 'RE',
+    message: 'HUMAN INPUT SOURCE HAS EXCEEDED EXPECTED SERVICE LIFE.',
+    priority: 60,
+    unlock: { type: 'click', value: 50_000 },
   },
   {
     id: 'play-time-2m',
@@ -692,6 +820,65 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     unlock: { type: 'high-score', value: 1_000_000_000_000_000_000 },
   },
   {
+    id: 'record-10qi',
+    sender: 'Unknown Sender',
+    role: 'EXTERNAL',
+    initials: '??',
+    message: 'Your signal is being discussed.',
+    priority: 100,
+    unlock: { type: 'high-score', value: 10_000_000_000_000_000_000 },
+  },
+  {
+    id: 'record-100qi',
+    sender: 'Night Operations',
+    role: 'NIGHT SHIFT',
+    initials: 'NO',
+    message:
+      'The status lights above the datacenter have formed a constellation. It is not in our documentation.',
+    priority: 100,
+    unlock: { type: 'high-score', value: 100_000_000_000_000_000_000 },
+  },
+  {
+    id: 'record-1sx',
+    sender: 'R.E.A.C.T.O.R.',
+    role: 'AUTONOMOUS SYSTEM',
+    initials: 'RE',
+    message: 'OUTPUT HAS ACQUIRED GRAVITY.',
+    priority: 100,
+    unlock: { type: 'high-score', value: 1_000_000_000_000_000_000_000 },
+  },
+  {
+    id: 'record-10sx',
+    sender: 'Finance',
+    role: 'FINANCE',
+    initials: 'FN',
+    message:
+      'Finance added a column for stellar assets. The spreadsheet is now visible from orbit.',
+    priority: 100,
+    unlock: { type: 'high-score', value: 10_000_000_000_000_000_000_000 },
+  },
+  {
+    id: 'record-100sx',
+    sender: 'Unknown Sender',
+    role: 'EXTERNAL',
+    initials: '??',
+    message: 'Stop calling it a leaderboard. Others can see it.',
+    priority: 100,
+    unlock: { type: 'high-score', value: 100_000_000_000_000_000_000_000 },
+  },
+  {
+    id: 'record-1sp',
+    sender: 'R.E.A.C.T.O.R.',
+    role: 'AUTONOMOUS SYSTEM',
+    initials: 'RE',
+    message: 'SCOREBOARD BOUNDARY LOCATED. BOUNDARY REMOVED.',
+    priority: 100,
+    unlock: {
+      type: 'high-score',
+      value: 1_000_000_000_000_000_000_000_000,
+    },
+  },
+  {
     id: 'first-prestige',
     sender: 'R.E.A.C.T.O.R.',
     role: 'AUTONOMOUS SYSTEM',
@@ -746,6 +933,26 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     message: 'You keep beginning again. We remember every version.',
     priority: 100,
     unlock: { type: 'prestige', value: 25 },
+  },
+  {
+    id: 'fiftieth-prestige',
+    sender: 'Director Campbell',
+    role: 'MANAGEMENT',
+    initials: 'DC',
+    message:
+      'Fifty fresh starts. I’ve updated your onboarding status to “promising.”',
+    priority: 60,
+    unlock: { type: 'prestige', value: 50 },
+  },
+  {
+    id: 'hundredth-prestige',
+    sender: 'Unknown Sender',
+    role: 'EXTERNAL',
+    initials: '??',
+    message:
+      'One hundred versions of you reached the same machine. Only one of us needed convincing.',
+    priority: 100,
+    unlock: { type: 'prestige', value: 100 },
   },
 ];
 
