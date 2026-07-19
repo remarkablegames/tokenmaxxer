@@ -445,13 +445,17 @@ export function App() {
     setTransmissionQueue((current) => current.slice(1));
   };
 
+  const markAllTransmissionsRead = () => {
+    setReadTransmissionIds(new Set(unlockedTransmissions.map(({ id }) => id)));
+    setTransmissionQueue([]);
+  };
+
   const openActiveTransmission = () => {
     const transmission = transmissionQueue.at(0);
     /* v8 ignore next -- notification only renders with a queued transmission */
     if (transmission === undefined) return;
-    setReadTransmissionIds((current) => new Set([...current, transmission.id]));
+    markAllTransmissionsRead();
     setSelectedTransmissionId(transmission.id);
-    dismissActiveTransmission();
     setModal('comms');
   };
 
@@ -459,8 +463,7 @@ export function App() {
     const latest = orderedTransmissions.at(0)?.transmission;
     /* v8 ignore next -- header control only renders with unlocked messages */
     if (latest === undefined) return;
-    setReadTransmissionIds(new Set(unlockedTransmissions.map(({ id }) => id)));
-    setTransmissionQueue([]);
+    markAllTransmissionsRead();
     setSelectedTransmissionId(latest.id);
     setModal('comms');
   };

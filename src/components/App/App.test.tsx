@@ -105,6 +105,33 @@ describe('Tokenmaxxer dashboard', () => {
     ).toBeInTheDocument();
   });
 
+  it('clears every unread message when a notification opens Ops Comms', async () => {
+    const save = createInitialSave();
+    save.progress.tokens = 999;
+    save.progress.stats.tokens = 999;
+    save.progress.stats.clicks = 199;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
+    vi.spyOn(Math, 'random').mockReturnValue(0);
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.click(screen.getByRole('button', { name: /activate reactor/i }));
+    await user.click(screen.getByRole('button', { name: 'Close' }));
+    expect(
+      screen.getByRole('button', { name: 'Open Ops Comms, 2 unread' }),
+    ).toBeInTheDocument();
+    await user.click(
+      screen.getByRole('button', {
+        name: 'Open message from Director Campbell',
+      }),
+    );
+    await user.click(screen.getByRole('button', { name: 'Close dialog' }));
+
+    expect(
+      screen.getByRole('button', { name: 'Open Ops Comms' }),
+    ).toBeInTheDocument();
+  });
+
   it('clears pending live notifications when the full Comms log is opened', async () => {
     const user = userEvent.setup();
     render(<App />);
