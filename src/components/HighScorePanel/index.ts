@@ -1,0 +1,1 @@
+export { HighScorePanel } from './HighScorePanel';

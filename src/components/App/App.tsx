@@ -1,11 +1,18 @@
 import type { ChangeEvent, MouseEvent } from 'react';
 import { useEffect, useRef, useState } from 'react';
+import {
+  type ArchiveTab,
+  ChampionArchiveModal,
+} from 'src/components/ChampionArchiveModal';
 import { CommsNotification } from 'src/components/CommsNotification';
+import { DashboardHeader } from 'src/components/DashboardHeader';
+import { HighScorePanel } from 'src/components/HighScorePanel';
+import { ModalShell } from 'src/components/ModalShell';
 import { Reactor } from 'src/components/Reactor';
+import { SessionResetModal } from 'src/components/SessionResetModal';
 import { playSound } from 'src/services/audio';
 import {
   ABILITIES,
-  ACHIEVEMENTS,
   activateAbility,
   calculateMetrics,
   clickReactor,
@@ -58,7 +65,6 @@ interface CelebrationState {
   index: number;
   isNew: boolean;
 }
-type ArchiveTab = 'milestones' | 'achievements';
 type Modal =
   'none' | 'prestige' | 'archive' | 'stats' | 'settings' | 'save' | 'comms';
 
@@ -70,8 +76,6 @@ const CATEGORY_LABELS: Record<UpgradeCategory, string> = {
 const PANEL_CLASS =
   'rounded-2xl border border-white/8 bg-linear-to-br from-[#0f1e31]/90 to-[#060e1c]/95 shadow-[inset_0_1px_0_rgb(255_255_255/0.035),0_18px_60px_rgb(0_0_0/0.22)]';
 const EYEBROW_CLASS = 'text-xs font-extrabold tracking-[0.2em] text-cyan-300';
-const ICON_BUTTON_CLASS =
-  'grid size-10 cursor-pointer place-items-center rounded-xl border border-white/10 bg-white/4 text-slate-300 transition-colors hover:border-cyan-300/45 hover:bg-cyan-400/8';
 const ACTION_BUTTON_CLASS =
   'cursor-pointer rounded-xl px-4 py-3 font-extrabold transition hover:-translate-y-px hover:brightness-125 disabled:cursor-not-allowed disabled:opacity-40';
 const SHELL_CLASS = 'mx-auto w-full max-w-400 px-3 sm:px-6';
@@ -142,10 +146,6 @@ function getVisibleAbilities(progress: GameProgress): AbilityDefinition[] {
     (ability) => !isAbilityUnlocked(progress, ability),
   );
   return nextLocked === undefined ? unlocked : [...unlocked, nextLocked];
-}
-
-function formatMilestoneTarget(target: number): string {
-  return formatNumber(target).replace(/\.0+(?=[A-Za-z])/u, '');
 }
 
 export function App() {
@@ -226,12 +226,6 @@ export function App() {
 
   const progress = save.progress;
   const metrics = calculateMetrics(progress);
-  const target = getRecordTarget(progress.recordIndex);
-  const recordProgress = Math.min(
-    100,
-    Math.max(0, (progress.tokens / target) * 100),
-  );
-  const displayedRecordProgress = Number(recordProgress.toFixed(1));
   const stage = getReactorStage(progress.recordIndex);
   const onboardingObjective = getOnboardingObjective(progress);
   const showProgressPanels = progress.bonuses.length > 0;
@@ -574,124 +568,25 @@ export function App() {
   return (
     <main className="min-h-screen bg-[#050914] text-slate-100">
       <div className="noise pointer-events-none fixed inset-0" />
-      <header className="sticky top-0 z-30 border-b border-cyan-400/15 bg-[#050914]/95 py-3 backdrop-blur-xl">
-        <div className={`${SHELL_CLASS} flex flex-wrap items-center gap-3`}>
-          <div className="mr-auto">
-            <h1 className="text-xl font-black tracking-tight sm:text-2xl">
-              <span className="text-amber-300">🏆</span> TOKENMAXXER
-            </h1>
-            <p
-              className={`status text-xs tracking-[.28em] ${notice === 'SYSTEM ONLINE' ? 'text-emerald-300' : 'text-cyan-300'}`}
-            >
-              ● {notice}
-            </p>
-            {previewConfig.enabled && (
-              <span className="mt-1 inline-flex rounded-full border border-amber-300/35 bg-amber-300/10 px-2 py-0.5 text-xs font-bold tracking-[.18em] text-amber-200">
-                PREVIEW MODE
-              </span>
-            )}
-          </div>
-          <Stat
-            label="TOKENS"
-            value={formatNumber(progress.tokens)}
-            highlight
-          />
-          <Stat
-            label="PER SECOND"
-            value={formatNumber(metrics.tokensPerSecond)}
-          />
-          <Stat
-            label="PER CLICK"
-            value={formatNumber(metrics.tokensPerClick)}
-          />
-          {unlockedTransmissions.length > 0 && (
-            <button
-              aria-label={`Open Ops Comms${unreadTransmissionCount > 0 ? `, ${String(unreadTransmissionCount)} unread` : ''}`}
-              className={`${ICON_BUTTON_CLASS} relative`}
-              onClick={openCommsLog}
-              type="button"
-            >
-              <svg
-                aria-hidden="true"
-                className="size-5"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M5 5h14v10H9l-4 4V5Z"
-                  stroke="currentColor"
-                  strokeLinejoin="round"
-                  strokeWidth="1.8"
-                />
-                <path
-                  d="M8 9h8M8 12h5"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeWidth="1.8"
-                />
-              </svg>
-              {unreadTransmissionCount > 0 && (
-                <span className="absolute -top-1 -right-1 grid min-w-5 place-items-center rounded-full bg-amber-400 px-1 text-xs font-black text-[#07111f] shadow-[0_0_12px_rgb(251_191_36/0.55)]">
-                  {unreadTransmissionCount}
-                </span>
-              )}
-            </button>
-          )}
-          <button
-            className={ICON_BUTTON_CLASS}
-            aria-label="Open settings"
-            onClick={() => {
-              setModal('settings');
-            }}
-            type="button"
-          >
-            ⚙
-          </button>
-        </div>
-      </header>
+      <DashboardHeader
+        hasComms={unlockedTransmissions.length > 0}
+        notice={notice}
+        onOpenComms={openCommsLog}
+        onOpenSettings={() => {
+          setModal('settings');
+        }}
+        previewEnabled={previewConfig.enabled}
+        tokens={progress.tokens}
+        tokensPerClick={metrics.tokensPerClick}
+        tokensPerSecond={metrics.tokensPerSecond}
+        unreadCount={unreadTransmissionCount}
+      />
 
-      <section className="border-b border-amber-300/15 bg-linear-to-r from-amber-500/5 via-cyan-500/5 to-violet-500/5 py-3 sm:py-4">
-        <div className={SHELL_CLASS}>
-          <p className={`${EYEBROW_CLASS} text-amber-300`}>HIGH SCORE</p>
-          <div className="mb-2 flex items-end justify-between gap-4">
-            <h2 className="text-3xl font-black tabular-nums sm:text-5xl">
-              <span className="text-cyan-100">
-                {formatNumber(progress.tokens)}
-              </span>{' '}
-              <span className="text-slate-600">/</span>{' '}
-              <span>{formatNumber(target)}</span>{' '}
-              <span className="text-base font-medium text-slate-500">
-                TOKENS
-              </span>
-            </h2>
-            <div className="shrink-0 pb-1 text-right">
-              <span className="block text-xs font-bold tracking-wider text-slate-400">
-                PROGRESS
-              </span>
-              <strong className="text-sm text-amber-300 sm:text-base">
-                {displayedRecordProgress.toFixed(1)}%
-              </strong>
-            </div>
-          </div>
-          <div
-            aria-label="High Score progress"
-            aria-valuemax={100}
-            aria-valuemin={0}
-            aria-valuenow={displayedRecordProgress}
-            className="h-3 overflow-hidden rounded-full border border-white/8 bg-black/45 shadow-[inset_0_2px_5px_rgb(0_0_0/0.55)]"
-            role="progressbar"
-          >
-            <div
-              className="h-full rounded-[inherit] bg-linear-to-r from-cyan-600 via-cyan-300 to-amber-400 shadow-[0_0_20px_#22d3ee]"
-              style={{ width: `${String(displayedRecordProgress)}%` }}
-            />
-          </div>
-          <div className="mt-2 flex justify-between text-xs text-slate-500">
-            <span>{progress.bonuses.length} PERFORMANCE BONUSES EARNED</span>
-            <span>NEXT BONUS: #{progress.recordIndex + 1}</span>
-          </div>
-        </div>
-      </section>
+      <HighScorePanel
+        bonusesEarned={progress.bonuses.length}
+        recordIndex={progress.recordIndex}
+        tokens={progress.tokens}
+      />
 
       <div
         className={`${SHELL_CLASS} grid gap-4 py-3 sm:py-6 xl:grid-cols-[minmax(300px,0.85fr)_minmax(400px,1.2fr)_minmax(340px,1fr)]`}
@@ -1097,23 +992,19 @@ export function App() {
           </div>
         </div>
       )}
-      {modal !== 'none' && (
+      {modal !== 'none' && modal !== 'archive' && modal !== 'prestige' && (
         <ModalShell
           onClose={() => {
             setModal('none');
           }}
           title={
-            modal === 'prestige'
-              ? 'Start a New Session'
-              : modal === 'archive'
-                ? 'Champion Archive'
-                : modal === 'stats'
-                  ? 'Lifetime Statistics'
-                  : modal === 'settings'
-                    ? 'System Settings'
-                    : modal === 'comms'
-                      ? 'Ops Comms'
-                      : 'Save Operations'
+            modal === 'stats'
+              ? 'Lifetime Statistics'
+              : modal === 'settings'
+                ? 'System Settings'
+                : modal === 'comms'
+                  ? 'Ops Comms'
+                  : 'Save Operations'
           }
         >
           {modal === 'comms' && (
@@ -1174,146 +1065,6 @@ export function App() {
                   );
                 })}
               </ol>
-            </div>
-          )}
-          {modal === 'prestige' && (
-            <div className="mx-auto max-w-2xl space-y-5">
-              <div className="flex items-center justify-between rounded-xl border border-amber-300/20 bg-amber-300/7 px-4 py-3">
-                <span className="text-sm font-bold tracking-[0.15em] text-slate-300">
-                  BENCHMARK RATING
-                </span>
-                <strong className="text-xl text-amber-300">
-                  {progress.prestigeLevel} →{' '}
-                  {progress.prestigeLevel + progress.pendingPrestigeLevels}
-                </strong>
-              </div>
-              <div className="grid gap-3 sm:grid-cols-2">
-                <section className="rounded-xl border border-rose-300/10 bg-rose-300/4 p-4">
-                  <h3 className="text-sm font-extrabold tracking-[0.14em] text-rose-200">
-                    RESETS
-                  </h3>
-                  <p className="mt-2 text-base leading-relaxed text-slate-300">
-                    Tokens, upgrades, active abilities, and your current High
-                    Score ladder.
-                  </p>
-                </section>
-                <section className="rounded-xl border border-emerald-300/10 bg-emerald-300/4 p-4">
-                  <h3 className="text-sm font-extrabold tracking-[0.14em] text-emerald-200">
-                    REMAINS
-                  </h3>
-                  <p className="mt-2 text-base leading-relaxed text-slate-300">
-                    Long-term memory: lifetime records, Performance Bonuses,
-                    achievements, statistics, and Benchmark Rating.
-                  </p>
-                </section>
-              </div>
-              <div className="flex flex-col gap-4 rounded-xl bg-white/4 p-4 sm:flex-row sm:items-center sm:justify-between">
-                <span>
-                  <span className="block text-sm font-extrabold tracking-[0.14em] text-slate-400">
-                    PERMANENT EFFECT
-                  </span>
-                  <strong className="mt-1 block text-xl text-cyan-300">
-                    Token Multiplier: {tokenMultiplier.toFixed(1)}× →{' '}
-                    {getTokenMultiplier(
-                      progress.prestigeLevel + progress.pendingPrestigeLevels,
-                    ).toFixed(1)}
-                    ×
-                  </strong>
-                </span>
-                <button
-                  className={`${ACTION_BUTTON_CLASS} bg-linear-to-r from-cyan-600 to-violet-600 px-5 py-4 text-base text-white`}
-                  disabled={progress.pendingPrestigeLevels <= 0}
-                  onClick={handlePrestige}
-                  type="button"
-                >
-                  Start a New Session
-                </button>
-              </div>
-            </div>
-          )}
-          {modal === 'archive' && (
-            <div>
-              <div
-                aria-label="Champion Archive sections"
-                className="mb-4 grid grid-cols-2 rounded-xl border border-white/8 bg-black/20 p-1"
-                role="tablist"
-              >
-                <button
-                  aria-controls="archive-panel"
-                  aria-selected={archiveTab === 'milestones'}
-                  className={`cursor-pointer rounded-lg px-4 py-3 text-sm font-extrabold transition-colors ${archiveTab === 'milestones' ? 'bg-cyan-400/12 text-cyan-200' : 'text-slate-400 hover:text-slate-200'}`}
-                  id="milestones-tab"
-                  onClick={() => {
-                    setArchiveTab('milestones');
-                  }}
-                  role="tab"
-                  type="button"
-                >
-                  Milestones
-                </button>
-                <button
-                  aria-controls="archive-panel"
-                  aria-selected={archiveTab === 'achievements'}
-                  className={`cursor-pointer rounded-lg px-4 py-3 text-sm font-extrabold transition-colors ${archiveTab === 'achievements' ? 'bg-cyan-400/12 text-cyan-200' : 'text-slate-400 hover:text-slate-200'}`}
-                  id="achievements-tab"
-                  onClick={() => {
-                    setArchiveTab('achievements');
-                  }}
-                  role="tab"
-                  type="button"
-                >
-                  Achievements
-                </button>
-              </div>
-              <div
-                aria-labelledby={`${archiveTab}-tab`}
-                id="archive-panel"
-                role="tabpanel"
-              >
-                {archiveTab === 'milestones' ? (
-                  <ol className="grid gap-2 sm:grid-cols-2">
-                    {[...progress.bonuses]
-                      .sort((left, right) => left - right)
-                      .map((index) => (
-                        <li
-                          className="flex items-center justify-between gap-4 rounded-xl border border-amber-300/20 bg-amber-300/5 p-4"
-                          key={index}
-                        >
-                          <span>
-                            <small className="block text-xs font-bold tracking-[0.14em] text-slate-400">
-                              MILESTONE #{index + 1}
-                            </small>
-                            <strong className="mt-1 block text-xl text-amber-200">
-                              {formatMilestoneTarget(getRecordTarget(index))}
-                            </strong>
-                          </span>
-                          <span className="text-xs font-extrabold tracking-[0.12em] text-emerald-300">
-                            ◆ SECURED
-                          </span>
-                        </li>
-                      ))}
-                  </ol>
-                ) : (
-                  <div className="grid gap-2 sm:grid-cols-2">
-                    {ACHIEVEMENTS.map((achievement) => (
-                      <div
-                        className={`flex items-center gap-3 rounded-xl border p-3 ${progress.achievements.includes(achievement.id) ? 'border-amber-300/25 bg-amber-300/5 opacity-100' : 'border-white/6 opacity-60'}`}
-                        key={achievement.id}
-                      >
-                        <span className="text-amber-400">
-                          {progress.achievements.includes(achievement.id)
-                            ? '◆'
-                            : '◇'}
-                        </span>
-                        <div className="[&_small]:block [&_small]:text-xs [&_small]:text-slate-400 [&_strong]:block">
-                          <strong>{achievement.name}</strong>
-                          <small>{achievement.description}</small>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
             </div>
           )}
           {modal === 'stats' && (
@@ -1469,6 +1220,26 @@ export function App() {
           )}
         </ModalShell>
       )}
+      {modal === 'archive' && (
+        <ChampionArchiveModal
+          achievementIds={progress.achievements}
+          bonuses={progress.bonuses}
+          initialTab={archiveTab}
+          onClose={() => {
+            setModal('none');
+          }}
+        />
+      )}
+      {modal === 'prestige' && (
+        <SessionResetModal
+          onClose={() => {
+            setModal('none');
+          }}
+          onConfirm={handlePrestige}
+          pendingPrestigeLevels={progress.pendingPrestigeLevels}
+          prestigeLevel={progress.prestigeLevel}
+        />
+      )}
     </main>
   );
 }
@@ -1490,28 +1261,6 @@ function Panel({
       <h2 className="mb-3 text-lg font-bold">{title}</h2>
       {children}
     </section>
-  );
-}
-function Stat({
-  label,
-  value,
-  highlight = false,
-}: {
-  label: string;
-  value: string;
-  highlight?: boolean;
-}) {
-  return (
-    <div className="min-w-20 border-l border-white/9 pl-3 max-sm:order-3 max-sm:min-w-0 max-sm:flex-1">
-      <small className="block text-xs tracking-[0.12em] text-slate-400">
-        {label}
-      </small>
-      <strong
-        className={`text-base tabular-nums max-sm:text-sm ${highlight ? 'text-cyan-200' : ''}`}
-      >
-        {value}
-      </strong>
-    </div>
   );
 }
 function ArchiveButton({
@@ -1578,45 +1327,5 @@ function TrophyIcon() {
         fill="#fff7d6"
       />
     </svg>
-  );
-}
-function ModalShell({
-  title,
-  children,
-  onClose,
-}: {
-  title: string;
-  children: React.ReactNode;
-  onClose: () => void;
-}) {
-  const handleBackdropClick = (event: MouseEvent<HTMLDivElement>) => {
-    if (event.target === event.currentTarget) onClose();
-  };
-
-  return (
-    <div
-      aria-modal="true"
-      className="fixed inset-0 z-100 grid place-items-center overflow-y-auto bg-[#020610]/85 p-4 backdrop-blur-lg"
-      onClick={handleBackdropClick}
-      role="dialog"
-    >
-      <section className="modal-card max-h-[calc(100vh-2rem)] w-full max-w-184 overflow-y-auto rounded-2xl border border-cyan-300/20 bg-[#0a1221] shadow-[0_25px_100px_#000]">
-        <header className="flex items-center justify-between border-b border-white/8 px-5 py-4">
-          <div>
-            <p className={EYEBROW_CLASS}>TOKENMAXXER CONTROL</p>
-            <h2 className="text-2xl font-black">{title}</h2>
-          </div>
-          <button
-            aria-label="Close dialog"
-            className={ICON_BUTTON_CLASS}
-            onClick={onClose}
-            type="button"
-          >
-            ×
-          </button>
-        </header>
-        <div className="p-5">{children}</div>
-      </section>
-    </div>
   );
 }
