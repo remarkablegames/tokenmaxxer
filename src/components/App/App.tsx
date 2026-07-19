@@ -58,14 +58,9 @@ interface CelebrationState {
   index: number;
   isNew: boolean;
 }
+type ArchiveTab = 'milestones' | 'achievements';
 type Modal =
-  | 'none'
-  | 'prestige'
-  | 'achievements'
-  | 'stats'
-  | 'settings'
-  | 'save'
-  | 'comms';
+  'none' | 'prestige' | 'archive' | 'stats' | 'settings' | 'save' | 'comms';
 
 const CATEGORY_LABELS: Record<UpgradeCategory, string> = {
   manual: 'Manual Systems',
@@ -196,6 +191,7 @@ export function App() {
   const [modal, setModal] = useState<Modal>(() =>
     previewConfig.mode === 'prestige' ? 'prestige' : 'none',
   );
+  const [archiveTab, setArchiveTab] = useState<ArchiveTab>('milestones');
   const [floats, setFloats] = useState<FloatText[]>([]);
   const [celebration, setCelebration] = useState<CelebrationState | null>(() =>
     previewConfig.mode === 'high-score'
@@ -791,14 +787,16 @@ export function App() {
                     label="Milestones"
                     value={String(progress.bonuses.length)}
                     onClick={() => {
-                      setModal('achievements');
+                      setArchiveTab('milestones');
+                      setModal('archive');
                     }}
                   />
                   <ArchiveButton
                     label="Achievements"
                     value={`${String(progress.achievements.length)}/12`}
                     onClick={() => {
-                      setModal('achievements');
+                      setArchiveTab('achievements');
+                      setModal('archive');
                     }}
                   />
                   <ArchiveButton
@@ -1103,7 +1101,7 @@ export function App() {
           title={
             modal === 'prestige'
               ? 'Start a New Session'
-              : modal === 'achievements'
+              : modal === 'archive'
                 ? 'Champion Archive'
                 : modal === 'stats'
                   ? 'Lifetime Statistics'
@@ -1229,22 +1227,89 @@ export function App() {
               </div>
             </div>
           )}
-          {modal === 'achievements' && (
-            <div className="grid gap-2 sm:grid-cols-2">
-              {ACHIEVEMENTS.map((achievement) => (
-                <div
-                  className={`flex items-center gap-3 rounded-xl border p-3 ${progress.achievements.includes(achievement.id) ? 'border-amber-300/25 bg-amber-300/5 opacity-100' : 'border-white/6 opacity-45'}`}
-                  key={achievement.id}
+          {modal === 'archive' && (
+            <div>
+              <div
+                aria-label="Champion Archive sections"
+                className="mb-4 grid grid-cols-2 rounded-xl border border-white/8 bg-black/20 p-1"
+                role="tablist"
+              >
+                <button
+                  aria-controls="archive-panel"
+                  aria-selected={archiveTab === 'milestones'}
+                  className={`cursor-pointer rounded-lg px-4 py-3 text-sm font-extrabold transition-colors ${archiveTab === 'milestones' ? 'bg-cyan-400/12 text-cyan-200' : 'text-slate-400 hover:text-slate-200'}`}
+                  id="milestones-tab"
+                  onClick={() => {
+                    setArchiveTab('milestones');
+                  }}
+                  role="tab"
+                  type="button"
                 >
-                  <span className="text-amber-400">
-                    {progress.achievements.includes(achievement.id) ? '◆' : '◇'}
-                  </span>
-                  <div className="[&_small]:block [&_small]:text-xs [&_small]:text-slate-400 [&_strong]:block">
-                    <strong>{achievement.name}</strong>
-                    <small>{achievement.description}</small>
+                  Milestones
+                </button>
+                <button
+                  aria-controls="archive-panel"
+                  aria-selected={archiveTab === 'achievements'}
+                  className={`cursor-pointer rounded-lg px-4 py-3 text-sm font-extrabold transition-colors ${archiveTab === 'achievements' ? 'bg-cyan-400/12 text-cyan-200' : 'text-slate-400 hover:text-slate-200'}`}
+                  id="achievements-tab"
+                  onClick={() => {
+                    setArchiveTab('achievements');
+                  }}
+                  role="tab"
+                  type="button"
+                >
+                  Achievements
+                </button>
+              </div>
+              <div
+                aria-labelledby={`${archiveTab}-tab`}
+                id="archive-panel"
+                role="tabpanel"
+              >
+                {archiveTab === 'milestones' ? (
+                  <ol className="grid gap-2 sm:grid-cols-2">
+                    {[...progress.bonuses]
+                      .sort((left, right) => left - right)
+                      .map((index) => (
+                        <li
+                          className="flex items-center justify-between gap-4 rounded-xl border border-amber-300/20 bg-amber-300/5 p-4"
+                          key={index}
+                        >
+                          <span>
+                            <small className="block text-xs font-bold tracking-[0.14em] text-slate-400">
+                              MILESTONE #{index + 1}
+                            </small>
+                            <strong className="mt-1 block text-xl text-amber-200">
+                              {formatNumber(getRecordTarget(index))}
+                            </strong>
+                          </span>
+                          <span className="text-xs font-extrabold tracking-[0.12em] text-emerald-300">
+                            ◆ SECURED
+                          </span>
+                        </li>
+                      ))}
+                  </ol>
+                ) : (
+                  <div className="grid gap-2 sm:grid-cols-2">
+                    {ACHIEVEMENTS.map((achievement) => (
+                      <div
+                        className={`flex items-center gap-3 rounded-xl border p-3 ${progress.achievements.includes(achievement.id) ? 'border-amber-300/25 bg-amber-300/5 opacity-100' : 'border-white/6 opacity-45'}`}
+                        key={achievement.id}
+                      >
+                        <span className="text-amber-400">
+                          {progress.achievements.includes(achievement.id)
+                            ? '◆'
+                            : '◇'}
+                        </span>
+                        <div className="[&_small]:block [&_small]:text-xs [&_small]:text-slate-400 [&_strong]:block">
+                          <strong>{achievement.name}</strong>
+                          <small>{achievement.description}</small>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                </div>
-              ))}
+                )}
+              </div>
             </div>
           )}
           {modal === 'stats' && (

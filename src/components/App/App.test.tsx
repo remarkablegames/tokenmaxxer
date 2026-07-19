@@ -669,12 +669,38 @@ describe('Tokenmaxxer dashboard', () => {
 
   it('opens the archive and statistics from every dashboard shortcut', async () => {
     const save = createInitialSave();
-    save.progress.recordIndex = 1;
-    save.progress.bonuses = [0];
+    save.progress.recordIndex = 2;
+    save.progress.bonuses = [0, 1];
     localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
     const user = userEvent.setup();
     render(<App />);
-    await user.click(screen.getByRole('button', { name: /1Milestones/i }));
+    await user.click(screen.getByRole('button', { name: /2Milestones/i }));
+    expect(
+      screen.getByRole('tab', { name: 'Milestones', selected: true }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole('tabpanel')).toHaveTextContent('MILESTONE #1');
+    expect(screen.getByRole('tabpanel')).toHaveTextContent('1.00K');
+    const milestones = screen.getAllByRole('listitem');
+    expect(milestones[0]).toHaveTextContent('MILESTONE #1');
+    expect(milestones[1]).toHaveTextContent('MILESTONE #2');
+    expect(screen.getByRole('tabpanel')).not.toHaveTextContent('First Input');
+    await user.click(screen.getByRole('tab', { name: 'Achievements' }));
+    expect(
+      screen.getByRole('tab', { name: 'Achievements', selected: true }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole('tabpanel')).toHaveTextContent('First Input');
+    expect(screen.getByRole('tabpanel')).not.toHaveTextContent('MILESTONE #1');
+    await user.click(screen.getByRole('tab', { name: 'Milestones' }));
+    expect(
+      screen.getByRole('tab', { name: 'Milestones', selected: true }),
+    ).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Close dialog' }));
+    await user.click(
+      screen.getByRole('button', { name: /0\/12Achievements/i }),
+    );
+    expect(
+      screen.getByRole('tab', { name: 'Achievements', selected: true }),
+    ).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'Close dialog' }));
     await user.click(
       screen.getByRole('button', { name: /0Sessions Started/i }),
