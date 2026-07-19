@@ -21,6 +21,12 @@ describe('ChampionArchiveModal', () => {
     expect(milestones[1]).toHaveTextContent('MILESTONE #2');
     await user.click(screen.getByRole('tab', { name: 'Achievements' }));
     expect(screen.getByRole('tabpanel')).toHaveTextContent('Record Breaker');
+    expect(screen.getByRole('tabpanel')).toHaveTextContent(
+      'Secure a High Score milestone',
+    );
+    expect(screen.getByRole('tabpanel')).toHaveTextContent(
+      'Secure the 100K milestone',
+    );
     expect(
       screen.getByText('Record Breaker').closest('div')?.parentElement,
     ).toHaveClass('opacity-100');
