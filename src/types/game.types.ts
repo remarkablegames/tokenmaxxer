@@ -58,6 +58,8 @@ export interface LifetimeStats {
 }
 
 export interface Preferences {
+  musicMuted: boolean;
+  musicVolume: number;
   muted: boolean;
   volume: number;
 }

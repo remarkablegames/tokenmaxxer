@@ -1,5 +1,6 @@
 import type { ChangeEvent, MouseEvent } from 'react';
 import { useEffect, useRef, useState } from 'react';
+import { AudioSettings } from 'src/components/AudioSettings';
 import {
   type ArchiveTab,
   ChampionArchiveModal,
@@ -10,6 +11,7 @@ import { HighScorePanel } from 'src/components/HighScorePanel';
 import { ModalShell } from 'src/components/ModalShell';
 import { Reactor } from 'src/components/Reactor';
 import { SessionResetModal } from 'src/components/SessionResetModal';
+import { useBackgroundMusic } from 'src/hooks/useBackgroundMusic';
 import { playSound } from 'src/services/audio';
 import {
   ABILITIES,
@@ -225,6 +227,11 @@ export function App() {
   const idleTriggered = useRef(false);
 
   const progress = save.progress;
+  useBackgroundMusic({
+    muted: save.preferences.musicMuted,
+    recordIndex: progress.recordIndex,
+    volume: save.preferences.musicVolume,
+  });
   const metrics = calculateMetrics(progress);
   const stage = getReactorStage(progress.recordIndex);
   const onboardingObjective = getOnboardingObjective(progress);
@@ -519,6 +526,36 @@ export function App() {
       preferences: {
         ...current.preferences,
         volume: Number(event.target.value),
+      },
+    }));
+  };
+
+  const handleMusicVolume = (event: ChangeEvent<HTMLInputElement>) => {
+    setSave((current) => ({
+      ...current,
+      preferences: {
+        ...current.preferences,
+        musicVolume: Number(event.target.value),
+      },
+    }));
+  };
+
+  const toggleMusic = () => {
+    setSave((current) => ({
+      ...current,
+      preferences: {
+        ...current.preferences,
+        musicMuted: !current.preferences.musicMuted,
+      },
+    }));
+  };
+
+  const toggleSoundEffects = () => {
+    setSave((current) => ({
+      ...current,
+      preferences: {
+        ...current.preferences,
+        muted: !current.preferences.muted,
       },
     }));
   };
@@ -1131,47 +1168,13 @@ export function App() {
             </div>
           )}
           {modal === 'settings' && (
-            <div className="space-y-5">
-              <label className="flex items-center justify-between gap-4">
-                <span>
-                  <strong className="block">Sound Effects</strong>
-                  <small className="text-slate-500">
-                    Synthesized locally in your browser
-                  </small>
-                </span>
-                <button
-                  aria-pressed={!save.preferences.muted}
-                  className="min-w-18 cursor-pointer rounded-full border border-cyan-400/25 bg-cyan-400/10 px-3 py-2 text-xs font-extrabold text-cyan-300"
-                  onClick={() => {
-                    setSave((current) => ({
-                      ...current,
-                      preferences: {
-                        ...current.preferences,
-                        muted: !current.preferences.muted,
-                      },
-                    }));
-                  }}
-                  type="button"
-                >
-                  {save.preferences.muted ? 'MUTED' : 'ON'}
-                </button>
-              </label>
-              <label className="block">
-                <span className="mb-2 flex justify-between">
-                  <strong>Volume</strong>
-                  <span>{Math.round(save.preferences.volume * 100)}%</span>
-                </span>
-                <input
-                  className="w-full accent-cyan-400"
-                  max="1"
-                  min="0"
-                  onChange={handleVolume}
-                  step="0.05"
-                  type="range"
-                  value={save.preferences.volume}
-                />
-              </label>
-            </div>
+            <AudioSettings
+              onEffectsVolumeChange={handleVolume}
+              onMusicVolumeChange={handleMusicVolume}
+              onToggleEffects={toggleSoundEffects}
+              onToggleMusic={toggleMusic}
+              preferences={save.preferences}
+            />
           )}
           {modal === 'save' && (
             <div className="space-y-4">

@@ -73,7 +73,12 @@ describe('game calculations', () => {
     expect(createInitialSave()).toMatchObject({
       version: 1,
       progress: { tokens: 0, recordIndex: 0 },
-      preferences: { muted: false, volume: 0.45 },
+      preferences: {
+        musicMuted: false,
+        musicVolume: 0.3,
+        muted: false,
+        volume: 0.45,
+      },
     });
     expect(getRecordTarget(2)).toBe(100_000);
     expect(getReactorStage(-1)).toBe(0);
@@ -241,6 +246,12 @@ describe('formatting and save validation', () => {
     const valid = createInitialSave();
     valid.transmissions = { 'first-click': 123_456 };
     expect(parseSave(JSON.stringify(valid))).toEqual(valid);
+    const legacy = JSON.parse(JSON.stringify(valid)) as {
+      preferences: Record<string, unknown>;
+    };
+    delete legacy.preferences.musicMuted;
+    delete legacy.preferences.musicVolume;
+    expect(parseSave(JSON.stringify(legacy))).toBeNull();
     expect(parseSave('not json')).toBeNull();
     expect(parseSave('{}')).toBeNull();
     const cases: SaveEnvelope[] = [];
@@ -253,6 +264,12 @@ describe('formatting and save validation', () => {
       },
       (save: SaveEnvelope) => {
         save.preferences.volume = 2;
+      },
+      (save: SaveEnvelope) => {
+        save.preferences.musicMuted = 'no' as unknown as boolean;
+      },
+      (save: SaveEnvelope) => {
+        save.preferences.musicVolume = 2;
       },
       (save: SaveEnvelope) => {
         save.progress.prestigeLevel = Number.NaN;

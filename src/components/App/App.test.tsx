@@ -4,6 +4,10 @@ import { createInitialSave, STORAGE_KEY } from 'src/services/game';
 
 import { App } from '.';
 
+vi.mock('src/hooks/useBackgroundMusic', () => ({
+  useBackgroundMusic: vi.fn(),
+}));
+
 describe('Tokenmaxxer dashboard', () => {
   beforeEach(() => {
     localStorage.clear();
@@ -573,7 +577,7 @@ describe('Tokenmaxxer dashboard', () => {
     ).toHaveAttribute('aria-hidden', 'false');
   });
 
-  it('handles critical feedback, amount selection, volume, import, export, and reset', async () => {
+  it('handles critical feedback, amount selection, audio, import, export, and reset', async () => {
     const createObjectURL = vi.fn(() => 'blob:save');
     const revokeObjectURL = vi.fn();
     vi.stubGlobal('URL', { createObjectURL, revokeObjectURL });
@@ -595,8 +599,19 @@ describe('Tokenmaxxer dashboard', () => {
     await user.click(screen.getByRole('button', { name: 'MAX' }));
 
     await user.click(screen.getByRole('button', { name: 'Open settings' }));
-    fireEvent.change(screen.getByRole('slider'), { target: { value: '0.8' } });
+    fireEvent.change(screen.getByRole('slider', { name: 'Music volume' }), {
+      target: { value: '0.2' },
+    });
+    expect(screen.getByText('20%')).toBeInTheDocument();
+    fireEvent.change(screen.getByRole('slider', { name: 'Effects volume' }), {
+      target: { value: '0.8' },
+    });
     expect(screen.getByText('80%')).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Toggle music' }));
+    await user.click(
+      screen.getByRole('button', { name: 'Toggle sound effects' }),
+    );
+    expect(screen.getAllByText('MUTED')).toHaveLength(2);
     await user.click(screen.getByRole('button', { name: 'Close dialog' }));
 
     await user.click(screen.getByRole('button', { name: 'Save Data' }));

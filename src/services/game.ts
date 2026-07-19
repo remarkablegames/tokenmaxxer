@@ -248,7 +248,12 @@ export function createInitialSave(): SaveEnvelope {
   return {
     version: 1,
     progress: createInitialProgress(),
-    preferences: { muted: false, volume: 0.45 },
+    preferences: {
+      musicMuted: false,
+      musicVolume: 0.3,
+      muted: false,
+      volume: 0.45,
+    },
     transmissions: {},
   };
 }
@@ -605,9 +610,15 @@ export function parseSave(raw: string): SaveEnvelope | null {
       !Array.isArray(progress.achievements) ||
       !isRecord(progress.stats) ||
       typeof preferences.muted !== 'boolean' ||
+      typeof preferences.volume !== 'number' ||
       !Number.isFinite(preferences.volume) ||
       preferences.volume < 0 ||
-      preferences.volume > 1
+      preferences.volume > 1 ||
+      typeof preferences.musicMuted !== 'boolean' ||
+      typeof preferences.musicVolume !== 'number' ||
+      !Number.isFinite(preferences.musicVolume) ||
+      preferences.musicVolume < 0 ||
+      preferences.musicVolume > 1
     )
       return null;
     if (
