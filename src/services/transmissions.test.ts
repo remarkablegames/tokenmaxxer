@@ -101,6 +101,20 @@ describe('narrative transmissions', () => {
     ]);
   });
 
+  it('delays the first critical message until 200 total clicks', () => {
+    const progress = createInitialProgress();
+    progress.stats.criticalClicks = 1;
+    progress.stats.clicks = 199;
+    expect(
+      getEligibleTransmissions(progress).map(({ id }) => id),
+    ).not.toContain('first-critical');
+
+    progress.stats.clicks = 200;
+    expect(getEligibleTransmissions(progress).map(({ id }) => id)).toContain(
+      'first-critical',
+    );
+  });
+
   it('requires meaningful input before unlocking active-playtime chatter', () => {
     const progress = createInitialProgress();
     progress.stats.playTime = 600;

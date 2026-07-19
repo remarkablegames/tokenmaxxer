@@ -186,7 +186,7 @@ describe('Tokenmaxxer dashboard', () => {
     const save = createInitialSave();
     save.progress.tokens = 20;
     save.progress.stats.tokens = 20;
-    save.progress.stats.clicks = 1;
+    save.progress.stats.clicks = 199;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
     vi.spyOn(Math, 'random').mockReturnValue(0);
     const user = userEvent.setup();

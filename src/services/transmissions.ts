@@ -6,15 +6,14 @@ interface NumericTransmissionUnlock {
     | 'click'
     | 'high-score'
     | 'prestige'
-    | 'critical-click'
     | 'lifetime-tokens'
     | 'tokens-per-second'
     | 'ability-uses';
   value: number;
 }
 
-interface PlayTimeTransmissionUnlock {
-  type: 'play-time';
+interface ClickGatedTransmissionUnlock {
+  type: 'critical-click' | 'play-time';
   value: number;
   clicks: number;
 }
@@ -38,7 +37,7 @@ interface SessionTransmissionUnlock {
 
 type TransmissionUnlock =
   | NumericTransmissionUnlock
-  | PlayTimeTransmissionUnlock
+  | ClickGatedTransmissionUnlock
   | UpgradeTransmissionUnlock
   | AbilityTransmissionUnlock
   | SessionTransmissionUnlock;
@@ -151,7 +150,7 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     initials: 'TR',
     message: 'Unexpected output spike detected. Attempting to reproduce.',
     priority: 60,
-    unlock: { type: 'critical-click', value: 1 },
+    unlock: { type: 'critical-click', value: 1, clicks: 200 },
   },
   {
     id: 'clicks-100',
@@ -704,7 +703,10 @@ function isTransmissionUnlocked(
     case 'prestige':
       return progress.stats.prestiges >= unlock.value;
     case 'critical-click':
-      return progress.stats.criticalClicks >= unlock.value;
+      return (
+        progress.stats.criticalClicks >= unlock.value &&
+        progress.stats.clicks >= unlock.clicks
+      );
     case 'lifetime-tokens':
       return progress.stats.tokens >= unlock.value;
     case 'play-time':
