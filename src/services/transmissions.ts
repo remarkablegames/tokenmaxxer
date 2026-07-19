@@ -84,6 +84,16 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     unlock: { type: 'upgrade', value: 'gpu' },
   },
   {
+    id: 'model-croak',
+    sender: 'IT Support',
+    role: 'INFRASTRUCTURE',
+    initials: 'IT',
+    message:
+      'Croak is live. It called the employee handbook “mid” and requested production access.',
+    priority: 40,
+    unlock: { type: 'upgrade', value: 'model', level: 1 },
+  },
+  {
     id: 'model-gopilot',
     sender: 'IT Support',
     role: 'INFRASTRUCTURE',
@@ -91,7 +101,7 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     message:
       'GoPilot is live. It keeps suggesting shortcuts through departments that do not exist.',
     priority: 40,
-    unlock: { type: 'upgrade', value: 'model', level: 1 },
+    unlock: { type: 'upgrade', value: 'model', level: 3 },
   },
   {
     id: 'model-talkgpt',
@@ -134,12 +144,22 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     unlock: { type: 'upgrade', value: 'model', level: 20 },
   },
   {
-    id: 'model-mythos',
+    id: 'model-babble',
+    sender: 'Quality Assurance',
+    role: 'QUALITY ASSURANCE',
+    initials: 'QA',
+    message:
+      'Babble generated a roadmap with seven acts, three prophecies, and no delivery date.',
+    priority: 60,
+    unlock: { type: 'upgrade', value: 'model', level: 25 },
+  },
+  {
+    id: 'model-legendos',
     sender: 'Ops Security',
     role: 'SECURITY',
     initials: 'OS',
     message:
-      'MythOS cost more than our entire security budget. The vendor claims it can bypass any system that budget could have protected.',
+      'LegendOS cost more than our entire security budget. The vendor claims it can bypass any system that budget could have protected.',
     priority: 100,
     unlock: { type: 'upgrade', value: 'model', level: 30 },
   },

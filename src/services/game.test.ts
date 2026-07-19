@@ -86,18 +86,20 @@ describe('game calculations', () => {
     expect(getTokenMultiplier(0)).toBe(1);
     expect(getTokenMultiplier(5)).toBe(1.5);
     expect(getAiModelDeployment(0)).toBeNull();
-    expect(getAiModelDeployment(1)).toBe('GoPilot');
+    expect(getAiModelDeployment(1)).toBe('Croak');
+    expect(getAiModelDeployment(3)).toBe('GoPilot');
     expect(getAiModelDeployment(5)).toBe('TalkGPT');
     expect(getAiModelDeployment(10)).toBe('GeminAI');
     expect(getAiModelDeployment(15)).toBe('Claudio');
     expect(getAiModelDeployment(20)).toBe('DeepThunk');
-    expect(getAiModelDeployment(30)).toBe('MythOS');
+    expect(getAiModelDeployment(25)).toBe('Babble');
+    expect(getAiModelDeployment(30)).toBe('LegendOS');
     expect(getUpgradeDescription(UPGRADES[0], 1)).toBe(
       '+1 base token per click',
     );
     expect(getUpgradeDescription(UPGRADES[4], 0)).toBe('+4 tokens per second');
     expect(getUpgradeDescription(UPGRADES[4], 1)).toBe(
-      'GoPilot active · +4 tokens per second',
+      'Croak active · +4 tokens per second',
     );
   });
 
