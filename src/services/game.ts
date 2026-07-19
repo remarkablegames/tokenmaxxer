@@ -13,9 +13,9 @@ import type {
 } from 'src/types/game.types';
 
 export const STORAGE_KEY = 'org.remarkablegames.tokenmaxxer';
-export const CRITICAL_MULTIPLIER = 5;
-export const PRESTIGE_RECORD_INDEX = 5;
-export const TOKEN_MULTIPLIER_PER_PRESTIGE_LEVEL = 0.1;
+const CRITICAL_MULTIPLIER = 5;
+const PRESTIGE_RECORD_INDEX = 5;
+const TOKEN_MULTIPLIER_PER_PRESTIGE_LEVEL = 0.1;
 
 export const UPGRADES: UpgradeDefinition[] = [
   {

@@ -1,7 +1,7 @@
 import { createInitialProgress } from 'src/services/game';
 import type { SaveEnvelope } from 'src/types/game.types';
 
-export interface PreviewConfig {
+interface PreviewConfig {
   mode: 'high-score' | 'prestige' | null;
   tokens?: number;
   enabled: boolean;

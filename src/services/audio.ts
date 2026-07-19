@@ -1,4 +1,4 @@
-export type SoundName =
+type SoundName =
   | 'click'
   | 'critical'
   | 'purchase'

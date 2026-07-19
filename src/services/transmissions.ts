@@ -35,7 +35,7 @@ interface SessionTransmissionUnlock {
   value: 'idle' | 'offline-return';
 }
 
-export type TransmissionUnlock =
+type TransmissionUnlock =
   | NumericTransmissionUnlock
   | PlayTimeTransmissionUnlock
   | UpgradeTransmissionUnlock
@@ -689,7 +689,7 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
   },
 ];
 
-export function isTransmissionUnlocked(
+function isTransmissionUnlocked(
   progress: GameProgress,
   unlock: TransmissionUnlock,
 ): boolean {
