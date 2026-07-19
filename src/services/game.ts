@@ -196,13 +196,13 @@ export function getReactorStage(highScoreLevel: number): number {
 }
 
 export function getAiModelDeployment(level: number): string | null {
-  if (level >= 30) return 'LegendOS';
-  if (level >= 25) return 'Babble';
-  if (level >= 20) return 'DeepThunk';
-  if (level >= 15) return 'Claudio';
-  if (level >= 10) return 'GeminAI';
-  if (level >= 5) return 'TalkGPT';
-  if (level >= 3) return 'GoPilot';
+  if (level >= 70) return 'LegendOS';
+  if (level >= 60) return 'Babble';
+  if (level >= 50) return 'DeepThunk';
+  if (level >= 40) return 'Claudio';
+  if (level >= 30) return 'GeminAI';
+  if (level >= 20) return 'TalkGPT';
+  if (level >= 10) return 'GoPilot';
   if (level >= 1) return 'Croak';
   return null;
 }

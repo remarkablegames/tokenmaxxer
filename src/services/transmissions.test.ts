@@ -9,9 +9,9 @@ import {
 
 describe('narrative transmissions', () => {
   it('defines a varied, prioritized office narrative', () => {
-    expect(TRANSMISSIONS).toHaveLength(67);
-    expect(new Set(TRANSMISSIONS.map(({ id }) => id)).size).toBe(67);
-    expect(new Set(TRANSMISSIONS.map(({ sender }) => sender)).size).toBe(13);
+    expect(TRANSMISSIONS).toHaveLength(71);
+    expect(new Set(TRANSMISSIONS.map(({ id }) => id)).size).toBe(71);
+    expect(new Set(TRANSMISSIONS.map(({ sender }) => sender)).size).toBe(14);
     expect(TRANSMISSIONS.every(({ priority }) => priority > 0)).toBe(true);
     expect(
       TRANSMISSIONS.find(({ id }) => id === 'agent-swarm-purchased')?.message,
@@ -56,7 +56,7 @@ describe('narrative transmissions', () => {
     progress.upgrades.keyboard = 1;
     progress.upgrades.templates = 1;
     progress.upgrades.gpu = 1;
-    progress.upgrades.model = 30;
+    progress.upgrades.model = 70;
     progress.upgrades.rack = 1;
     progress.upgrades.multifinger = 1;
     progress.upgrades.contextCompaction = 1;
@@ -84,23 +84,59 @@ describe('narrative transmissions', () => {
       getEligibleTransmissions(progress)
         .filter(({ id }) => id.startsWith('model-'))
         .map(({ id }) => id),
-    ).toEqual(['model-croak', 'model-gopilot', 'model-talkgpt']);
+    ).toEqual(['model-croak', 'model-croak-social']);
 
-    progress.upgrades.model = 30;
+    progress.upgrades.model = 70;
     expect(
       getEligibleTransmissions(progress)
         .filter(({ id }) => id.startsWith('model-'))
         .map(({ id }) => id),
     ).toEqual([
       'model-croak',
+      'model-croak-social',
       'model-gopilot',
+      'model-gopilot-licensing',
       'model-talkgpt',
       'model-geminai',
       'model-claudio',
       'model-deepthunk',
+      'model-deepthunk-training',
       'model-babble',
+      'model-babble-access',
       'model-legendos',
     ]);
+  });
+
+  it('spaces model follow-ups within their ten-level bands', () => {
+    const progress = createInitialProgress();
+
+    const modelTransmissionIds = (): string[] =>
+      getEligibleTransmissions(progress)
+        .filter(({ id }) => id.startsWith('model-'))
+        .map(({ id }) => id);
+
+    progress.upgrades.model = 4;
+    expect(modelTransmissionIds()).toEqual(['model-croak']);
+    progress.upgrades.model = 5;
+    expect(modelTransmissionIds()).toEqual([
+      'model-croak',
+      'model-croak-social',
+    ]);
+
+    progress.upgrades.model = 14;
+    expect(modelTransmissionIds()).not.toContain('model-gopilot-licensing');
+    progress.upgrades.model = 15;
+    expect(modelTransmissionIds()).toContain('model-gopilot-licensing');
+
+    progress.upgrades.model = 54;
+    expect(modelTransmissionIds()).not.toContain('model-deepthunk-training');
+    progress.upgrades.model = 55;
+    expect(modelTransmissionIds()).toContain('model-deepthunk-training');
+
+    progress.upgrades.model = 64;
+    expect(modelTransmissionIds()).not.toContain('model-babble-access');
+    progress.upgrades.model = 65;
+    expect(modelTransmissionIds()).toContain('model-babble-access');
   });
 
   it('delays the first critical message until 200 total clicks', () => {

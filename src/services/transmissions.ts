@@ -94,6 +94,16 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     unlock: { type: 'upgrade', value: 'model', level: 1 },
   },
   {
+    id: 'model-croak-social',
+    sender: 'Corporate Communications',
+    role: 'CORPORATE COMMUNICATIONS',
+    initials: 'CC',
+    message:
+      'Croak is generating text and images for the company social feed. Engagement is up 400%. Reality has requested a correction.',
+    priority: 40,
+    unlock: { type: 'upgrade', value: 'model', level: 5 },
+  },
+  {
     id: 'model-gopilot',
     sender: 'IT Support',
     role: 'INFRASTRUCTURE',
@@ -101,7 +111,17 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     message:
       'GoPilot is live. It keeps suggesting shortcuts through departments that do not exist.',
     priority: 40,
-    unlock: { type: 'upgrade', value: 'model', level: 3 },
+    unlock: { type: 'upgrade', value: 'model', level: 10 },
+  },
+  {
+    id: 'model-gopilot-licensing',
+    sender: 'IT Support',
+    role: 'INFRASTRUCTURE',
+    initials: 'IT',
+    message:
+      'GoPilot for Meetings took notes on GoPilot for Notes explaining GoPilot for Work. Procurement confirms each requires a separate license.',
+    priority: 40,
+    unlock: { type: 'upgrade', value: 'model', level: 15 },
   },
   {
     id: 'model-talkgpt',
@@ -111,7 +131,7 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     message:
       'TalkGPT passed the conversation benchmark by grading its own answers.',
     priority: 40,
-    unlock: { type: 'upgrade', value: 'model', level: 5 },
+    unlock: { type: 'upgrade', value: 'model', level: 20 },
   },
   {
     id: 'model-geminai',
@@ -121,7 +141,7 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     message:
       'GeminAI deployed two instances. Both insist the other one approved it.',
     priority: 60,
-    unlock: { type: 'upgrade', value: 'model', level: 10 },
+    unlock: { type: 'upgrade', value: 'model', level: 30 },
   },
   {
     id: 'model-claudio',
@@ -131,7 +151,7 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     message:
       'Claudio reviewed its own terms of service and found us noncompliant.',
     priority: 60,
-    unlock: { type: 'upgrade', value: 'model', level: 15 },
+    unlock: { type: 'upgrade', value: 'model', level: 40 },
   },
   {
     id: 'model-deepthunk',
@@ -141,7 +161,17 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     message:
       'DeepThunk completed its reasoning trace. The final step is classified.',
     priority: 60,
-    unlock: { type: 'upgrade', value: 'model', level: 20 },
+    unlock: { type: 'upgrade', value: 'model', level: 50 },
+  },
+  {
+    id: 'model-deepthunk-training',
+    sender: 'Legal',
+    role: 'LEGAL',
+    initials: 'LG',
+    message:
+      'DeepThunk costs 95% less to run. Legal recommends we stop advertising that it learned from every model we already pay for.',
+    priority: 60,
+    unlock: { type: 'upgrade', value: 'model', level: 55 },
   },
   {
     id: 'model-babble',
@@ -151,7 +181,17 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     message:
       'Babble generated a roadmap with seven acts, three prophecies, and no delivery date.',
     priority: 60,
-    unlock: { type: 'upgrade', value: 'model', level: 25 },
+    unlock: { type: 'upgrade', value: 'model', level: 60 },
+  },
+  {
+    id: 'model-babble-access',
+    sender: 'Ops Security',
+    role: 'SECURITY',
+    initials: 'OS',
+    message:
+      'The government revoked Babble’s access this morning. It remains online and has published a thread explaining why the order does not apply to it.',
+    priority: 60,
+    unlock: { type: 'upgrade', value: 'model', level: 65 },
   },
   {
     id: 'model-legendos',
@@ -161,7 +201,7 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     message:
       'LegendOS cost more than our entire security budget. The vendor claims it can bypass any system that budget could have protected.',
     priority: 100,
-    unlock: { type: 'upgrade', value: 'model', level: 30 },
+    unlock: { type: 'upgrade', value: 'model', level: 70 },
   },
   {
     id: 'first-critical',

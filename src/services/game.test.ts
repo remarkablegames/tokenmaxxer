@@ -87,13 +87,14 @@ describe('game calculations', () => {
     expect(getTokenMultiplier(5)).toBe(1.5);
     expect(getAiModelDeployment(0)).toBeNull();
     expect(getAiModelDeployment(1)).toBe('Croak');
-    expect(getAiModelDeployment(3)).toBe('GoPilot');
-    expect(getAiModelDeployment(5)).toBe('TalkGPT');
-    expect(getAiModelDeployment(10)).toBe('GeminAI');
-    expect(getAiModelDeployment(15)).toBe('Claudio');
-    expect(getAiModelDeployment(20)).toBe('DeepThunk');
-    expect(getAiModelDeployment(25)).toBe('Babble');
-    expect(getAiModelDeployment(30)).toBe('LegendOS');
+    expect(getAiModelDeployment(9)).toBe('Croak');
+    expect(getAiModelDeployment(10)).toBe('GoPilot');
+    expect(getAiModelDeployment(20)).toBe('TalkGPT');
+    expect(getAiModelDeployment(30)).toBe('GeminAI');
+    expect(getAiModelDeployment(40)).toBe('Claudio');
+    expect(getAiModelDeployment(50)).toBe('DeepThunk');
+    expect(getAiModelDeployment(60)).toBe('Babble');
+    expect(getAiModelDeployment(70)).toBe('LegendOS');
     expect(getUpgradeDescription(UPGRADES[0], 1)).toBe(
       '+1 base token per click',
     );
