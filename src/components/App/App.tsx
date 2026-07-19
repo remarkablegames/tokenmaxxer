@@ -1293,7 +1293,7 @@ export function App() {
                   <div className="grid gap-2 sm:grid-cols-2">
                     {ACHIEVEMENTS.map((achievement) => (
                       <div
-                        className={`flex items-center gap-3 rounded-xl border p-3 ${progress.achievements.includes(achievement.id) ? 'border-amber-300/25 bg-amber-300/5 opacity-100' : 'border-white/6 opacity-45'}`}
+                        className={`flex items-center gap-3 rounded-xl border p-3 ${progress.achievements.includes(achievement.id) ? 'border-amber-300/25 bg-amber-300/5 opacity-100' : 'border-white/6 opacity-60'}`}
                         key={achievement.id}
                       >
                         <span className="text-amber-400">

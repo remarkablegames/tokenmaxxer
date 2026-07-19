@@ -689,6 +689,12 @@ describe('Tokenmaxxer dashboard', () => {
       screen.getByRole('tab', { name: 'Achievements', selected: true }),
     ).toBeInTheDocument();
     expect(screen.getByRole('tabpanel')).toHaveTextContent('First Input');
+    expect(screen.getByRole('tabpanel')).toHaveTextContent(
+      'Secure a High Score milestone',
+    );
+    expect(screen.getByRole('tabpanel')).toHaveTextContent(
+      'Secure the 100K milestone',
+    );
     expect(screen.getByRole('tabpanel')).not.toHaveTextContent('MILESTONE #1');
     await user.click(screen.getByRole('tab', { name: 'Milestones' }));
     expect(

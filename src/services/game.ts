@@ -382,13 +382,13 @@ export const ACHIEVEMENTS: AchievementDefinition[] = [
   {
     id: 'record',
     name: 'Record Breaker',
-    description: 'Earn a High Score Performance Bonus',
+    description: 'Secure a High Score milestone',
     test: (p) => p.bonuses.length >= 1,
   },
   {
     id: 'six-figures',
     name: 'Six Figures',
-    description: 'Earn the 100,000 Performance Bonus',
+    description: 'Secure the 100K milestone',
     test: (p) => p.bonuses.includes(2),
   },
   {
