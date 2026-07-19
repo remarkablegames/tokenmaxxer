@@ -5,7 +5,7 @@ import { HighScorePanel } from '.';
 describe('HighScorePanel', () => {
   it('shows the current record chase and progress', () => {
     render(
-      <HighScorePanel bonusesEarned={2} recordIndex={2} tokens={25_500} />,
+      <HighScorePanel bonusesEarned={2} highScoreLevel={2} tokens={25_500} />,
     );
 
     expect(
@@ -20,7 +20,7 @@ describe('HighScorePanel', () => {
 
   it('clamps displayed progress to the valid range', () => {
     const { rerender } = render(
-      <HighScorePanel bonusesEarned={0} recordIndex={0} tokens={-1} />,
+      <HighScorePanel bonusesEarned={0} highScoreLevel={0} tokens={-1} />,
     );
     expect(screen.getByRole('progressbar')).toHaveAttribute(
       'aria-valuenow',
@@ -28,7 +28,7 @@ describe('HighScorePanel', () => {
     );
 
     rerender(
-      <HighScorePanel bonusesEarned={1} recordIndex={0} tokens={2_000} />,
+      <HighScorePanel bonusesEarned={1} highScoreLevel={0} tokens={2_000} />,
     );
     expect(screen.getByRole('progressbar')).toHaveAttribute(
       'aria-valuenow',

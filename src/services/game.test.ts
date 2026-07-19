@@ -72,7 +72,7 @@ describe('game calculations', () => {
   it('creates initial state and record helpers', () => {
     expect(createInitialSave()).toMatchObject({
       version: 1,
-      progress: { tokens: 0, recordIndex: 0 },
+      progress: { tokens: 0, highScoreLevel: 0 },
       preferences: {
         musicMuted: false,
         musicVolume: 0.3,
@@ -139,22 +139,22 @@ describe('game calculations', () => {
     const normal = clickReactor(progress, 1);
     expect(normal.critical).toBe(false);
     expect(normal.amount).toBe(1);
-    expect(normal.progress).toMatchObject({ recordIndex: 1, bonuses: [0] });
+    expect(normal.progress).toMatchObject({ highScoreLevel: 1, bonuses: [0] });
 
     progress = richProgress();
     progress.tokens = 99_999_999;
-    progress.recordIndex = 5;
+    progress.highScoreLevel = 5;
     const critical = clickReactor(progress, 0);
     expect(critical.critical).toBe(true);
-    expect(critical.progress.recordIndex).toBe(6);
+    expect(critical.progress.highScoreLevel).toBe(6);
     expect(critical.progress.pendingPrestigeLevels).toBe(3);
     expect(critical.progress.stats.criticalClicks).toBe(1);
 
     progress.tokens = 1_100_000_000;
-    progress.recordIndex = 0;
+    progress.highScoreLevel = 0;
     progress.bonuses = [0];
     const multiple = tickGame(progress, 0);
-    expect(multiple.recordIndex).toBe(7);
+    expect(multiple.highScoreLevel).toBe(7);
     expect(new Set(multiple.bonuses).size).toBe(multiple.bonuses.length);
   });
 
@@ -189,7 +189,7 @@ describe('game actions', () => {
   it('activates unlocked abilities and enforces cooldowns', () => {
     const progress = createInitialProgress();
     expect(activateAbility(progress, 'surge')).toBe(progress);
-    progress.recordIndex = 3;
+    progress.highScoreLevel = 3;
     const active = activateAbility(progress, 'surge');
     expect(active.abilities.surge).toEqual({ remaining: 20, cooldown: 90 });
     expect(active.stats.abilitiesUsed).toBe(1);
@@ -202,13 +202,13 @@ describe('game actions', () => {
   it('prestiges only with a payout, resets the ladder, and raises rating', () => {
     const progress = richProgress();
     expect(prestige(progress)).toBe(progress);
-    progress.recordIndex = 6;
+    progress.highScoreLevel = 6;
     progress.pendingPrestigeLevels = 3;
     progress.bonuses = [0, 1, 2, 3, 4, 5];
     progress.achievements = ['record'];
     const next = prestige(progress);
     expect(next.tokens).toBe(0);
-    expect(next.recordIndex).toBe(0);
+    expect(next.highScoreLevel).toBe(0);
     expect(next.prestigeLevel).toBe(8);
     expect(next.pendingPrestigeLevels).toBe(0);
     expect(next.stats.prestiges).toBe(1);
@@ -260,7 +260,7 @@ describe('formatting and save validation', () => {
         save.progress.tokens = -1;
       },
       (save: SaveEnvelope) => {
-        save.progress.recordIndex = 0.5;
+        save.progress.highScoreLevel = 0.5;
       },
       (save: SaveEnvelope) => {
         save.preferences.volume = 2;

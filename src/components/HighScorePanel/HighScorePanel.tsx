@@ -2,16 +2,16 @@ import { formatNumber, getRecordTarget } from 'src/services/game';
 
 interface HighScorePanelProps {
   bonusesEarned: number;
-  recordIndex: number;
+  highScoreLevel: number;
   tokens: number;
 }
 
 export function HighScorePanel({
   bonusesEarned,
-  recordIndex,
+  highScoreLevel,
   tokens,
 }: HighScorePanelProps) {
-  const target = getRecordTarget(recordIndex);
+  const target = getRecordTarget(highScoreLevel);
   const recordProgress = Math.min(100, Math.max(0, (tokens / target) * 100));
   const displayedProgress = Number(recordProgress.toFixed(1));
 
@@ -52,7 +52,7 @@ export function HighScorePanel({
         </div>
         <div className="mt-2 flex justify-between text-xs text-slate-500">
           <span>{bonusesEarned} PERFORMANCE BONUSES EARNED</span>
-          <span>NEXT BONUS: #{recordIndex + 1}</span>
+          <span>NEXT BONUS: #{highScoreLevel + 1}</span>
         </div>
       </div>
     </section>

@@ -73,7 +73,7 @@ function simulateActivePlayer(): BalanceResult {
         firstAutomation = elapsed;
     }
 
-    if (progress.recordIndex > 5)
+    if (progress.highScoreLevel > 5)
       return { firstUpgrade, firstAutomation, firstPrestige: elapsed };
   }
 

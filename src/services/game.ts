@@ -14,7 +14,7 @@ import type {
 
 export const STORAGE_KEY = 'org.remarkablegames.tokenmaxxer';
 const CRITICAL_MULTIPLIER = 5;
-const PRESTIGE_RECORD_INDEX = 5;
+const PRESTIGE_UNLOCK_HIGH_SCORE_LEVEL = 5;
 const TOKEN_MULTIPLIER_PER_PRESTIGE_LEVEL = 0.1;
 
 export const UPGRADES: UpgradeDefinition[] = [
@@ -191,8 +191,8 @@ export function getRecordTarget(index: number): number {
   return 1_000 * 10 ** index;
 }
 
-export function getReactorStage(recordIndex: number): number {
-  return Math.min(5, Math.max(0, recordIndex));
+export function getReactorStage(highScoreLevel: number): number {
+  return Math.min(5, Math.max(0, highScoreLevel));
 }
 
 export function getAiModelDeployment(level: number): string | null {
@@ -219,7 +219,7 @@ export function getUpgradeDescription(
 export function createInitialProgress(): GameProgress {
   return {
     tokens: 0,
-    recordIndex: 0,
+    highScoreLevel: 0,
     upgrades: { ...EMPTY_UPGRADES },
     abilities: {
       surge: { remaining: 0, cooldown: 0 },
@@ -325,17 +325,17 @@ export function getPurchaseQuote(
 
 function processMilestones(progress: GameProgress): GameProgress {
   let next = progress;
-  while (next.tokens >= getRecordTarget(next.recordIndex)) {
-    const index = next.recordIndex;
+  while (next.tokens >= getRecordTarget(next.highScoreLevel)) {
+    const index = next.highScoreLevel;
     next = {
       ...next,
-      recordIndex: index + 1,
+      highScoreLevel: index + 1,
       bonuses: next.bonuses.includes(index)
         ? next.bonuses
         : [...next.bonuses, index],
       pendingPrestigeLevels:
         next.pendingPrestigeLevels +
-        (index >= PRESTIGE_RECORD_INDEX ? index - 2 : 0),
+        (index >= PRESTIGE_UNLOCK_HIGH_SCORE_LEVEL ? index - 2 : 0),
     };
   }
   return next;
@@ -525,8 +525,8 @@ export function activateAbility(
   const state = progress.abilities[id];
   if (
     !definition ||
-    progress.recordIndex === 0 ||
-    getRecordTarget(progress.recordIndex - 1) < definition.unlockAt ||
+    progress.highScoreLevel === 0 ||
+    getRecordTarget(progress.highScoreLevel - 1) < definition.unlockAt ||
     state.cooldown > 0
   )
     return progress;
@@ -548,14 +548,14 @@ export function activateAbility(
 
 export function prestige(progress: GameProgress): GameProgress {
   if (
-    progress.recordIndex <= PRESTIGE_RECORD_INDEX ||
+    progress.highScoreLevel <= PRESTIGE_UNLOCK_HIGH_SCORE_LEVEL ||
     progress.pendingPrestigeLevels <= 0
   )
     return progress;
   const fresh = createInitialProgress();
   return unlockAchievements({
     ...fresh,
-    recordIndex: 0,
+    highScoreLevel: 0,
     bonuses: [...progress.bonuses],
     achievements: [...progress.achievements],
     prestigeLevel: progress.prestigeLevel + progress.pendingPrestigeLevels,
@@ -602,8 +602,8 @@ export function parseSave(raw: string): SaveEnvelope | null {
     if (
       !Number.isFinite(progress.tokens) ||
       progress.tokens < 0 ||
-      !Number.isInteger(progress.recordIndex) ||
-      progress.recordIndex < 0 ||
+      !Number.isInteger(progress.highScoreLevel) ||
+      progress.highScoreLevel < 0 ||
       !isRecord(progress.upgrades) ||
       !isRecord(progress.abilities) ||
       !Array.isArray(progress.bonuses) ||

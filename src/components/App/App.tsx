@@ -135,8 +135,8 @@ function isAbilityUnlocked(
   ability: AbilityDefinition,
 ): boolean {
   return (
-    progress.recordIndex > 0 &&
-    getRecordTarget(progress.recordIndex - 1) >= ability.unlockAt
+    progress.highScoreLevel > 0 &&
+    getRecordTarget(progress.highScoreLevel - 1) >= ability.unlockAt
   );
 }
 
@@ -201,7 +201,7 @@ export function App() {
   const [floats, setFloats] = useState<FloatText[]>([]);
   const [celebration, setCelebration] = useState<CelebrationState | null>(() =>
     previewConfig.mode === 'high-score'
-      ? { index: Math.max(0, save.progress.recordIndex - 1), isNew: true }
+      ? { index: Math.max(0, save.progress.highScoreLevel - 1), isNew: true }
       : null,
   );
   const [notice, setNotice] = useState('SYSTEM ONLINE');
@@ -216,7 +216,7 @@ export function App() {
     string | null
   >(null);
   const lastFrame = useRef(0);
-  const previousRecord = useRef(save.progress.recordIndex);
+  const previousHighScoreLevel = useRef(save.progress.highScoreLevel);
   const previousBonusIndices = useRef(new Set(save.progress.bonuses));
   const floatId = useRef(0);
   const floatTimers = useRef(new Set<number>());
@@ -229,11 +229,11 @@ export function App() {
   const progress = save.progress;
   useBackgroundMusic({
     muted: save.preferences.musicMuted,
-    recordIndex: progress.recordIndex,
+    highScoreLevel: progress.highScoreLevel,
     volume: save.preferences.musicVolume,
   });
   const metrics = calculateMetrics(progress);
-  const stage = getReactorStage(progress.recordIndex);
+  const stage = getReactorStage(progress.highScoreLevel);
   const onboardingObjective = getOnboardingObjective(progress);
   const showProgressPanels = progress.bonuses.length > 0;
   const visibleAbilities = getVisibleAbilities(progress);
@@ -241,7 +241,7 @@ export function App() {
     isAbilityUnlocked(progress, ability),
   );
   const showPrestige =
-    progress.recordIndex >= 5 || progress.pendingPrestigeLevels > 0;
+    progress.highScoreLevel >= 5 || progress.pendingPrestigeLevels > 0;
   const tokenMultiplier = getTokenMultiplier(progress.prestigeLevel);
   const visibleCategories: UpgradeCategory[] = [
     'manual',
@@ -398,8 +398,8 @@ export function App() {
   }, [previewConfig.enabled]);
 
   useEffect(() => {
-    if (progress.recordIndex > previousRecord.current) {
-      const won = progress.recordIndex - 1;
+    if (progress.highScoreLevel > previousHighScoreLevel.current) {
+      const won = progress.highScoreLevel - 1;
       const isNew = !previousBonusIndices.current.has(won);
       setCelebration({ index: won, isNew });
       setNotice(isNew ? 'NEW HIGH SCORE' : 'RECORD RECLAIMED');
@@ -408,15 +408,15 @@ export function App() {
         setCelebration(null);
         setNotice('SYSTEM ONLINE');
       }, 3_200);
-      previousRecord.current = progress.recordIndex;
+      previousHighScoreLevel.current = progress.highScoreLevel;
       previousBonusIndices.current = new Set(progress.bonuses);
       return () => {
         window.clearTimeout(timer);
       };
     }
-    previousRecord.current = progress.recordIndex;
+    previousHighScoreLevel.current = progress.highScoreLevel;
     previousBonusIndices.current = new Set(progress.bonuses);
-  }, [progress.bonuses, progress.recordIndex, save.preferences]);
+  }, [progress.bonuses, progress.highScoreLevel, save.preferences]);
 
   const updateProgress = (next: GameProgress) => {
     setSave((current) => ({ ...current, progress: next }));
@@ -626,7 +626,7 @@ export function App() {
 
       <HighScorePanel
         bonusesEarned={progress.bonuses.length}
-        recordIndex={progress.recordIndex}
+        highScoreLevel={progress.highScoreLevel}
         tokens={progress.tokens}
       />
 

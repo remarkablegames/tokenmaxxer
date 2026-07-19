@@ -14,7 +14,7 @@ Add a looped, progression-driven soundtrack using Howler. Music begins on the fi
   5. `14-theres-someone-here`
 - Load `.ogg` first with `.mp3` as the fallback and loop every track.
 - Defer music creation and playback until the first `pointerdown` or `keydown` so playback complies with browser autoplay policies.
-- Select the active track using `recordIndex % 5`, including resumed saves, imports, resets, and new sessions.
+- Select the active track using `highScoreLevel % 5`, including resumed saves, imports, resets, and new sessions.
 - If progression skips multiple records, transition once to the final derived track.
 - Fade the current track to silence over 1.5 seconds, stop it, start the next track at zero volume, and fade it in over 1.5 seconds.
 - Guard asynchronous fade callbacks so rapid progression always converges on the latest target without starting stale tracks.
@@ -41,4 +41,4 @@ Add a looped, progression-driven soundtrack using Howler. Music begins on the fi
 
 - “First click” includes pointer interaction anywhere on the page; keyboard interaction is supported for accessibility.
 - Muting silences music without resetting its playback position.
-- Music progression and playback position are not stored separately because the active track is derived from `recordIndex`.
+- Music progression and playback position are not stored separately because the active track is derived from `highScoreLevel`.

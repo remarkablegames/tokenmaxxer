@@ -64,7 +64,7 @@ describe('useBackgroundMusic', () => {
 
   it('creates looped fallback sources only after the first interaction', () => {
     const { unmount } = renderHook(() => {
-      useBackgroundMusic({ muted: false, recordIndex: 2, volume: 0.3 });
+      useBackgroundMusic({ muted: false, highScoreLevel: 2, volume: 0.3 });
     });
     expect(mocks.instances).toHaveLength(0);
 
@@ -93,16 +93,16 @@ describe('useBackgroundMusic', () => {
 
   it('supports keyboard startup and cycles to the progression track', () => {
     const { rerender } = renderHook(
-      ({ recordIndex }) => {
-        useBackgroundMusic({ muted: false, recordIndex, volume: 0.3 });
+      ({ highScoreLevel }) => {
+        useBackgroundMusic({ muted: false, highScoreLevel, volume: 0.3 });
       },
-      { initialProps: { recordIndex: 5 } },
+      { initialProps: { highScoreLevel: 5 } },
     );
 
     fireEvent.keyDown(window, { key: 'Enter' });
     expect(mocks.instances[0].play).toHaveBeenCalledOnce();
 
-    rerender({ recordIndex: 6 });
+    rerender({ highScoreLevel: 6 });
     expect(mocks.instances[0].fade).toHaveBeenCalledWith(0.3, 0, 1_500);
     completeFade(mocks.instances[0]);
     expect(mocks.instances[0].stop).toHaveBeenCalledOnce();
@@ -112,18 +112,18 @@ describe('useBackgroundMusic', () => {
 
   it('uses the latest target when records advance during a fade', () => {
     const { rerender } = renderHook(
-      ({ recordIndex, volume }) => {
-        useBackgroundMusic({ muted: false, recordIndex, volume });
+      ({ highScoreLevel, volume }) => {
+        useBackgroundMusic({ muted: false, highScoreLevel, volume });
       },
-      { initialProps: { recordIndex: 0, volume: 0.3 } },
+      { initialProps: { highScoreLevel: 0, volume: 0.3 } },
     );
     fireEvent.pointerDown(window);
 
-    rerender({ recordIndex: 1, volume: 0.3 });
+    rerender({ highScoreLevel: 1, volume: 0.3 });
     const staleHandler = mocks.instances[0].once.mock.calls[0][1] as () => void;
-    rerender({ recordIndex: 1, volume: 0.2 });
+    rerender({ highScoreLevel: 1, volume: 0.2 });
     expect(mocks.instances[0].once).toHaveBeenCalledOnce();
-    rerender({ recordIndex: 2, volume: 0.2 });
+    rerender({ highScoreLevel: 2, volume: 0.2 });
     act(staleHandler);
     expect(mocks.instances[1].play).not.toHaveBeenCalled();
     completeFade(mocks.instances[0]);
@@ -134,22 +134,22 @@ describe('useBackgroundMusic', () => {
     let hidden = false;
     vi.spyOn(document, 'hidden', 'get').mockImplementation(() => hidden);
     const { rerender } = renderHook(
-      ({ muted, recordIndex, volume }) => {
-        useBackgroundMusic({ muted, recordIndex, volume });
+      ({ muted, highScoreLevel, volume }) => {
+        useBackgroundMusic({ muted, highScoreLevel, volume });
       },
-      { initialProps: { muted: true, recordIndex: 0, volume: 0.3 } },
+      { initialProps: { muted: true, highScoreLevel: 0, volume: 0.3 } },
     );
     fireEvent.pointerDown(window);
     expect(mocks.instances[0].mute).toHaveBeenCalledWith(true);
 
-    rerender({ muted: false, recordIndex: 0, volume: 0.2 });
+    rerender({ muted: false, highScoreLevel: 0, volume: 0.2 });
     expect(mocks.instances[0].mute).toHaveBeenLastCalledWith(false);
     expect(mocks.instances[0].volume).toHaveBeenLastCalledWith(0.2);
 
     hidden = true;
     fireEvent(document, new Event('visibilitychange'));
     expect(mocks.instances[0].pause).toHaveBeenCalledOnce();
-    rerender({ muted: false, recordIndex: 1, volume: 0.2 });
+    rerender({ muted: false, highScoreLevel: 1, volume: 0.2 });
     completeFade(mocks.instances[0]);
     expect(mocks.instances[1].pause).toHaveBeenCalledOnce();
     hidden = false;

@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 
 interface UseBackgroundMusicOptions {
   muted: boolean;
-  recordIndex: number;
+  highScoreLevel: number;
   volume: number;
 }
 
@@ -25,8 +25,8 @@ class BackgroundMusicController {
   private visible = true;
   private volume = 0.3;
 
-  start({ muted, recordIndex, volume }: UseBackgroundMusicOptions): void {
-    this.activeIndex = recordIndex % MUSIC_TRACKS.length;
+  start({ muted, highScoreLevel, volume }: UseBackgroundMusicOptions): void {
+    this.activeIndex = highScoreLevel % MUSIC_TRACKS.length;
     this.targetIndex = this.activeIndex;
     this.volume = volume;
     this.howls = MUSIC_TRACKS.map(
@@ -49,8 +49,8 @@ class BackgroundMusicController {
     active.play();
   }
 
-  sync({ muted, recordIndex, volume }: UseBackgroundMusicOptions): void {
-    const targetIndex = recordIndex % MUSIC_TRACKS.length;
+  sync({ muted, highScoreLevel, volume }: UseBackgroundMusicOptions): void {
+    const targetIndex = highScoreLevel % MUSIC_TRACKS.length;
     if (!this.started) {
       this.activeIndex = targetIndex;
       this.targetIndex = targetIndex;
@@ -111,15 +111,15 @@ class BackgroundMusicController {
 
 export function useBackgroundMusic({
   muted,
-  recordIndex,
+  highScoreLevel,
   volume,
 }: UseBackgroundMusicOptions): void {
   const [controller] = useState(() => new BackgroundMusicController());
-  const latestOptions = useRef({ muted, recordIndex, volume });
+  const latestOptions = useRef({ muted, highScoreLevel, volume });
 
   useEffect(() => {
-    latestOptions.current = { muted, recordIndex, volume };
-  }, [muted, recordIndex, volume]);
+    latestOptions.current = { muted, highScoreLevel, volume };
+  }, [muted, highScoreLevel, volume]);
 
   useEffect(() => {
     const removeStartListeners = () => {
@@ -145,6 +145,6 @@ export function useBackgroundMusic({
   }, [controller]);
 
   useEffect(() => {
-    controller.sync({ muted, recordIndex, volume });
-  }, [controller, muted, recordIndex, volume]);
+    controller.sync({ muted, highScoreLevel, volume });
+  }, [controller, muted, highScoreLevel, volume]);
 }

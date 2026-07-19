@@ -53,7 +53,7 @@ describe('query preview sandbox', () => {
     expect(preview.preferences.volume).toBe(0.8);
     expect(preview.progress).toMatchObject({
       tokens: 100_000_000,
-      recordIndex: 6,
+      highScoreLevel: 6,
       bonuses: [0, 1, 2, 3, 4, 5],
       prestigeLevel: 0,
       pendingPrestigeLevels: 3,

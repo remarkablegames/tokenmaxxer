@@ -66,7 +66,7 @@ export interface Preferences {
 
 export interface GameProgress {
   tokens: number;
-  recordIndex: number;
+  highScoreLevel: number;
   upgrades: Record<UpgradeId, number>;
   abilities: Record<AbilityId, AbilityState>;
   bonuses: number[];

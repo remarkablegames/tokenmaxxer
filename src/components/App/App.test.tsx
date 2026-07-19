@@ -125,7 +125,7 @@ describe('Tokenmaxxer dashboard', () => {
     const save = createInitialSave();
     save.progress.stats.clicks = 1;
     save.progress.stats.prestiges = 1;
-    save.progress.recordIndex = 6;
+    save.progress.highScoreLevel = 6;
     save.progress.bonuses = [0, 1, 2, 3, 4, 5];
     localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
     const user = userEvent.setup();
@@ -292,7 +292,7 @@ describe('Tokenmaxxer dashboard', () => {
     save.progress.tokens = 5_000;
     save.progress.stats.tokens = 5_000;
     save.progress.stats.clicks = 20;
-    save.progress.recordIndex = 1;
+    save.progress.highScoreLevel = 1;
     save.progress.bonuses = [0];
     save.progress.upgrades.keyboard = 1;
     save.progress.upgrades.gpu = 1;
@@ -311,7 +311,7 @@ describe('Tokenmaxxer dashboard', () => {
 
     save.progress.tokens = 10_000;
     save.progress.stats.tokens = 10_000;
-    save.progress.recordIndex = 2;
+    save.progress.highScoreLevel = 2;
     save.progress.bonuses = [0, 1];
     localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
     render(<App />);
@@ -327,7 +327,7 @@ describe('Tokenmaxxer dashboard', () => {
     const save = createInitialSave();
     save.progress.tokens = 10_000_000;
     save.progress.stats.tokens = 10_000_000;
-    save.progress.recordIndex = 5;
+    save.progress.highScoreLevel = 5;
     save.progress.bonuses = [0, 1, 2, 3, 4];
     localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
     render(<App />);
@@ -463,7 +463,7 @@ describe('Tokenmaxxer dashboard', () => {
     const advanced = createInitialSave();
     advanced.progress.tokens = 1_000_000_000;
     advanced.progress.stats.tokens = 20_000_000;
-    advanced.progress.recordIndex = 6;
+    advanced.progress.highScoreLevel = 6;
     advanced.progress.pendingPrestigeLevels = 3;
     advanced.progress.prestigeLevel = 2;
     advanced.progress.bonuses = [0, 1, 2, 3, 4, 5];
@@ -642,7 +642,7 @@ describe('Tokenmaxxer dashboard', () => {
 
   it('opens the archive and statistics from every dashboard shortcut', async () => {
     const save = createInitialSave();
-    save.progress.recordIndex = 2;
+    save.progress.highScoreLevel = 2;
     save.progress.bonuses = [0, 1];
     localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
     const user = userEvent.setup();
@@ -667,7 +667,7 @@ describe('Tokenmaxxer dashboard', () => {
 
   it('shows ability recharge state', () => {
     const save = createInitialSave();
-    save.progress.recordIndex = 3;
+    save.progress.highScoreLevel = 3;
     save.progress.abilities.surge.cooldown = 12;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
     render(<App />);
