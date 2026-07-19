@@ -6,6 +6,12 @@
 
 🏆 An incremental game where you optimize token production to chase the ultimate high score.
 
+## Credits
+
+### Music
+
+- [DavidKBD - Code Injection Dark Techno Music Pack](https://davidkbd.itch.io/code-injection-dark-techno-music-pack)
+
 ## Install
 
 Clone the repository:
