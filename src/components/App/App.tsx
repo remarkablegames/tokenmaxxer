@@ -144,6 +144,10 @@ function getVisibleAbilities(progress: GameProgress): AbilityDefinition[] {
   return nextLocked === undefined ? unlocked : [...unlocked, nextLocked];
 }
 
+function formatMilestoneTarget(target: number): string {
+  return formatNumber(target).replace(/\.0+(?=[A-Za-z])/u, '');
+}
+
 export function App() {
   const [previewConfig] = useState(() =>
     parsePreviewSearch(window.location.search),
@@ -1280,7 +1284,7 @@ export function App() {
                               MILESTONE #{index + 1}
                             </small>
                             <strong className="mt-1 block text-xl text-amber-200">
-                              {formatNumber(getRecordTarget(index))}
+                              {formatMilestoneTarget(getRecordTarget(index))}
                             </strong>
                           </span>
                           <span className="text-xs font-extrabold tracking-[0.12em] text-emerald-300">

@@ -679,7 +679,8 @@ describe('Tokenmaxxer dashboard', () => {
       screen.getByRole('tab', { name: 'Milestones', selected: true }),
     ).toBeInTheDocument();
     expect(screen.getByRole('tabpanel')).toHaveTextContent('MILESTONE #1');
-    expect(screen.getByRole('tabpanel')).toHaveTextContent('1.00K');
+    expect(screen.getByRole('tabpanel')).toHaveTextContent('1K');
+    expect(screen.getByRole('tabpanel')).not.toHaveTextContent(/\.0/);
     const milestones = screen.getAllByRole('listitem');
     expect(milestones[0]).toHaveTextContent('MILESTONE #1');
     expect(milestones[1]).toHaveTextContent('MILESTONE #2');
