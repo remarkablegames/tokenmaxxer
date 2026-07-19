@@ -296,9 +296,16 @@ export function App() {
         ...Object.fromEntries(newlyUnlocked.map(({ id }) => [id, unlockedAt])),
       },
     }));
-    setTransmissionQueue((current) =>
-      sortTransmissionsByPriority([...current, ...newlyUnlocked]),
-    );
+    setTransmissionQueue((current) => {
+      if (current.length === 0)
+        return sortTransmissionsByPriority(newlyUnlocked);
+      const [active, ...waiting] = current;
+      const sortedWaiting = sortTransmissionsByPriority([
+        ...waiting,
+        ...newlyUnlocked,
+      ]);
+      return [active, ...sortedWaiting];
+    });
   }, [transmissionSignature]);
 
   useEffect(() => {

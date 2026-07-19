@@ -236,6 +236,37 @@ describe('Tokenmaxxer dashboard', () => {
     );
   });
 
+  it('does not let a new high-priority message preempt the active toast', async () => {
+    const save = createInitialSave();
+    save.progress.tokens = 20;
+    save.progress.stats.tokens = 20;
+    save.progress.stats.clicks = 199;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
+    vi.spyOn(Math, 'random').mockReturnValue(0);
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.click(
+      screen.getByRole('button', { name: /mechanical keyboard/i }),
+    );
+    expect(screen.getByRole('status')).toHaveAccessibleName(
+      'New message from Max Chen',
+    );
+
+    await user.click(screen.getByRole('button', { name: /activate reactor/i }));
+    expect(screen.getByRole('status')).toHaveAccessibleName(
+      'New message from Max Chen',
+    );
+    await user.click(
+      screen.getByRole('button', {
+        name: 'Dismiss notification from Max Chen',
+      }),
+    );
+    expect(screen.getByRole('status')).toHaveAccessibleName(
+      'New message from Token Reactor',
+    );
+  });
+
   it('notifies on an offline return and only idles engaged players', () => {
     vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout'] });
     vi.setSystemTime(new Date('2026-07-18T05:00:00Z'));
@@ -539,6 +570,14 @@ describe('Tokenmaxxer dashboard', () => {
     expect(screen.getByRole('dialog')).toHaveTextContent('Benchmark Rating5');
     expect(screen.getByRole('dialog')).toHaveTextContent('Lifetime Record100M');
     await user.click(screen.getByRole('dialog'));
+    expect(screen.getByRole('status')).toHaveAccessibleName(
+      'New message from Max Chen',
+    );
+    await user.click(
+      screen.getByRole('button', {
+        name: 'Dismiss notification from Max Chen',
+      }),
+    );
     expect(screen.getByRole('status')).toHaveAccessibleName(
       'New message from R.E.A.C.T.O.R.',
     );
