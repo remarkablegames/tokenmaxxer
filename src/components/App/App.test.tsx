@@ -205,7 +205,7 @@ describe('Tokenmaxxer dashboard', () => {
     );
   });
 
-  it('notifies on an offline return and after a period of inactivity', () => {
+  it('notifies on an offline return and only idles engaged players', () => {
     vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout'] });
     vi.setSystemTime(new Date('2026-07-18T05:00:00Z'));
     const save = createInitialSave();
@@ -220,6 +220,17 @@ describe('Tokenmaxxer dashboard', () => {
     unmount();
 
     localStorage.clear();
+    const inactiveRender = render(<App />);
+    act(() => {
+      vi.advanceTimersByTime(45_000);
+    });
+    expect(screen.queryByRole('status')).not.toBeInTheDocument();
+    inactiveRender.unmount();
+
+    const engagedSave = createInitialSave();
+    engagedSave.progress.stats.clicks = 5;
+    engagedSave.transmissions['first-click'] = Date.now();
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(engagedSave));
     render(<App />);
     act(() => {
       vi.advanceTimersByTime(45_000);

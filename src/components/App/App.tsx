@@ -340,8 +340,13 @@ export function App() {
       window.clearTimeout(timer);
       if (document.hidden || idleTriggered.current) return;
       timer = window.setTimeout(() => {
-        idleTriggered.current = true;
         const transmission = getSessionTransmission('idle');
+        if (
+          transmission.unlock.type === 'session' &&
+          progressRef.current.stats.clicks < transmission.unlock.clicks
+        )
+          return;
+        idleTriggered.current = true;
         knownTransmissionIds.current.add(transmission.id);
         setSave((current) => ({
           ...current,

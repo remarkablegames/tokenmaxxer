@@ -33,6 +33,7 @@ interface AbilityTransmissionUnlock {
 interface SessionTransmissionUnlock {
   type: 'session';
   value: 'idle' | 'offline-return';
+  clicks: number;
 }
 
 type TransmissionUnlock =
@@ -308,7 +309,7 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     initials: 'MC',
     message: 'You still there? Campbell just refreshed the AI leaderboard.',
     priority: 40,
-    unlock: { type: 'session', value: 'idle' },
+    unlock: { type: 'session', value: 'idle', clicks: 5 },
   },
   {
     id: 'record-10m',
@@ -338,7 +339,7 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     message:
       'Your dashboard was unattended. The reactor remained unusually interested in its target.',
     priority: 40,
-    unlock: { type: 'session', value: 'offline-return' },
+    unlock: { type: 'session', value: 'offline-return', clicks: 0 },
   },
   {
     id: 'record-100m',
