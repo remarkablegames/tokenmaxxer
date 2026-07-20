@@ -867,7 +867,7 @@ export function App() {
                 >
                   <span>
                     <small>SESSION RESET</small>
-                    <strong>Start a New Session</strong>
+                    <strong>Start New Session</strong>
                   </span>
                   <span>
                     {progress.pendingPrestigeLevels > 0

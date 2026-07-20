@@ -424,7 +424,7 @@ export const ACHIEVEMENTS: AchievementDefinition[] = [
   {
     id: 'new-era',
     name: 'New Era',
-    description: 'Start a new session',
+    description: 'Start new session',
     test: (p) => p.stats.prestiges >= 1,
   },
 ];

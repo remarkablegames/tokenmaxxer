@@ -23,7 +23,7 @@ export function SessionResetModal({
     <ModalShell
       onClose={onClose}
       onCloseButton={onCloseButton}
-      title="Start a New Session"
+      title="Start New Session"
     >
       <div className="mx-auto max-w-2xl space-y-5">
         <div className="flex items-center justify-between rounded-xl border border-amber-300/20 bg-amber-300/7 px-4 py-3">
@@ -70,7 +70,7 @@ export function SessionResetModal({
             onClick={onConfirm}
             type="button"
           >
-            Start a New Session
+            Start New Session
           </button>
         </div>
       </div>

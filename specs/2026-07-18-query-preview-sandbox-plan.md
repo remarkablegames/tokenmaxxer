@@ -12,7 +12,7 @@ without modifying the player's real local save.
 ### Prestige Preview
 
 `?preview=prestige` creates a deterministic, prestige-ready session and opens
-the Start a New Session modal.
+the Start New Session modal.
 
 The fixture contains:
 

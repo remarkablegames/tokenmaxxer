@@ -500,9 +500,7 @@ describe('Tokenmaxxer dashboard', () => {
       }),
     ).toBeInTheDocument();
 
-    fireEvent.click(
-      screen.getByRole('button', { name: 'Start a New Session' }),
-    );
+    fireEvent.click(screen.getByRole('button', { name: 'Start New Session' }));
     expect(
       screen.getByRole('button', { name: /3Benchmark Rating/i }),
     ).toBeInTheDocument();
@@ -576,18 +574,16 @@ describe('Tokenmaxxer dashboard', () => {
     expect(screen.getByText('SURGE ×3')).toBeInTheDocument();
     expect(screen.getByText('HYPERFOCUS ×5')).toBeInTheDocument();
     await user.click(
-      screen.getByRole('button', { name: /start a new session.*\+3 rating/i }),
+      screen.getByRole('button', { name: /start new session.*\+3 rating/i }),
     );
     expect(playSound).toHaveBeenLastCalledWith('interface', 0.45, false);
-    expect(screen.getByRole('dialog')).toHaveTextContent('Start a New Session');
+    expect(screen.getByRole('dialog')).toHaveTextContent('Start New Session');
     await user.click(screen.getByRole('dialog'));
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     await user.click(
-      screen.getByRole('button', { name: /start a new session.*\+3 rating/i }),
+      screen.getByRole('button', { name: /start new session.*\+3 rating/i }),
     );
-    await user.click(
-      screen.getByRole('button', { name: 'Start a New Session' }),
-    );
+    await user.click(screen.getByRole('button', { name: 'Start New Session' }));
     expect(screen.getByText(/BENCHMARK RATING \+3/i)).toBeInTheDocument();
     expect(
       screen.getByRole('button', { name: /5Benchmark Rating/i }),

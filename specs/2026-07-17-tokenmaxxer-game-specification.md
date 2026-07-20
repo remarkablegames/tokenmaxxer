@@ -46,7 +46,7 @@ The implementation uses a deterministic TypeScript game engine, React dashboard,
 - Use a dark navy dashboard palette with cyan, violet, amber, and trophy-gold accents.
 - Stack sections on mobile with a sticky record header and use a dashboard grid on desktop.
 - Include 12 achievements spanning clicks, criticals, automation, production, records, abilities, upgrade ownership, and first Prestige.
-- Clearly explain Prestige payout, ladder reset behavior, preserved lifetime progress, and the automatic production multiplier. Present it to the player as a Session Reset with the primary action `Start a New Session`.
+- Clearly explain Prestige payout, ladder reset behavior, preserved lifetime progress, and the automatic production multiplier. Present it to the player as a Session Reset with the primary action `Start New Session`.
 - Use emoji only as intentional symbols, such as trophies, rather than placeholder artwork.
 
 ## Architecture, Persistence, and Audio

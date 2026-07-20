@@ -21,9 +21,7 @@ describe('SessionResetModal', () => {
     expect(dialog).toHaveTextContent('Token Multiplier: 1.2× → 1.5×');
     expect(dialog).toHaveTextContent('RESETS');
     expect(dialog).toHaveTextContent('REMAINS');
-    await user.click(
-      screen.getByRole('button', { name: 'Start a New Session' }),
-    );
+    await user.click(screen.getByRole('button', { name: 'Start New Session' }));
     expect(onConfirm).toHaveBeenCalledOnce();
   });
 
@@ -38,7 +36,7 @@ describe('SessionResetModal', () => {
     );
 
     expect(
-      screen.getByRole('button', { name: 'Start a New Session' }),
+      screen.getByRole('button', { name: 'Start New Session' }),
     ).toBeDisabled();
   });
 });
