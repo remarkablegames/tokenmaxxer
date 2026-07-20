@@ -464,6 +464,28 @@ export function App() {
     setTransmissionQueue((current) => current.slice(1));
   };
 
+  const playInterfaceCloseSound = () => {
+    playSound(
+      'interface-close',
+      save.preferences.soundVolume,
+      save.preferences.soundMuted,
+    );
+  };
+
+  const dismissActiveTransmissionWithSound = () => {
+    playInterfaceCloseSound();
+    dismissActiveTransmission();
+  };
+
+  const closeModal = () => {
+    setModal('none');
+  };
+
+  const closeModalWithSound = () => {
+    playInterfaceCloseSound();
+    closeModal();
+  };
+
   const markAllTransmissionsRead = () => {
     setReadTransmissionIds(new Set(unlockedTransmissions.map(({ id }) => id)));
     setTransmissionQueue([]);
@@ -1032,7 +1054,7 @@ export function App() {
         <CommsNotification
           blocked={transmissionBlocked}
           key={activeTransmission.id}
-          onDismiss={dismissActiveTransmission}
+          onDismiss={dismissActiveTransmissionWithSound}
           onOpen={openActiveTransmission}
           onTimeout={dismissActiveTransmission}
           transmission={activeTransmission}
@@ -1082,9 +1104,8 @@ export function App() {
       )}
       {modal !== 'none' && modal !== 'archive' && modal !== 'prestige' && (
         <ModalShell
-          onClose={() => {
-            setModal('none');
-          }}
+          onClose={closeModal}
+          onCloseButton={closeModalWithSound}
           title={
             modal === 'stats'
               ? 'Lifetime Statistics'
@@ -1279,16 +1300,14 @@ export function App() {
           achievementIds={progress.achievements}
           bonuses={progress.bonuses}
           initialTab={archiveTab}
-          onClose={() => {
-            setModal('none');
-          }}
+          onClose={closeModal}
+          onCloseButton={closeModalWithSound}
         />
       )}
       {modal === 'prestige' && (
         <SessionResetModal
-          onClose={() => {
-            setModal('none');
-          }}
+          onClose={closeModal}
+          onCloseButton={closeModalWithSound}
           onConfirm={handlePrestige}
           pendingPrestigeLevels={progress.pendingPrestigeLevels}
           prestigeLevel={progress.prestigeLevel}

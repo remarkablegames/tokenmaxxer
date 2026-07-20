@@ -5,6 +5,7 @@ interface SessionResetModalProps {
   pendingPrestigeLevels: number;
   prestigeLevel: number;
   onClose: () => void;
+  onCloseButton?: () => void;
   onConfirm: () => void;
 }
 
@@ -12,13 +13,18 @@ export function SessionResetModal({
   pendingPrestigeLevels,
   prestigeLevel,
   onClose,
+  onCloseButton,
   onConfirm,
 }: SessionResetModalProps) {
   const tokenMultiplier = getTokenMultiplier(prestigeLevel);
   const nextPrestigeLevel = prestigeLevel + pendingPrestigeLevels;
 
   return (
-    <ModalShell onClose={onClose} title="Start a New Session">
+    <ModalShell
+      onClose={onClose}
+      onCloseButton={onCloseButton}
+      title="Start a New Session"
+    >
       <div className="mx-auto max-w-2xl space-y-5">
         <div className="flex items-center justify-between rounded-xl border border-amber-300/20 bg-amber-300/7 px-4 py-3">
           <span className="text-sm font-bold tracking-[0.15em] text-slate-300">

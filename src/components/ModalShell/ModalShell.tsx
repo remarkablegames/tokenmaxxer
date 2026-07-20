@@ -4,9 +4,15 @@ interface ModalShellProps {
   title: string;
   children: ReactNode;
   onClose: () => void;
+  onCloseButton?: () => void;
 }
 
-export function ModalShell({ title, children, onClose }: ModalShellProps) {
+export function ModalShell({
+  title,
+  children,
+  onClose,
+  onCloseButton,
+}: ModalShellProps) {
   const handleBackdropClick = (event: MouseEvent<HTMLDivElement>) => {
     if (event.target === event.currentTarget) onClose();
   };
@@ -29,7 +35,7 @@ export function ModalShell({ title, children, onClose }: ModalShellProps) {
           <button
             aria-label="Close dialog"
             className="grid size-10 cursor-pointer place-items-center rounded-xl border border-white/10 bg-white/4 text-slate-300 transition-colors hover:border-cyan-300/45 hover:bg-cyan-400/8"
-            onClick={onClose}
+            onClick={onCloseButton ?? onClose}
             type="button"
           >
             ×

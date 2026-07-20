@@ -93,6 +93,7 @@ describe('audio effects', () => {
   it.each([
     'click',
     'interface',
+    'interface-close',
     'critical',
     'purchase',
     'milestone',
@@ -109,6 +110,14 @@ describe('audio effects', () => {
     playSound('interface', 0.5, false);
     expect(setValueAtTime).toHaveBeenCalledWith(820, 1);
     expect(exponentialRampToValueAtTime).toHaveBeenCalledWith(520, 1.04);
+    expect(setValueAtTime).toHaveBeenCalledWith(0.075, 1);
+    expect(stop).toHaveBeenCalledWith(1.06);
+  });
+
+  it('uses a lower tick when an interface closes', () => {
+    playSound('interface-close', 0.5, false);
+    expect(setValueAtTime).toHaveBeenCalledWith(480, 1);
+    expect(exponentialRampToValueAtTime).toHaveBeenCalledWith(300, 1.04);
     expect(setValueAtTime).toHaveBeenCalledWith(0.075, 1);
     expect(stop).toHaveBeenCalledWith(1.06);
   });

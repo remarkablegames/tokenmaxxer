@@ -3,6 +3,7 @@ import { Howl } from 'howler';
 type SynthSoundName =
   | 'click'
   | 'interface'
+  | 'interface-close'
   | 'critical'
   | 'purchase'
   | 'milestone'
@@ -21,6 +22,7 @@ interface AssetSoundDefinition {
 const SOUND_FREQUENCIES: Record<SynthSoundName, number> = {
   click: 260,
   interface: 820,
+  'interface-close': 480,
   critical: 720,
   purchase: 420,
   milestone: 880,
@@ -67,6 +69,10 @@ function isAssetSound(name: SoundName): name is AssetSoundName {
   return name in SOUND_ASSETS;
 }
 
+function isInterfaceSound(name: SynthSoundName): boolean {
+  return name === 'interface' || name === 'interface-close';
+}
+
 function playSynthesizedSound(name: SynthSoundName, volume: number): void {
   if (typeof AudioContext === 'undefined') return;
   context ??= new AudioContext();
@@ -74,20 +80,25 @@ function playSynthesizedSound(name: SynthSoundName, volume: number): void {
   const gain = context.createGain();
   const now = context.currentTime;
   const duration =
-    name === 'prestige' ? 0.5 : name === 'interface' ? 0.06 : 0.16;
+    name === 'prestige' ? 0.5 : isInterfaceSound(name) ? 0.06 : 0.16;
   oscillator.type =
-    name === 'critical' || name === 'milestone' || name === 'interface'
+    name === 'critical' || name === 'milestone' || isInterfaceSound(name)
       ? 'triangle'
       : 'sine';
   oscillator.frequency.setValueAtTime(SOUND_FREQUENCIES[name], now);
   oscillator.frequency.exponentialRampToValueAtTime(
-    name === 'interface' ? 520 : SOUND_FREQUENCIES[name] * 1.5,
-    now + (name === 'interface' ? 0.04 : 0.08),
+    name === 'interface-close'
+      ? 300
+      : name === 'interface'
+        ? 520
+        : SOUND_FREQUENCIES[name] * 1.5,
+    now + (isInterfaceSound(name) ? 0.04 : 0.08),
   );
   gain.gain.setValueAtTime(
     Math.max(
       0.001,
-      volume * (name === 'message' ? 0.11 : name === 'interface' ? 0.15 : 0.18),
+      volume *
+        (name === 'message' ? 0.11 : isInterfaceSound(name) ? 0.15 : 0.18),
     ),
     now,
   );

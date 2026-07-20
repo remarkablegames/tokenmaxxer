@@ -9,6 +9,7 @@ interface ChampionArchiveModalProps {
   bonuses: number[];
   initialTab: ArchiveTab;
   onClose: () => void;
+  onCloseButton?: () => void;
 }
 
 function formatMilestoneTarget(target: number): string {
@@ -20,11 +21,16 @@ export function ChampionArchiveModal({
   bonuses,
   initialTab,
   onClose,
+  onCloseButton,
 }: ChampionArchiveModalProps) {
   const [activeTab, setActiveTab] = useState<ArchiveTab>(initialTab);
 
   return (
-    <ModalShell onClose={onClose} title="Champion Archive">
+    <ModalShell
+      onClose={onClose}
+      onCloseButton={onCloseButton}
+      title="Champion Archive"
+    >
       <div
         aria-label="Champion Archive sections"
         className="mb-4 grid grid-cols-2 rounded-xl border border-white/8 bg-black/20 p-1"

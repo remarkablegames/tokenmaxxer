@@ -20,4 +20,24 @@ describe('ModalShell', () => {
     fireEvent.click(dialog);
     expect(onClose).toHaveBeenCalledTimes(2);
   });
+
+  it('can distinguish its explicit close control from its backdrop', () => {
+    const onClose = vi.fn();
+    const onCloseButton = vi.fn();
+    render(
+      <ModalShell
+        onClose={onClose}
+        onCloseButton={onCloseButton}
+        title="Test Console"
+      >
+        Content
+      </ModalShell>,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Close dialog' }));
+    expect(onCloseButton).toHaveBeenCalledOnce();
+    expect(onClose).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('dialog'));
+    expect(onClose).toHaveBeenCalledOnce();
+  });
 });

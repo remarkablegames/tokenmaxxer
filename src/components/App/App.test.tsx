@@ -31,6 +31,7 @@ describe('Tokenmaxxer dashboard', () => {
     await user.click(screen.getByRole('button', { name: 'Open settings' }));
     expect(playSound).toHaveBeenLastCalledWith('interface', 0.45, false);
     await user.click(screen.getByRole('button', { name: 'Close dialog' }));
+    expect(playSound).toHaveBeenLastCalledWith('interface-close', 0.45, false);
 
     await user.click(screen.getByRole('button', { name: /activate reactor/i }));
     await user.click(
@@ -38,6 +39,7 @@ describe('Tokenmaxxer dashboard', () => {
         name: 'Dismiss notification from Director Campbell',
       }),
     );
+    expect(playSound).toHaveBeenLastCalledWith('interface-close', 0.45, false);
     vi.mocked(playSound).mockClear();
     await user.click(
       screen.getByRole('button', { name: /open ops comms, 1 unread/i }),
