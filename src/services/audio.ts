@@ -9,7 +9,6 @@ type SynthSoundName =
   | 'purchase'
   | 'milestone'
   | 'ability'
-  | 'prestige'
   | 'message'
   | 'warning';
 
@@ -30,7 +29,6 @@ const SOUND_FREQUENCIES: Record<SynthSoundName, number> = {
   purchase: 420,
   milestone: 880,
   ability: 560,
-  prestige: 320,
   message: 660,
   warning: 190,
 };
@@ -103,13 +101,7 @@ function playSynthesizedSound(name: SynthSoundName, volume: number): void {
   const gain = context.createGain();
   const now = context.currentTime;
   const duration =
-    name === 'prestige'
-      ? 0.5
-      : name === 'warning'
-        ? 0.25
-        : isInterfaceSound(name)
-          ? 0.06
-          : 0.16;
+    name === 'warning' ? 0.25 : isInterfaceSound(name) ? 0.06 : 0.16;
   oscillator.type = getOscillatorType(name);
   oscillator.frequency.setValueAtTime(SOUND_FREQUENCIES[name], now);
   oscillator.frequency.exponentialRampToValueAtTime(

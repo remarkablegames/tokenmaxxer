@@ -594,7 +594,7 @@ export function App() {
       updateProgress(next);
       setModal('none');
       playSound(
-        'prestige',
+        'high-score',
         save.preferences.soundVolume,
         save.preferences.soundMuted,
       );

@@ -99,7 +99,6 @@ describe('audio effects', () => {
     'purchase',
     'milestone',
     'ability',
-    'prestige',
     'message',
     'warning',
   ] as const)('synthesizes %s', (sound) => {

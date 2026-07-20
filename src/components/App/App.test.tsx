@@ -584,6 +584,7 @@ describe('Tokenmaxxer dashboard', () => {
       screen.getByRole('button', { name: /start new session.*\+3 rating/i }),
     );
     await user.click(screen.getByRole('button', { name: 'Start New Session' }));
+    expect(playSound).toHaveBeenLastCalledWith('high-score', 0.45, false);
     expect(screen.getByText(/BENCHMARK RATING \+3/i)).toBeInTheDocument();
     expect(
       screen.getByRole('button', { name: /5Benchmark Rating/i }),
