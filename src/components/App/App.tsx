@@ -414,11 +414,6 @@ export function App() {
       const isNew = !previousBonusIndices.current.has(won);
       setCelebration({ index: won, isNew });
       setNotice(isNew ? 'NEW HIGH SCORE' : 'RECORD RECLAIMED');
-      playSound(
-        'milestone',
-        save.preferences.soundVolume,
-        save.preferences.soundMuted,
-      );
       const timer = window.setTimeout(() => {
         setCelebration(null);
         setNotice('SYSTEM ONLINE');
@@ -432,6 +427,15 @@ export function App() {
     previousHighScoreLevel.current = progress.highScoreLevel;
     previousBonusIndices.current = new Set(progress.bonuses);
   }, [progress.bonuses, progress.highScoreLevel, save.preferences]);
+
+  useEffect(() => {
+    if (celebration === null) return;
+    playSound(
+      'high-score',
+      save.preferences.soundVolume,
+      save.preferences.soundMuted,
+    );
+  }, [celebration, save.preferences.soundMuted, save.preferences.soundVolume]);
 
   const updateProgress = (next: GameProgress) => {
     setSave((current) => ({ ...current, progress: next }));
@@ -542,7 +546,7 @@ export function App() {
     if (next !== progress) {
       updateProgress(next);
       playSound(
-        'ability',
+        id === 'surge' ? 'token-surge' : 'hyperfocus',
         save.preferences.soundVolume,
         save.preferences.soundMuted,
       );

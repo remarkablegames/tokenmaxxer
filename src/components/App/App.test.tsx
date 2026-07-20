@@ -453,6 +453,7 @@ describe('Tokenmaxxer dashboard', () => {
     const user = userEvent.setup();
     window.history.replaceState({}, '', '/?preview=high-score');
     render(<App />);
+    expect(playSound).toHaveBeenCalledWith('high-score', 0.45, false);
     const celebration = screen.getByRole('dialog', { name: 'NEW HIGH SCORE' });
     expect(celebration).toHaveTextContent('NEW HIGH SCORE');
     expect(screen.getByText('NEW HIGH SCORE')).toHaveClass('text-sm');
@@ -565,6 +566,7 @@ describe('Tokenmaxxer dashboard', () => {
       screen.getByRole('button', { name: /mechanical keyboard.*LV\. 1/i }),
     ).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: /token surge/i }));
+    expect(playSound).toHaveBeenLastCalledWith('token-surge', 0.45, false);
     expect(screen.getByText('SURGE ×3')).toBeInTheDocument();
     expect(screen.getByText('HYPERFOCUS ×5')).toBeInTheDocument();
     await user.click(
@@ -610,6 +612,21 @@ describe('Tokenmaxxer dashboard', () => {
     );
     await user.click(screen.getByRole('button', { name: /Achievements/i }));
     expect(screen.getByText('Record Breaker')).toBeInTheDocument();
+  });
+
+  it('plays the Hyperfocus activation asset', async () => {
+    const save = createInitialSave();
+    save.progress.tokens = 100_000;
+    save.progress.stats.tokens = 100_000;
+    save.progress.highScoreLevel = 3;
+    save.progress.bonuses = [0, 1, 2];
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
+    const user = userEvent.setup();
+    render(<App />);
+
+    vi.mocked(playSound).mockClear();
+    await user.click(screen.getByRole('button', { name: /hyperfocus/i }));
+    expect(playSound).toHaveBeenCalledWith('hyperfocus', 0.45, false);
   });
 
   it('labels a previously earned milestone as reclaimed after prestige', async () => {
