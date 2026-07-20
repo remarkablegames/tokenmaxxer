@@ -66,18 +66,18 @@ export function AudioSettings({
           </span>
           <button
             aria-label="Toggle sound effects"
-            aria-pressed={!preferences.muted}
+            aria-pressed={!preferences.soundMuted}
             className={TOGGLE_CLASS}
             onClick={onToggleEffects}
             type="button"
           >
-            {preferences.muted ? 'MUTED' : 'ON'}
+            {preferences.soundMuted ? 'MUTED' : 'ON'}
           </button>
         </label>
         <label className="block">
           <span className="mb-2 flex justify-between">
             <strong>Effects Volume</strong>
-            <span>{Math.round(preferences.volume * 100)}%</span>
+            <span>{Math.round(preferences.soundVolume * 100)}%</span>
           </span>
           <input
             aria-label="Effects volume"
@@ -87,7 +87,7 @@ export function AudioSettings({
             onChange={onEffectsVolumeChange}
             step="0.05"
             type="range"
-            value={preferences.volume}
+            value={preferences.soundVolume}
           />
         </label>
       </div>

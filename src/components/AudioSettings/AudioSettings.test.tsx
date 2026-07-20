@@ -19,8 +19,8 @@ describe('AudioSettings', () => {
         preferences={{
           musicMuted: true,
           musicVolume: 0.3,
-          muted: false,
-          volume: 0.45,
+          soundMuted: false,
+          soundVolume: 0.45,
         }}
       />,
     );

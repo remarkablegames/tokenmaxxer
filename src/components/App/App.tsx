@@ -316,7 +316,11 @@ export function App() {
     )
       return;
     soundedTransmissionIds.current.add(activeTransmission.id);
-    playSound('message', save.preferences.volume, save.preferences.muted);
+    playSound(
+      'message',
+      save.preferences.soundVolume,
+      save.preferences.soundMuted,
+    );
   }, [activeTransmission, save.preferences, transmissionBlocked]);
 
   useEffect(() => {
@@ -410,7 +414,11 @@ export function App() {
       const isNew = !previousBonusIndices.current.has(won);
       setCelebration({ index: won, isNew });
       setNotice(isNew ? 'NEW HIGH SCORE' : 'RECORD RECLAIMED');
-      playSound('milestone', save.preferences.volume, save.preferences.muted);
+      playSound(
+        'milestone',
+        save.preferences.soundVolume,
+        save.preferences.soundMuted,
+      );
       const timer = window.setTimeout(() => {
         setCelebration(null);
         setNotice('SYSTEM ONLINE');
@@ -480,8 +488,8 @@ export function App() {
     updateProgress(result.progress);
     playSound(
       result.critical ? 'critical' : 'click',
-      save.preferences.volume,
-      save.preferences.muted,
+      save.preferences.soundVolume,
+      save.preferences.soundMuted,
     );
     const id = floatId.current++;
     setFloats((current) => [
@@ -506,7 +514,11 @@ export function App() {
     /* v8 ignore else -- disabled upgrade controls enforce affordable actions */
     if (next !== progress) {
       updateProgress(next);
-      playSound('purchase', save.preferences.volume, save.preferences.muted);
+      playSound(
+        'purchase',
+        save.preferences.soundVolume,
+        save.preferences.soundMuted,
+      );
     }
   };
 
@@ -515,7 +527,11 @@ export function App() {
     /* v8 ignore else -- disabled ability controls enforce ready actions */
     if (next !== progress) {
       updateProgress(next);
-      playSound('ability', save.preferences.volume, save.preferences.muted);
+      playSound(
+        'ability',
+        save.preferences.soundVolume,
+        save.preferences.soundMuted,
+      );
     }
   };
 
@@ -525,17 +541,21 @@ export function App() {
     if (next !== progress) {
       updateProgress(next);
       setModal('none');
-      playSound('prestige', save.preferences.volume, save.preferences.muted);
+      playSound(
+        'prestige',
+        save.preferences.soundVolume,
+        save.preferences.soundMuted,
+      );
       setNotice(`BENCHMARK RATING +${String(progress.pendingPrestigeLevels)}`);
     }
   };
 
-  const handleVolume = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleSoundVolume = (event: ChangeEvent<HTMLInputElement>) => {
     setSave((current) => ({
       ...current,
       preferences: {
         ...current.preferences,
-        volume: Number(event.target.value),
+        soundVolume: Number(event.target.value),
       },
     }));
   };
@@ -565,7 +585,7 @@ export function App() {
       ...current,
       preferences: {
         ...current.preferences,
-        muted: !current.preferences.muted,
+        soundMuted: !current.preferences.soundMuted,
       },
     }));
   };
@@ -1179,7 +1199,7 @@ export function App() {
           )}
           {modal === 'settings' && (
             <AudioSettings
-              onEffectsVolumeChange={handleVolume}
+              onEffectsVolumeChange={handleSoundVolume}
               onMusicVolumeChange={handleMusicVolume}
               onToggleEffects={toggleSoundEffects}
               onToggleMusic={toggleMusic}

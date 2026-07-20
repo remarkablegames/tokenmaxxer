@@ -45,12 +45,12 @@ describe('query preview sandbox', () => {
   it('builds an isolated deterministic prestige state', () => {
     const save = createInitialSave();
     save.savedAt = 123;
-    save.preferences.volume = 0.8;
+    save.preferences.soundVolume = 0.8;
     const preview = applyPreview(save, parsePreviewSearch('?preview=prestige'));
 
     expect(preview).not.toBe(save);
     expect(preview.savedAt).toBeUndefined();
-    expect(preview.preferences.volume).toBe(0.8);
+    expect(preview.preferences.soundVolume).toBe(0.8);
     expect(preview.progress).toMatchObject({
       tokens: 100_000_000,
       highScoreLevel: 6,

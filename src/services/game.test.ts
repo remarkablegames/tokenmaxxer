@@ -76,8 +76,8 @@ describe('game calculations', () => {
       preferences: {
         musicMuted: false,
         musicVolume: 0.3,
-        muted: false,
-        volume: 0.45,
+        soundMuted: false,
+        soundVolume: 0.45,
       },
     });
     expect(getRecordTarget(2)).toBe(100_000);
@@ -252,8 +252,10 @@ describe('formatting and save validation', () => {
     const legacy = JSON.parse(JSON.stringify(valid)) as {
       preferences: Record<string, unknown>;
     };
-    delete legacy.preferences.musicMuted;
-    delete legacy.preferences.musicVolume;
+    delete legacy.preferences.soundMuted;
+    delete legacy.preferences.soundVolume;
+    legacy.preferences.muted = false;
+    legacy.preferences.volume = 0.45;
     expect(parseSave(JSON.stringify(legacy))).toBeNull();
     expect(parseSave('not json')).toBeNull();
     expect(parseSave('{}')).toBeNull();
@@ -266,7 +268,10 @@ describe('formatting and save validation', () => {
         save.progress.highScoreLevel = 0.5;
       },
       (save: SaveEnvelope) => {
-        save.preferences.volume = 2;
+        save.preferences.soundVolume = 2;
+      },
+      (save: SaveEnvelope) => {
+        save.preferences.soundMuted = 'no' as unknown as boolean;
       },
       (save: SaveEnvelope) => {
         save.preferences.musicMuted = 'no' as unknown as boolean;
