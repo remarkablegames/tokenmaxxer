@@ -5,11 +5,13 @@ type SynthSoundName =
   | 'interface'
   | 'interface-close'
   | 'critical'
+  | 'confirm'
   | 'purchase'
   | 'milestone'
   | 'ability'
   | 'prestige'
-  | 'message';
+  | 'message'
+  | 'warning';
 
 type AssetSoundName = 'high-score' | 'token-surge' | 'hyperfocus';
 type SoundName = SynthSoundName | AssetSoundName;
@@ -24,11 +26,13 @@ const SOUND_FREQUENCIES: Record<SynthSoundName, number> = {
   interface: 820,
   'interface-close': 480,
   critical: 720,
+  confirm: 620,
   purchase: 420,
   milestone: 880,
   ability: 560,
   prestige: 320,
   message: 660,
+  warning: 190,
 };
 
 const SOUND_ASSETS: Record<AssetSoundName, AssetSoundDefinition> = {
@@ -73,6 +77,25 @@ function isInterfaceSound(name: SynthSoundName): boolean {
   return name === 'interface' || name === 'interface-close';
 }
 
+function getOscillatorType(name: SynthSoundName): OscillatorType {
+  if (name === 'warning') return 'sawtooth';
+  if (
+    name === 'critical' ||
+    name === 'milestone' ||
+    name === 'confirm' ||
+    isInterfaceSound(name)
+  )
+    return 'triangle';
+  return 'sine';
+}
+
+function getRampFrequency(name: SynthSoundName): number {
+  if (name === 'interface-close') return 300;
+  if (name === 'warning') return 120;
+  if (name === 'interface') return 520;
+  return SOUND_FREQUENCIES[name] * 1.5;
+}
+
 function playSynthesizedSound(name: SynthSoundName, volume: number): void {
   if (typeof AudioContext === 'undefined') return;
   context ??= new AudioContext();
@@ -80,19 +103,18 @@ function playSynthesizedSound(name: SynthSoundName, volume: number): void {
   const gain = context.createGain();
   const now = context.currentTime;
   const duration =
-    name === 'prestige' ? 0.5 : isInterfaceSound(name) ? 0.06 : 0.16;
-  oscillator.type =
-    name === 'critical' || name === 'milestone' || isInterfaceSound(name)
-      ? 'triangle'
-      : 'sine';
+    name === 'prestige'
+      ? 0.5
+      : name === 'warning'
+        ? 0.25
+        : isInterfaceSound(name)
+          ? 0.06
+          : 0.16;
+  oscillator.type = getOscillatorType(name);
   oscillator.frequency.setValueAtTime(SOUND_FREQUENCIES[name], now);
   oscillator.frequency.exponentialRampToValueAtTime(
-    name === 'interface-close'
-      ? 300
-      : name === 'interface'
-        ? 520
-        : SOUND_FREQUENCIES[name] * 1.5,
-    now + (isInterfaceSound(name) ? 0.04 : 0.08),
+    getRampFrequency(name),
+    now + (name === 'warning' ? 0.12 : isInterfaceSound(name) ? 0.04 : 0.08),
   );
   gain.gain.setValueAtTime(
     Math.max(

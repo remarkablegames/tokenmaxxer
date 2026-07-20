@@ -472,6 +472,14 @@ export function App() {
     );
   };
 
+  const playInterfaceSound = () => {
+    playSound(
+      'interface',
+      save.preferences.soundVolume,
+      save.preferences.soundMuted,
+    );
+  };
+
   const dismissActiveTransmissionWithSound = () => {
     playInterfaceCloseSound();
     dismissActiveTransmission();
@@ -495,6 +503,7 @@ export function App() {
     const transmission = transmissionQueue.at(0);
     /* v8 ignore next -- notification only renders with a queued transmission */
     if (transmission === undefined) return;
+    playInterfaceSound();
     markAllTransmissionsRead();
     setSelectedTransmissionId(transmission.id);
     setModal('comms');
@@ -504,23 +513,26 @@ export function App() {
     const latest = orderedTransmissions.at(0)?.transmission;
     /* v8 ignore next -- header control only renders with unlocked messages */
     if (latest === undefined) return;
-    playSound(
-      'interface',
-      save.preferences.soundVolume,
-      save.preferences.soundMuted,
-    );
+    playInterfaceSound();
     markAllTransmissionsRead();
     setSelectedTransmissionId(latest.id);
     setModal('comms');
   };
 
   const openSettings = () => {
-    playSound(
-      'interface',
-      save.preferences.soundVolume,
-      save.preferences.soundMuted,
-    );
+    playInterfaceSound();
     setModal('settings');
+  };
+
+  const openArchive = (tab: ArchiveTab) => {
+    playInterfaceSound();
+    setArchiveTab(tab);
+    setModal('archive');
+  };
+
+  const openModal = (nextModal: Exclude<Modal, 'none' | 'archive'>) => {
+    playInterfaceSound();
+    setModal(nextModal);
   };
 
   const handleReactor = (event: MouseEvent<HTMLButtonElement>) => {
@@ -611,6 +623,7 @@ export function App() {
   };
 
   const toggleMusic = () => {
+    playInterfaceSound();
     setSave((current) => ({
       ...current,
       preferences: {
@@ -621,6 +634,7 @@ export function App() {
   };
 
   const toggleSoundEffects = () => {
+    playSound('interface', save.preferences.soundVolume, false);
     setSave((current) => ({
       ...current,
       preferences: {
@@ -633,6 +647,11 @@ export function App() {
   const handleImport = () => {
     const imported = parseSave(importText);
     if (imported === null) {
+      playSound(
+        'warning',
+        save.preferences.soundVolume,
+        save.preferences.soundMuted,
+      );
       setNotice('IMPORT REJECTED');
       return;
     }
@@ -646,6 +665,11 @@ export function App() {
     setSave(normalized);
     setImportText('');
     setModal('none');
+    playSound(
+      'confirm',
+      save.preferences.soundVolume,
+      save.preferences.soundMuted,
+    );
     setNotice('SAVE IMPORTED');
   };
 
@@ -658,6 +682,11 @@ export function App() {
     anchor.download = 'tokenmaxxer-save.json';
     anchor.click();
     URL.revokeObjectURL(url);
+    playSound(
+      'confirm',
+      save.preferences.soundVolume,
+      save.preferences.soundMuted,
+    );
     setNotice('SAVE EXPORTED');
   };
 
@@ -674,6 +703,11 @@ export function App() {
     syncNarrativeProgress(fresh.progress);
     setSave(fresh);
     setModal('none');
+    playSound(
+      'warning',
+      save.preferences.soundVolume,
+      save.preferences.soundMuted,
+    );
     setNotice('PROGRESS RESET');
   };
 
@@ -796,30 +830,28 @@ export function App() {
                     label="Milestones"
                     value={String(progress.bonuses.length)}
                     onClick={() => {
-                      setArchiveTab('milestones');
-                      setModal('archive');
+                      openArchive('milestones');
                     }}
                   />
                   <ArchiveButton
                     label="Achievements"
                     value={`${String(progress.achievements.length)}/12`}
                     onClick={() => {
-                      setArchiveTab('achievements');
-                      setModal('archive');
+                      openArchive('achievements');
                     }}
                   />
                   <ArchiveButton
                     label="Sessions Started"
                     value={String(progress.stats.prestiges)}
                     onClick={() => {
-                      setModal('stats');
+                      openModal('stats');
                     }}
                   />
                   <ArchiveButton
                     label="Benchmark Rating"
                     value={String(progress.prestigeLevel)}
                     onClick={() => {
-                      setModal('stats');
+                      openModal('stats');
                     }}
                   />
                 </div>
@@ -829,7 +861,7 @@ export function App() {
                   className="flex w-full animate-[modal-in_.35s_ease-out] cursor-pointer items-center justify-between gap-4 rounded-2xl border border-amber-300/30 bg-linear-to-r from-amber-900/25 to-violet-900/20 p-4 text-left disabled:cursor-not-allowed disabled:opacity-75 disabled:saturate-50 [&_small]:block [&_small]:text-xs [&_small]:tracking-[0.15em] [&_small]:text-amber-300 [&_strong]:mt-1 [&_strong]:block [&>span:last-child]:text-xs [&>span:last-child]:text-amber-200"
                   disabled={progress.pendingPrestigeLevels <= 0}
                   onClick={() => {
-                    setModal('prestige');
+                    openModal('prestige');
                   }}
                   type="button"
                 >
@@ -927,6 +959,7 @@ export function App() {
                   className="cursor-pointer rounded-md px-2 py-1 text-xs font-extrabold text-slate-400 aria-pressed:bg-cyan-700 aria-pressed:text-white"
                   key={mode}
                   onClick={() => {
+                    playInterfaceSound();
                     setBuyMode(mode);
                   }}
                   type="button"
@@ -1022,7 +1055,7 @@ export function App() {
           <button
             className="cursor-pointer text-slate-500 transition-colors hover:text-cyan-300"
             onClick={() => {
-              setModal('stats');
+              openModal('stats');
             }}
             type="button"
           >
@@ -1031,7 +1064,7 @@ export function App() {
           <button
             className="cursor-pointer text-slate-500 transition-colors hover:text-cyan-300"
             onClick={() => {
-              setModal('save');
+              openModal('save');
             }}
             type="button"
           >
@@ -1093,6 +1126,7 @@ export function App() {
               autoFocus
               className="mt-7 min-w-32 cursor-pointer rounded-xl bg-cyan-500 px-4 py-3 text-base font-extrabold text-[#04101c] shadow-[0_0_24px_rgb(6_182_212/0.22)] transition hover:-translate-y-px hover:brightness-125"
               onClick={() => {
+                playInterfaceCloseSound();
                 setCelebration(null);
               }}
               type="button"
@@ -1251,6 +1285,11 @@ export function App() {
                   disabled={previewConfig.enabled}
                   onClick={() => {
                     saveGame(save);
+                    playSound(
+                      'confirm',
+                      save.preferences.soundVolume,
+                      save.preferences.soundMuted,
+                    );
                     setNotice('GAME SAVED');
                   }}
                   type="button"
@@ -1302,6 +1341,7 @@ export function App() {
           initialTab={archiveTab}
           onClose={closeModal}
           onCloseButton={closeModalWithSound}
+          onSelectTab={playInterfaceSound}
         />
       )}
       {modal === 'prestige' && (

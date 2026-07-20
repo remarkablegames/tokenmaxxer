@@ -481,6 +481,7 @@ describe('Tokenmaxxer dashboard', () => {
       screen.getByRole('dialog', { name: 'NEW HIGH SCORE' }),
     ).toBeInTheDocument();
     await user.click(close);
+    expect(playSound).toHaveBeenLastCalledWith('interface-close', 0.45, false);
     expect(
       screen.queryByRole('dialog', { name: 'NEW HIGH SCORE' }),
     ).not.toBeInTheDocument();
@@ -528,6 +529,7 @@ describe('Tokenmaxxer dashboard', () => {
     render(<App />);
 
     await user.click(screen.getByRole('button', { name: 'Statistics' }));
+    expect(playSound).toHaveBeenCalledWith('interface', 0.45, false);
     const dialog = screen.getByRole('dialog');
     expect(dialog).toHaveTextContent('Lifetime Statistics');
     await user.click(dialog);
@@ -541,7 +543,9 @@ describe('Tokenmaxxer dashboard', () => {
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: 'Save Data' }));
+    expect(playSound).toHaveBeenLastCalledWith('interface', 0.45, true);
     await user.click(screen.getByRole('button', { name: 'Manual Save' }));
+    expect(playSound).toHaveBeenLastCalledWith('confirm', 0.45, true);
     expect(localStorage.getItem(STORAGE_KEY)).not.toBeNull();
     await user.click(screen.getByRole('button', { name: 'Close dialog' }));
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
@@ -574,6 +578,7 @@ describe('Tokenmaxxer dashboard', () => {
     await user.click(
       screen.getByRole('button', { name: /start a new session.*\+3 rating/i }),
     );
+    expect(playSound).toHaveBeenLastCalledWith('interface', 0.45, false);
     expect(screen.getByRole('dialog')).toHaveTextContent('Start a New Session');
     await user.click(screen.getByRole('dialog'));
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
@@ -704,6 +709,7 @@ describe('Tokenmaxxer dashboard', () => {
     await user.click(screen.getByRole('button', { name: /activate reactor/i }));
     expect(screen.getByText(/CRITICAL 5/)).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: '×10' }));
+    expect(playSound).toHaveBeenLastCalledWith('interface', 0.45, false);
     expect(screen.getByRole('button', { name: '×10' })).toHaveAttribute(
       'aria-pressed',
       'true',
@@ -723,6 +729,7 @@ describe('Tokenmaxxer dashboard', () => {
     await user.click(
       screen.getByRole('button', { name: 'Toggle sound effects' }),
     );
+    expect(playSound).toHaveBeenCalledWith('interface', 0.8, false);
     expect(screen.getAllByText('MUTED')).toHaveLength(2);
     await user.click(screen.getByRole('button', { name: 'Close dialog' }));
 
@@ -730,6 +737,7 @@ describe('Tokenmaxxer dashboard', () => {
     const textarea = screen.getByPlaceholderText(/paste a tokenmaxxer save/i);
     fireEvent.change(textarea, { target: { value: 'invalid' } });
     await user.click(screen.getByRole('button', { name: 'Validate & Import' }));
+    expect(playSound).toHaveBeenLastCalledWith('warning', 0.8, true);
     expect(screen.getByText(/IMPORT REJECTED/i)).toBeInTheDocument();
     const imported = createInitialSave();
     imported.progress.stats.clicks = 1;
@@ -737,6 +745,7 @@ describe('Tokenmaxxer dashboard', () => {
       target: { value: JSON.stringify(imported) },
     });
     await user.click(screen.getByRole('button', { name: 'Validate & Import' }));
+    expect(playSound).toHaveBeenLastCalledWith('confirm', 0.8, true);
     expect(screen.getByText(/SAVE IMPORTED/i)).toBeInTheDocument();
     expect(screen.queryByRole('status')).not.toBeInTheDocument();
     expect(
@@ -745,10 +754,12 @@ describe('Tokenmaxxer dashboard', () => {
 
     await user.click(screen.getByRole('button', { name: 'Save Data' }));
     await user.click(screen.getByRole('button', { name: 'Export JSON' }));
+    expect(playSound).toHaveBeenLastCalledWith('confirm', 0.45, false);
     expect(createObjectURL).toHaveBeenCalled();
     await user.click(
       screen.getByRole('button', { name: 'Reset All Progress' }),
     );
+    expect(playSound).toHaveBeenLastCalledWith('warning', 0.45, false);
     expect(screen.getByText(/PROGRESS RESET/i)).toBeInTheDocument();
   });
 
@@ -760,6 +771,7 @@ describe('Tokenmaxxer dashboard', () => {
     const user = userEvent.setup();
     render(<App />);
     await user.click(screen.getByRole('button', { name: /2Milestones/i }));
+    expect(playSound).toHaveBeenLastCalledWith('interface', 0.45, false);
     expect(
       screen.getByRole('tab', { name: 'Milestones', selected: true }),
     ).toBeInTheDocument();

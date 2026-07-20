@@ -10,6 +10,7 @@ interface ChampionArchiveModalProps {
   initialTab: ArchiveTab;
   onClose: () => void;
   onCloseButton?: () => void;
+  onSelectTab?: () => void;
 }
 
 function formatMilestoneTarget(target: number): string {
@@ -22,6 +23,7 @@ export function ChampionArchiveModal({
   initialTab,
   onClose,
   onCloseButton,
+  onSelectTab,
 }: ChampionArchiveModalProps) {
   const [activeTab, setActiveTab] = useState<ArchiveTab>(initialTab);
 
@@ -42,6 +44,7 @@ export function ChampionArchiveModal({
           className={`cursor-pointer rounded-lg px-4 py-3 text-sm font-extrabold transition-colors ${activeTab === 'milestones' ? 'bg-cyan-400/12 text-cyan-200' : 'text-slate-400 hover:text-slate-200'}`}
           id="milestones-tab"
           onClick={() => {
+            onSelectTab?.();
             setActiveTab('milestones');
           }}
           role="tab"
@@ -55,6 +58,7 @@ export function ChampionArchiveModal({
           className={`cursor-pointer rounded-lg px-4 py-3 text-sm font-extrabold transition-colors ${activeTab === 'achievements' ? 'bg-cyan-400/12 text-cyan-200' : 'text-slate-400 hover:text-slate-200'}`}
           id="achievements-tab"
           onClick={() => {
+            onSelectTab?.();
             setActiveTab('achievements');
           }}
           role="tab"

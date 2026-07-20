@@ -5,6 +5,7 @@ import { ChampionArchiveModal } from '.';
 
 describe('ChampionArchiveModal', () => {
   it('sorts milestones and switches between archive sections', async () => {
+    const onSelectTab = vi.fn();
     const user = userEvent.setup();
     render(
       <ChampionArchiveModal
@@ -12,6 +13,7 @@ describe('ChampionArchiveModal', () => {
         bonuses={[1, 0]}
         initialTab="milestones"
         onClose={vi.fn()}
+        onSelectTab={onSelectTab}
       />,
     );
 
@@ -35,6 +37,7 @@ describe('ChampionArchiveModal', () => {
     ).toHaveClass('opacity-60');
     await user.click(screen.getByRole('tab', { name: 'Milestones' }));
     expect(screen.getByRole('tabpanel')).toHaveTextContent('MILESTONE #1');
+    expect(onSelectTab).toHaveBeenCalledTimes(2);
   });
 
   it('opens directly to achievements and closes', async () => {

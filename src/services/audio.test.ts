@@ -95,11 +95,13 @@ describe('audio effects', () => {
     'interface',
     'interface-close',
     'critical',
+    'confirm',
     'purchase',
     'milestone',
     'ability',
     'prestige',
     'message',
+    'warning',
   ] as const)('synthesizes %s', (sound) => {
     playSound(sound, 0.5, false);
     expect(start).toHaveBeenCalled();
@@ -120,6 +122,16 @@ describe('audio effects', () => {
     expect(exponentialRampToValueAtTime).toHaveBeenCalledWith(300, 1.04);
     expect(setValueAtTime).toHaveBeenCalledWith(0.075, 1);
     expect(stop).toHaveBeenCalledWith(1.06);
+  });
+
+  it('distinguishes confirmation and warning feedback', () => {
+    playSound('confirm', 0.5, false);
+    expect(setValueAtTime).toHaveBeenCalledWith(620, 1);
+    vi.clearAllMocks();
+    playSound('warning', 0.5, false);
+    expect(setValueAtTime).toHaveBeenCalledWith(190, 1);
+    expect(exponentialRampToValueAtTime).toHaveBeenCalledWith(120, 1.12);
+    expect(stop).toHaveBeenCalledWith(1.25);
   });
 
   it('balances common and message synthesis against mastered assets', () => {
