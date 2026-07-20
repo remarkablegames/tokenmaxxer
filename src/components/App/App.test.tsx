@@ -666,9 +666,9 @@ describe('Tokenmaxxer dashboard', () => {
 
     await user.click(screen.getByRole('button', { name: 'Open settings' }));
     fireEvent.change(screen.getByRole('slider', { name: 'Music volume' }), {
-      target: { value: '0.2' },
+      target: { value: '0.25' },
     });
-    expect(screen.getByText('20%')).toBeInTheDocument();
+    expect(screen.getByText('25%')).toBeInTheDocument();
     fireEvent.change(screen.getByRole('slider', { name: 'Effects volume' }), {
       target: { value: '0.8' },
     });

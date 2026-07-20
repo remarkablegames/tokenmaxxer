@@ -252,7 +252,7 @@ export function createInitialSave(): SaveEnvelope {
     progress: createInitialProgress(),
     preferences: {
       musicMuted: false,
-      musicVolume: 0.3,
+      musicVolume: 0.2,
       soundMuted: false,
       soundVolume: 0.45,
     },

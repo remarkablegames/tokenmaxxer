@@ -75,7 +75,7 @@ describe('game calculations', () => {
       progress: { tokens: 0, highScoreLevel: 0 },
       preferences: {
         musicMuted: false,
-        musicVolume: 0.3,
+        musicVolume: 0.2,
         soundMuted: false,
         soundVolume: 0.45,
       },
