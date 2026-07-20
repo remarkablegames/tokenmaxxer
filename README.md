@@ -8,9 +8,8 @@
 
 ## Credits
 
-### Music
-
 - [DavidKBD - Code Injection Dark Techno Music Pack](https://davidkbd.itch.io/code-injection-dark-techno-music-pack)
+- [Pixel Combat by Helton Yan & Beto Bezerra](https://heltonyan.itch.io/pixelcombat)
 
 ## Install
 
