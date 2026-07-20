@@ -478,9 +478,23 @@ export function App() {
     const latest = orderedTransmissions.at(0)?.transmission;
     /* v8 ignore next -- header control only renders with unlocked messages */
     if (latest === undefined) return;
+    playSound(
+      'interface',
+      save.preferences.soundVolume,
+      save.preferences.soundMuted,
+    );
     markAllTransmissionsRead();
     setSelectedTransmissionId(latest.id);
     setModal('comms');
+  };
+
+  const openSettings = () => {
+    playSound(
+      'interface',
+      save.preferences.soundVolume,
+      save.preferences.soundMuted,
+    );
+    setModal('settings');
   };
 
   const handleReactor = (event: MouseEvent<HTMLButtonElement>) => {
@@ -644,9 +658,7 @@ export function App() {
         hasComms={unlockedTransmissions.length > 0}
         notice={notice}
         onOpenComms={openCommsLog}
-        onOpenSettings={() => {
-          setModal('settings');
-        }}
+        onOpenSettings={openSettings}
         previewEnabled={previewConfig.enabled}
         tokens={progress.tokens}
         tokensPerClick={metrics.tokensPerClick}

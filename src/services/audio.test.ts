@@ -42,6 +42,7 @@ describe('audio effects', () => {
 
   it.each([
     'click',
+    'interface',
     'critical',
     'purchase',
     'milestone',
@@ -52,5 +53,13 @@ describe('audio effects', () => {
     playSound(sound, 0.5, false);
     expect(start).toHaveBeenCalled();
     expect(stop).toHaveBeenCalled();
+  });
+
+  it('keeps interface feedback short and quiet', () => {
+    playSound('interface', 0.5, false);
+    expect(setValueAtTime).toHaveBeenCalledWith(820, 1);
+    expect(exponentialRampToValueAtTime).toHaveBeenCalledWith(520, 1.04);
+    expect(setValueAtTime).toHaveBeenCalledWith(0.04, 1);
+    expect(stop).toHaveBeenCalledWith(1.06);
   });
 });

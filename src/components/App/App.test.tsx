@@ -1,5 +1,6 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { playSound } from 'src/services/audio';
 import { createInitialSave, STORAGE_KEY } from 'src/services/game';
 
 import { App } from '.';
@@ -8,14 +9,40 @@ vi.mock('src/hooks/useBackgroundMusic', () => ({
   useBackgroundMusic: vi.fn(),
 }));
 
+vi.mock('src/services/audio', () => ({
+  playSound: vi.fn(),
+}));
+
 describe('Tokenmaxxer dashboard', () => {
   beforeEach(() => {
+    vi.clearAllMocks();
     localStorage.clear();
     vi.spyOn(window, 'requestAnimationFrame').mockReturnValue(1);
     vi.spyOn(window, 'cancelAnimationFrame').mockImplementation(
       () => undefined,
     );
     vi.spyOn(Math, 'random').mockReturnValue(1);
+  });
+
+  it('plays interface feedback when opening settings and Ops Comms', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.click(screen.getByRole('button', { name: 'Open settings' }));
+    expect(playSound).toHaveBeenLastCalledWith('interface', 0.45, false);
+    await user.click(screen.getByRole('button', { name: 'Close dialog' }));
+
+    await user.click(screen.getByRole('button', { name: /activate reactor/i }));
+    await user.click(
+      screen.getByRole('button', {
+        name: 'Dismiss notification from Director Campbell',
+      }),
+    );
+    vi.mocked(playSound).mockClear();
+    await user.click(
+      screen.getByRole('button', { name: /open ops comms, 1 unread/i }),
+    );
+    expect(playSound).toHaveBeenCalledWith('interface', 0.45, false);
   });
 
   afterEach(() => {
