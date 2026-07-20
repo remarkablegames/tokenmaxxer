@@ -53,6 +53,8 @@ const SOUND_ASSETS: Record<AssetSoundName, AssetSoundDefinition> = {
   },
 };
 
+const ASSET_VOLUME_MULTIPLIER = 0.7;
+
 let context: AudioContext | null = null;
 let assetSounds: Partial<Record<AssetSoundName, Howl>> = {};
 let assetVolumes: Record<AssetSoundName, number> = {
@@ -85,7 +87,7 @@ function playSynthesizedSound(name: SynthSoundName, volume: number): void {
   gain.gain.setValueAtTime(
     Math.max(
       0.001,
-      volume * (name === 'message' ? 0.07 : name === 'interface' ? 0.08 : 0.12),
+      volume * (name === 'message' ? 0.11 : name === 'interface' ? 0.15 : 0.18),
     ),
     now,
   );
@@ -108,6 +110,7 @@ export function playSound(
   }
 
   assetVolumes[name] = volume;
+  const assetVolume = volume * ASSET_VOLUME_MULTIPLIER;
   const definition = SOUND_ASSETS[name];
   const playFallback = () => {
     playSynthesizedSound(definition.fallback, assetVolumes[name]);
@@ -116,12 +119,12 @@ export function playSound(
     assetSounds[name] ??
     new Howl({
       src: definition.sources,
-      volume,
+      volume: assetVolume,
       onloaderror: playFallback,
       onplayerror: playFallback,
     });
   assetSounds[name] = sound;
-  sound.volume(volume);
+  sound.volume(assetVolume);
   sound.play();
 }
 

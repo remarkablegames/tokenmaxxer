@@ -65,14 +65,14 @@ describe('audio effects', () => {
     expect(howler.Howl).toHaveBeenCalledWith(
       expect.objectContaining({
         src: [`/sounds/${file}.ogg`, `/sounds/${file}.mp3`],
-        volume: 0.5,
+        volume: 0.35,
       }),
     );
     expect(howler.play).toHaveBeenCalledOnce();
 
     playSound(sound, 0.25, false);
     expect(howler.Howl).toHaveBeenCalledOnce();
-    expect(howler.volume).toHaveBeenCalledWith(0.25);
+    expect(howler.volume).toHaveBeenCalledWith(0.175);
     expect(howler.play).toHaveBeenCalledTimes(2);
     resetAudioForTests();
     expect(howler.unload).toHaveBeenCalledOnce();
@@ -109,7 +109,15 @@ describe('audio effects', () => {
     playSound('interface', 0.5, false);
     expect(setValueAtTime).toHaveBeenCalledWith(820, 1);
     expect(exponentialRampToValueAtTime).toHaveBeenCalledWith(520, 1.04);
-    expect(setValueAtTime).toHaveBeenCalledWith(0.04, 1);
+    expect(setValueAtTime).toHaveBeenCalledWith(0.075, 1);
     expect(stop).toHaveBeenCalledWith(1.06);
+  });
+
+  it('balances common and message synthesis against mastered assets', () => {
+    playSound('click', 0.5, false);
+    expect(setValueAtTime).toHaveBeenCalledWith(0.09, 1);
+    vi.clearAllMocks();
+    playSound('message', 0.5, false);
+    expect(setValueAtTime).toHaveBeenCalledWith(0.055, 1);
   });
 });
