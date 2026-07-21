@@ -110,8 +110,8 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
   },
   {
     id: 'model-croak-social',
-    sender: 'Corporate Communications',
-    role: 'CORPORATE COMMUNICATIONS',
+    sender: 'Biz Comms',
+    role: 'PR & BRAND',
     initials: 'CC',
     message:
       'Croak is generating text and images for the company social feed. Engagement is up 400%. Reality has requested a correction.',

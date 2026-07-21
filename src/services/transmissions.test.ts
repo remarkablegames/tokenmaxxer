@@ -35,6 +35,9 @@ describe('narrative transmissions', () => {
     ).toBe(
       'Parallel worktrees online. Every branch can now fix its own merge conflicts.',
     );
+    expect(
+      TRANSMISSIONS.find(({ id }) => id === 'model-croak-social'),
+    ).toMatchObject({ sender: 'Biz Comms', role: 'PR & BRAND' });
     expect(TRANSMISSIONS.map(({ unlock }) => unlock.type)).toEqual(
       expect.arrayContaining([
         'click',
