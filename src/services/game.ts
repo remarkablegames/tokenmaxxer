@@ -36,7 +36,7 @@ export const UPGRADES: UpgradeDefinition[] = [
     category: 'manual',
     baseCost: 200,
     growth: 1.17,
-    revealAt: 0,
+    revealAt: 200,
     unlockAt: 250,
     icon: 'icons/upgrades/templates.svg',
   },

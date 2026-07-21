@@ -76,7 +76,7 @@ describe('Tokenmaxxer dashboard', () => {
         .closest('button')
         ?.querySelector('img'),
     ).toHaveAttribute('src', 'icons/upgrades/keyboard.svg');
-    expect(screen.getByText('Skill Templates')).toBeInTheDocument();
+    expect(screen.queryByText('Skill Templates')).not.toBeInTheDocument();
     const upgradeMarket = screen.getByRole('region', {
       name: 'System upgrades',
     });
@@ -386,12 +386,20 @@ describe('Tokenmaxxer dashboard', () => {
 
   it('delays distant locked upgrade previews until their reveal threshold', () => {
     const save = createInitialSave();
-    save.progress.stats.tokens = 999;
+    save.progress.stats.tokens = 199;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
     const { unmount } = render(<App />);
 
+    expect(screen.queryByText('Skill Templates')).not.toBeInTheDocument();
     expect(screen.queryByText('Parallel Worktrees')).not.toBeInTheDocument();
     unmount();
+
+    save.progress.stats.tokens = 200;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
+    const secondRender = render(<App />);
+    expect(screen.getByText('Skill Templates')).toBeInTheDocument();
+    expect(screen.queryByText('Parallel Worktrees')).not.toBeInTheDocument();
+    secondRender.unmount();
 
     save.progress.stats.tokens = 1_000;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
