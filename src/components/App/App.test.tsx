@@ -76,7 +76,7 @@ describe('Tokenmaxxer dashboard', () => {
         .closest('button')
         ?.querySelector('img'),
     ).toHaveAttribute('src', 'icons/upgrades/keyboard.svg');
-    expect(screen.getByText('Prompt Templates')).toBeInTheDocument();
+    expect(screen.getByText('Skill Templates')).toBeInTheDocument();
     const upgradeMarket = screen.getByRole('region', {
       name: 'System upgrades',
     });
@@ -86,7 +86,7 @@ describe('Tokenmaxxer dashboard', () => {
       screen.getByRole('heading', { name: 'SYSTEM UPGRADES' }).parentElement
         ?.parentElement,
     ).toHaveClass('sticky', 'top-0');
-    expect(screen.queryByText('Multi-Finger Maxxing')).not.toBeInTheDocument();
+    expect(screen.queryByText('Parallel Worktrees')).not.toBeInTheDocument();
     expect(screen.queryByText('Automation Fleet')).not.toBeInTheDocument();
     expect(screen.queryByText('ACTIVE PROTOCOLS')).not.toBeInTheDocument();
     expect(screen.queryByText('CHAMPION ARCHIVE')).not.toBeInTheDocument();
@@ -423,6 +423,12 @@ describe('Tokenmaxxer dashboard', () => {
       screen.getByText('Token Surge').closest('button')?.querySelector('img'),
     ).toHaveAttribute('src', 'icons/abilities/token-surge.svg');
     expect(screen.getByText('Hyperfocus')).toBeInTheDocument();
+    expect(
+      screen
+        .getByText('Parallel Worktrees')
+        .closest('button')
+        ?.querySelector('img'),
+    ).toHaveAttribute('src', 'icons/upgrades/worktrees.svg');
   });
 
   it('reveals Prestige after the 10M Performance Bonus', () => {

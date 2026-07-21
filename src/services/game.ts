@@ -30,7 +30,7 @@ export const UPGRADES: UpgradeDefinition[] = [
   },
   {
     id: 'templates',
-    name: 'Prompt Templates',
+    name: 'Skill Templates',
     description: '×1.25 manual output',
     category: 'manual',
     baseCost: 200,
@@ -40,13 +40,13 @@ export const UPGRADES: UpgradeDefinition[] = [
   },
   {
     id: 'multifinger',
-    name: 'Multi-Finger Maxxing',
+    name: 'Parallel Worktrees',
     description: '+5 base tokens per click',
     category: 'manual',
     baseCost: 2_000,
     growth: 1.19,
     unlockAt: 10_000,
-    icon: 'icons/upgrades/multifinger.svg',
+    icon: 'icons/upgrades/worktrees.svg',
   },
   {
     id: 'gpu',

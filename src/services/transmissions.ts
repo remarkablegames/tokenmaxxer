@@ -322,7 +322,7 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     role: 'PEOPLE OPERATIONS',
     initials: 'HR',
     message:
-      'Multi-finger maxxing is not covered by the repetitive strain wellness policy.',
+      'Parallel worktrees online. Every branch can now fix its own merge conflicts.',
     priority: 40,
     unlock: { type: 'upgrade', value: 'multifinger' },
   },
@@ -471,7 +471,7 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     role: 'MANAGEMENT',
     initials: 'DC',
     message:
-      'Standardized prompts? Excellent. Original thought was becoming difficult to benchmark.',
+      'Skill installed. Verbosity increased by 25%. Usefulness remains within benchmark variance.',
     priority: 40,
     unlock: { type: 'upgrade', value: 'templates' },
   },

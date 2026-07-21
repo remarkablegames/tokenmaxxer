@@ -25,6 +25,16 @@ describe('narrative transmissions', () => {
     expect(
       TRANSMISSIONS.find(({ id }) => id === 'optimization-purchased')?.message,
     ).toContain('premium AI slop');
+    expect(
+      TRANSMISSIONS.find(({ id }) => id === 'templates-purchased')?.message,
+    ).toBe(
+      'Skill installed. Verbosity increased by 25%. Usefulness remains within benchmark variance.',
+    );
+    expect(
+      TRANSMISSIONS.find(({ id }) => id === 'multifinger-purchased')?.message,
+    ).toBe(
+      'Parallel worktrees online. Every branch can now fix its own merge conflicts.',
+    );
     expect(TRANSMISSIONS.map(({ unlock }) => unlock.type)).toEqual(
       expect.arrayContaining([
         'click',
