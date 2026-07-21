@@ -69,7 +69,7 @@ export const UPGRADES: UpgradeDefinition[] = [
     category: 'automation',
     baseCost: 350,
     growth: 1.12,
-    revealAt: 50,
+    revealAt: 100,
     unlockAt: 250,
     icon: 'icons/upgrades/model.svg',
   },

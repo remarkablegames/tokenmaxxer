@@ -425,7 +425,27 @@ describe('Tokenmaxxer dashboard', () => {
     expect(gpu).toHaveAttribute('data-guided', 'true');
     await user.click(gpu);
     expect(screen.getByText('Chase the First Record')).toBeInTheDocument();
+    expect(screen.queryByText('AI Model')).not.toBeInTheDocument();
+  });
+
+  it('reveals the AI Model preview at 100 lifetime tokens', () => {
+    const save = createInitialSave();
+    save.progress.stats.tokens = 99;
+    save.progress.upgrades.keyboard = 1;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
+    const { unmount } = render(<App />);
+
+    expect(screen.queryByText('AI Model')).not.toBeInTheDocument();
+    unmount();
+
+    save.progress.stats.tokens = 100;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
+    render(<App />);
+
     expect(screen.getByText('AI Model')).toBeInTheDocument();
+    expect(
+      screen.getByText('LOCKED · Generate 250 lifetime tokens'),
+    ).toBeInTheDocument();
   });
 
   it('reveals advanced dashboard sections at their progression thresholds', () => {
