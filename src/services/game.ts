@@ -287,7 +287,7 @@ export function calculateMetrics(progress: GameProgress): ProductionMetrics {
     u.agentSwarm * 900 +
     u.orbital * 8_000;
   const automationMultiplier =
-    (1 + u.overclock * 0.35) * (1 + u.contextCompaction * 0.2);
+    1 + u.overclock * 0.35 + u.contextCompaction * 0.2;
   const tokenMultiplier = getTokenMultiplier(progress.prestigeLevel);
   const surge = progress.abilities.surge.remaining > 0 ? 2 : 1;
   const hyperfocusActive = progress.abilities.hyperfocus.remaining > 0;

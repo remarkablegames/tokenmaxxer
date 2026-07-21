@@ -2,7 +2,7 @@
 
 ## Summary
 
-Build a polished, responsive browser incremental game centered on repeatedly chasing larger High Score records. The main progression should take approximately 20–25 minutes to reach the first Prestige, with endless powers-of-ten records afterward.
+Build a polished, responsive browser incremental game centered on repeatedly chasing larger High Score records. The main progression should take approximately 45–50 minutes to reach the first Prestige, with endless powers-of-ten records afterward.
 
 The implementation uses a deterministic TypeScript game engine, React dashboard, custom SVG artwork, native CSS/SVG animation, lightweight Web Audio effects, and versioned local saves. It has no backend, remote assets, runtime network requests, service worker, or animation-library dependency.
 
@@ -34,7 +34,7 @@ The implementation uses a deterministic TypeScript game engine, React dashboard,
 
 - First upgrade is affordable within 15 seconds.
 - Automation begins within one minute.
-- A deterministic active strategy reaches first Prestige within the intended 20–25 minute progression window.
+- A deterministic active strategy reaches first Prestige within the intended 45–50 minute progression window.
 - No multi-minute progression dead zones occur before first Prestige.
 
 ## Interface and Presentation

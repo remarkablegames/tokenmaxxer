@@ -56,7 +56,7 @@ function simulateActivePlayer(): BalanceResult {
   let firstAutomation = -1;
   const step = 0.2;
 
-  for (let elapsed = 0; elapsed <= 1_500; elapsed += step) {
+  for (let elapsed = 0; elapsed <= 3_000; elapsed += step) {
     progress = tickGame(progress, step);
     if (Math.floor(elapsed * 2) !== Math.floor((elapsed - step) * 2))
       progress = clickReactor(progress, 1).progress;
@@ -89,9 +89,9 @@ describe('progression balance', () => {
     const result = simulateActivePlayer();
     expect(result.firstUpgrade).toBeLessThanOrEqual(15);
     expect(result.firstAutomation).toBeLessThanOrEqual(60);
-    // The steeper efficiency costs intentionally extend the first session
-    // while preventing two multiplier upgrades from dominating the midgame.
-    expect(result.firstPrestige).toBeGreaterThanOrEqual(20 * 60);
-    expect(result.firstPrestige).toBeLessThanOrEqual(25 * 60);
+    // Additive efficiency stacking prevents two multiplier upgrades from
+    // dominating the midgame and intentionally creates a longer first run.
+    expect(result.firstPrestige).toBeGreaterThanOrEqual(45 * 60);
+    expect(result.firstPrestige).toBeLessThanOrEqual(50 * 60);
   });
 });

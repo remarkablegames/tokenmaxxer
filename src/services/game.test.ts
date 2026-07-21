@@ -124,7 +124,9 @@ describe('game calculations', () => {
     progress.abilities.hyperfocus.remaining = 1;
     const metrics = calculateMetrics(progress);
     expect(metrics.tokensPerClick).toBeCloseTo(8 * 1.25 * 1.2 * 1.5 * 2 * 3);
-    expect(metrics.tokensPerSecond).toBeCloseTo(9_017 * 1.35 * 1.2 * 1.5 * 2);
+    expect(metrics.tokensPerSecond).toBeCloseTo(
+      9_017 * (1 + 0.35 + 0.2) * 1.5 * 2,
+    );
     expect(metrics.criticalChance).toBe(0.4);
 
     const focused = createInitialProgress();
