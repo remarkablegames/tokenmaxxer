@@ -70,6 +70,10 @@ describe('game calculations', () => {
     expect(UPGRADES.find(({ id }) => id === 'overclock')?.baseCost).toBe(
       25_000,
     );
+    expect(UPGRADES.find(({ id }) => id === 'critical')).toMatchObject({
+      description: '+1% critical click chance',
+      maxLevel: 30,
+    });
     expect(UPGRADES.find(({ id }) => id === 'optimization')?.name).toBe(
       'KV Cache Optimization',
     );
@@ -147,6 +151,17 @@ describe('game calculations', () => {
     });
     progress.upgrades.optimization = 20;
     expect(getUpgradeCost(progress, keyboard, 0)).toBe(10);
+
+    const critical = UPGRADES.find(({ id }) => id === 'critical');
+    if (critical === undefined) throw new Error('Missing critical upgrade');
+    progress.tokens = Number.MAX_SAFE_INTEGER;
+    progress.upgrades.critical = 29;
+    expect(getPurchaseQuote(progress, critical, 'max').count).toBe(1);
+    progress.upgrades.critical = 30;
+    expect(getPurchaseQuote(progress, critical, 1)).toEqual({
+      count: 0,
+      cost: 0,
+    });
   });
 
   it('processes clicks, criticals, milestones, bonuses, and rating payouts', () => {

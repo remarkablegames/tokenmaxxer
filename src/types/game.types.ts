@@ -27,6 +27,7 @@ export interface UpgradeDefinition {
   growth: number;
   revealAt: number;
   unlockAt: number;
+  maxLevel?: number;
   icon: string;
 }
 

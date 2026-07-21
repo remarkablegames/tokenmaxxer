@@ -979,6 +979,9 @@ export function App() {
                 <div className="space-y-2">
                   {getVisibleUpgrades(progress, category).map((upgrade) => {
                     const unlocked = progress.stats.tokens >= upgrade.unlockAt;
+                    const maxed =
+                      upgrade.maxLevel !== undefined &&
+                      progress.upgrades[upgrade.id] >= upgrade.maxLevel;
                     const quote = getPurchaseQuote(progress, upgrade, buyMode);
                     const nextCost = getPurchaseQuote(
                       { ...progress, tokens: Number.MAX_SAFE_INTEGER },
@@ -1030,9 +1033,11 @@ export function App() {
                             LV. {progress.upgrades[upgrade.id]}
                           </em>
                           <span className="text-xs font-extrabold whitespace-nowrap text-amber-300">
-                            {quote.count > 0
-                              ? `${formatNumber(quote.cost)} T`
-                              : `${formatNumber(nextCost)} T`}
+                            {maxed
+                              ? 'MAX'
+                              : quote.count > 0
+                                ? `${formatNumber(quote.cost)} T`
+                                : `${formatNumber(nextCost)} T`}
                           </span>
                         </span>
                       </button>

@@ -711,6 +711,21 @@ describe('Tokenmaxxer dashboard', () => {
     vi.mocked(playSound).mockClear();
     await user.click(screen.getByRole('button', { name: /hyperfocus/i }));
     expect(playSound).toHaveBeenCalledWith('hyperfocus', 0.45, false);
+    expect(screen.getByText('CRIT 20%')).toBeInTheDocument();
+  });
+
+  it('marks Critical Prompting as maxed at level 30', () => {
+    const save = createInitialSave();
+    save.progress.stats.tokens = 1_000_000;
+    save.progress.upgrades.critical = 30;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
+    render(<App />);
+
+    expect(
+      screen.getByRole('button', {
+        name: /critical prompting.*LV\. 30.*MAX/i,
+      }),
+    ).toBeDisabled();
   });
 
   it('labels a previously earned milestone as reclaimed after prestige', async () => {

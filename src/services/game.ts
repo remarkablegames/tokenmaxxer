@@ -142,12 +142,13 @@ export const UPGRADES: UpgradeDefinition[] = [
   {
     id: 'critical',
     name: 'Critical Prompting',
-    description: '+2% critical click chance',
+    description: '+1% critical click chance',
     category: 'efficiency',
     baseCost: 7_500,
     growth: 1.19,
     revealAt: 5_000,
     unlockAt: 25_000,
+    maxLevel: 30,
     icon: 'icons/upgrades/critical.svg',
   },
   {
@@ -176,7 +177,7 @@ export const ABILITIES: AbilityDefinition[] = [
   {
     id: 'hyperfocus',
     name: 'Hyperfocus',
-    description: '3× clicks and +15% critical chance',
+    description: '3× clicks and +15% critical chance, up to 35%',
     icon: 'icons/abilities/hyperfocus.svg',
     unlockAt: 100_000,
     duration: 15,
@@ -298,7 +299,7 @@ export function calculateMetrics(progress: GameProgress): ProductionMetrics {
     criticalChance: Math.min(
       0.35,
       0.05 +
-        u.critical * 0.02 +
+        u.critical * 0.01 +
         (progress.abilities.hyperfocus.remaining > 0 ? 0.15 : 0),
     ),
   };
@@ -322,7 +323,12 @@ export function getPurchaseQuote(
   upgrade: UpgradeDefinition,
   mode: BuyMode,
 ): PurchaseQuote {
-  const limit = mode === 'max' ? 10_000 : mode;
+  const requestedLimit = mode === 'max' ? 10_000 : mode;
+  const availableLevels =
+    upgrade.maxLevel === undefined
+      ? requestedLimit
+      : Math.max(0, upgrade.maxLevel - progress.upgrades[upgrade.id]);
+  const limit = Math.min(requestedLimit, availableLevels);
   let cost = 0;
   let count = 0;
   while (count < limit) {
