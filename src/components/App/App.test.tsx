@@ -71,6 +71,15 @@ describe('Tokenmaxxer dashboard', () => {
         ?.querySelector('img'),
     ).toHaveAttribute('src', 'icons/upgrades/keyboard.svg');
     expect(screen.getByText('Prompt Templates')).toBeInTheDocument();
+    const upgradeMarket = screen.getByRole('region', {
+      name: 'System upgrades',
+    });
+    expect(upgradeMarket).toHaveClass('xl:h-[calc(100dvh-15rem)]');
+    expect(upgradeMarket).toHaveClass('xl:overflow-y-auto');
+    expect(
+      screen.getByRole('heading', { name: 'SYSTEM UPGRADES' }).parentElement
+        ?.parentElement,
+    ).toHaveClass('sticky', 'top-0');
     expect(screen.queryByText('Multi-Finger Maxxing')).not.toBeInTheDocument();
     expect(screen.queryByText('Automation Fleet')).not.toBeInTheDocument();
     expect(screen.queryByText('ACTIVE PROTOCOLS')).not.toBeInTheDocument();

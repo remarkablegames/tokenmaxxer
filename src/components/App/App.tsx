@@ -943,8 +943,11 @@ export function App() {
           </div>
         </section>
 
-        <section className={`${PANEL_CLASS} min-h-125 overflow-hidden`}>
-          <div className="flex items-center justify-between border-b border-white/8 p-4">
+        <section
+          aria-label="System upgrades"
+          className={`${PANEL_CLASS} min-h-125 [scrollbar-color:#155e75_transparent] overflow-hidden xl:h-[calc(100dvh-15rem)] xl:self-start xl:overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-cyan-800/50 [&::-webkit-scrollbar-thumb:hover]:bg-cyan-600/80 [&::-webkit-scrollbar-track]:bg-transparent`}
+        >
+          <div className="sticky top-0 z-10 flex items-center justify-between border-b border-white/8 bg-[#0b1728]/95 p-4 backdrop-blur-xl">
             <div>
               <p className={EYEBROW_CLASS}>PRODUCTION MARKET</p>
               <h2 className="text-lg font-bold">SYSTEM UPGRADES</h2>
@@ -969,7 +972,7 @@ export function App() {
               ))}
             </div>
           </div>
-          <div className="max-h-155 [scrollbar-color:#155e75_transparent] overflow-y-auto p-3 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-cyan-800/50 [&::-webkit-scrollbar-thumb:hover]:bg-cyan-600/80 [&::-webkit-scrollbar-track]:bg-transparent">
+          <div className="p-3">
             {visibleCategories.map((category) => (
               <div
                 className="mb-5 animate-[modal-in_.35s_ease-out]"
