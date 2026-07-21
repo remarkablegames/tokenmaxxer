@@ -95,11 +95,12 @@ function getOnboardingObjective(
       description:
         'Click the glowing reactor core to generate your first token.',
     };
-  if (progress.upgrades.keyboard === 0)
+  if (progress.upgrades.keyboard === 0 && progress.stats.tokens < 50)
     return {
       step: 2,
       title: 'Upgrade Manual Output',
-      description: 'Earn 20 tokens and buy Mechanical Keyboard.',
+      description:
+        'Buy Mechanical Keyboard, or generate 50 lifetime tokens to continue.',
     };
   if (progress.upgrades.gpu === 0)
     return {

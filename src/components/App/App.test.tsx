@@ -392,6 +392,12 @@ describe('Tokenmaxxer dashboard', () => {
     const { unmount } = render(<App />);
 
     expect(screen.queryByText('Automation Fleet')).not.toBeInTheDocument();
+    expect(screen.getByText('Upgrade Manual Output')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'Buy Mechanical Keyboard, or generate 50 lifetime tokens to continue.',
+      ),
+    ).toBeInTheDocument();
     unmount();
 
     save.progress.stats.tokens = 50;
@@ -400,7 +406,7 @@ describe('Tokenmaxxer dashboard', () => {
 
     expect(screen.getByText('Automation Fleet')).toBeInTheDocument();
     expect(screen.getByText('Used GPU')).toBeInTheDocument();
-    expect(screen.getByText('Upgrade Manual Output')).toBeInTheDocument();
+    expect(screen.getByText('Bring Automation Online')).toBeInTheDocument();
   });
 
   it('delays distant locked upgrade previews until their reveal threshold', () => {
