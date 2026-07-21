@@ -64,6 +64,12 @@ describe('game calculations', () => {
     expect(UPGRADES.find(({ id }) => id === 'contextCompaction')?.name).toBe(
       'Context Compaction',
     );
+    expect(
+      UPGRADES.find(({ id }) => id === 'contextCompaction')?.baseCost,
+    ).toBe(5_000);
+    expect(UPGRADES.find(({ id }) => id === 'overclock')?.baseCost).toBe(
+      25_000,
+    );
     expect(UPGRADES.find(({ id }) => id === 'optimization')?.name).toBe(
       'KV Cache Optimization',
     );

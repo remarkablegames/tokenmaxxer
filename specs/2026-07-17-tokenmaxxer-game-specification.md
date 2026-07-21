@@ -33,7 +33,7 @@ The implementation uses a deterministic TypeScript game engine, React dashboard,
 
 - First upgrade is affordable within 15 seconds.
 - Automation begins within one minute.
-- An optimized deterministic strategy reaches first Prestige in 10–16 minutes, leaving normal discovery and interaction in the intended 15–20 minute window.
+- A deterministic active strategy reaches first Prestige within the intended 15–20 minute progression window.
 - No multi-minute progression dead zones occur before first Prestige.
 
 ## Interface and Presentation

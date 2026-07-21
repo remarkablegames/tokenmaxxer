@@ -89,9 +89,9 @@ describe('progression balance', () => {
     const result = simulateActivePlayer();
     expect(result.firstUpgrade).toBeLessThanOrEqual(15);
     expect(result.firstAutomation).toBeLessThanOrEqual(60);
-    // This deterministic strategy buys the mathematically strongest option
-    // immediately; normal discovery and UI interaction extend it toward 15–20m.
-    expect(result.firstPrestige).toBeGreaterThanOrEqual(10 * 60);
-    expect(result.firstPrestige).toBeLessThanOrEqual(16 * 60);
+    // This deterministic active strategy should remain within the intended
+    // first-session progression window after all production balance changes.
+    expect(result.firstPrestige).toBeGreaterThanOrEqual(15 * 60);
+    expect(result.firstPrestige).toBeLessThanOrEqual(20 * 60);
   });
 });
