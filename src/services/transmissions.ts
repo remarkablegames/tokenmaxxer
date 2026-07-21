@@ -317,14 +317,14 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     unlock: { type: 'click', value: 500 },
   },
   {
-    id: 'multifinger-purchased',
+    id: 'worktrees-purchased',
     sender: 'HR Wellness',
     role: 'PEOPLE OPERATIONS',
     initials: 'HR',
     message:
       'Parallel worktrees online. Every branch can now fix its own merge conflicts.',
     priority: 40,
-    unlock: { type: 'upgrade', value: 'multifinger' },
+    unlock: { type: 'upgrade', value: 'worktrees' },
   },
   {
     id: 'context-compaction-purchased',

@@ -39,7 +39,7 @@ export const UPGRADES: UpgradeDefinition[] = [
     icon: 'icons/upgrades/templates.svg',
   },
   {
-    id: 'multifinger',
+    id: 'worktrees',
     name: 'Parallel Worktrees',
     description: '+5 base tokens per click',
     category: 'manual',
@@ -174,7 +174,7 @@ export const ABILITIES: AbilityDefinition[] = [
 const EMPTY_UPGRADES: Record<UpgradeId, number> = {
   keyboard: 0,
   templates: 0,
-  multifinger: 0,
+  worktrees: 0,
   gpu: 0,
   model: 0,
   rack: 0,
@@ -262,7 +262,7 @@ export function createInitialSave(): SaveEnvelope {
 
 export function calculateMetrics(progress: GameProgress): ProductionMetrics {
   const u = progress.upgrades;
-  const manualBase = 1 + u.keyboard + u.multifinger * 5;
+  const manualBase = 1 + u.keyboard + u.worktrees * 5;
   const manualMultiplier =
     (1 + u.templates * 0.25) * (1 + u.contextCompaction * 0.2);
   const automationBase =

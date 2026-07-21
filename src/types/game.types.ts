@@ -3,7 +3,7 @@ export type UpgradeCategory = 'manual' | 'automation' | 'efficiency';
 export type UpgradeId =
   | 'keyboard'
   | 'templates'
-  | 'multifinger'
+  | 'worktrees'
   | 'gpu'
   | 'model'
   | 'rack'

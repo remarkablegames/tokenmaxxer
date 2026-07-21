@@ -31,7 +31,7 @@ describe('narrative transmissions', () => {
       'Skill installed. Verbosity increased by 25%. Usefulness remains within benchmark variance.',
     );
     expect(
-      TRANSMISSIONS.find(({ id }) => id === 'multifinger-purchased')?.message,
+      TRANSMISSIONS.find(({ id }) => id === 'worktrees-purchased')?.message,
     ).toBe(
       'Parallel worktrees online. Every branch can now fix its own merge conflicts.',
     );
@@ -70,7 +70,7 @@ describe('narrative transmissions', () => {
     progress.upgrades.gpu = 1;
     progress.upgrades.model = 75;
     progress.upgrades.rack = 1;
-    progress.upgrades.multifinger = 1;
+    progress.upgrades.worktrees = 1;
     progress.upgrades.contextCompaction = 1;
     progress.upgrades.critical = 1;
     progress.upgrades.overclock = 1;

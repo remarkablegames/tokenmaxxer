@@ -33,7 +33,7 @@ function richProgress(): GameProgress {
   progress.upgrades = {
     keyboard: 2,
     templates: 1,
-    multifinger: 1,
+    worktrees: 1,
     gpu: 1,
     model: 1,
     rack: 1,
