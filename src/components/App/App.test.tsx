@@ -372,6 +372,18 @@ describe('Tokenmaxxer dashboard', () => {
     expect(screen.queryByText('Prompt Engineer')).not.toBeInTheDocument();
   });
 
+  it('keeps the automation fleet visible after starting a new session', () => {
+    const save = createInitialSave();
+    save.progress.stats.prestiges = 1;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
+    render(<App />);
+
+    expect(screen.getByText('Automation Fleet')).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /used gpu.*LV\. 0/i }),
+    ).toBeInTheDocument();
+  });
+
   it('guides the first automation purchase and then points to the record', async () => {
     const save = createInitialSave();
     save.progress.tokens = 75;
