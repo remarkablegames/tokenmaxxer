@@ -242,7 +242,9 @@ export function App() {
   const tokenMultiplier = getTokenMultiplier(progress.prestigeLevel);
   const visibleCategories: UpgradeCategory[] = [
     'manual',
-    ...(progress.upgrades.keyboard > 0 || progress.stats.prestiges > 0
+    ...(progress.upgrades.keyboard > 0 ||
+    progress.stats.tokens >= 50 ||
+    progress.stats.prestiges > 0
       ? (['automation'] as UpgradeCategory[])
       : []),
     ...(progress.stats.tokens >= 5_000
