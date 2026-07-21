@@ -712,7 +712,7 @@ export function App() {
   };
 
   return (
-    <main className="min-h-screen bg-[#050914] text-slate-100">
+    <main className="min-h-screen bg-[#050914] text-slate-100 xl:grid xl:h-dvh xl:grid-rows-[auto_auto_minmax(0,1fr)_auto] xl:overflow-hidden">
       <div className="noise pointer-events-none fixed inset-0" />
       <DashboardHeader
         hasComms={unlockedTransmissions.length > 0}
@@ -733,9 +733,9 @@ export function App() {
       />
 
       <div
-        className={`${SHELL_CLASS} grid gap-4 py-3 sm:py-6 xl:grid-cols-[minmax(300px,0.85fr)_minmax(400px,1.2fr)_minmax(340px,1fr)]`}
+        className={`${SHELL_CLASS} grid gap-4 py-3 sm:py-6 xl:min-h-0 xl:grid-cols-[minmax(300px,0.85fr)_minmax(400px,1.2fr)_minmax(340px,1fr)] xl:py-4`}
       >
-        <aside className="space-y-4">
+        <aside className="[scrollbar-color:#155e75_transparent] space-y-4 xl:min-h-0 xl:overflow-y-auto xl:pr-1 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-cyan-800/50 [&::-webkit-scrollbar-thumb:hover]:bg-cyan-600/80 [&::-webkit-scrollbar-track]:bg-transparent">
           {onboardingObjective !== null && (
             <section
               aria-live="polite"
@@ -905,7 +905,7 @@ export function App() {
         </aside>
 
         <section
-          className={`${PANEL_CLASS} relative flex min-h-125 flex-col items-center justify-center overflow-hidden p-4 ${progress.stats.clicks === 0 ? 'shadow-[inset_0_1px_0_rgb(255_255_255/0.035),0_0_55px_rgb(34_211_238/0.16)]' : ''}`}
+          className={`${PANEL_CLASS} relative flex min-h-125 flex-col items-center justify-center overflow-hidden p-4 xl:h-full xl:min-h-0 ${progress.stats.clicks === 0 ? 'shadow-[inset_0_1px_0_rgb(255_255_255/0.035),0_0_55px_rgb(34_211_238/0.16)]' : ''}`}
         >
           <div className="absolute inset-x-8 top-5 flex justify-between">
             <span className={EYEBROW_CLASS}>REACTOR STAGE {stage + 1}/6</span>
@@ -945,7 +945,7 @@ export function App() {
 
         <section
           aria-label="System upgrades"
-          className={`${PANEL_CLASS} min-h-125 [scrollbar-color:#155e75_transparent] overflow-hidden xl:h-[calc(100dvh-15rem)] xl:self-start xl:overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-cyan-800/50 [&::-webkit-scrollbar-thumb:hover]:bg-cyan-600/80 [&::-webkit-scrollbar-track]:bg-transparent`}
+          className={`${PANEL_CLASS} min-h-125 [scrollbar-color:#155e75_transparent] overflow-hidden xl:h-full xl:min-h-0 xl:self-start xl:overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-cyan-800/50 [&::-webkit-scrollbar-thumb:hover]:bg-cyan-600/80 [&::-webkit-scrollbar-track]:bg-transparent`}
         >
           <div className="sticky top-0 z-10 flex items-center justify-between border-b border-white/8 bg-[#0b1728]/95 p-4 backdrop-blur-xl">
             <div>

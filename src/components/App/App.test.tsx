@@ -60,6 +60,12 @@ describe('Tokenmaxxer dashboard', () => {
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
       'TOKENMAXXER',
     );
+    expect(screen.getByRole('main')).toHaveClass(
+      'xl:h-dvh',
+      'xl:grid-rows-[auto_auto_minmax(0,1fr)_auto]',
+      'xl:overflow-hidden',
+    );
+    expect(screen.getByRole('complementary')).toHaveClass('xl:overflow-y-auto');
     expect(screen.getByText('HIGH SCORE')).toBeInTheDocument();
     expect(screen.getByText('NEXT OBJECTIVE')).toBeInTheDocument();
     expect(screen.getByText('Activate the Token Reactor')).toBeInTheDocument();
@@ -74,7 +80,7 @@ describe('Tokenmaxxer dashboard', () => {
     const upgradeMarket = screen.getByRole('region', {
       name: 'System upgrades',
     });
-    expect(upgradeMarket).toHaveClass('xl:h-[calc(100dvh-15rem)]');
+    expect(upgradeMarket).toHaveClass('xl:h-full');
     expect(upgradeMarket).toHaveClass('xl:overflow-y-auto');
     expect(
       screen.getByRole('heading', { name: 'SYSTEM UPGRADES' }).parentElement
