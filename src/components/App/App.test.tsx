@@ -652,7 +652,9 @@ describe('Tokenmaxxer dashboard', () => {
     await user.click(screen.getByRole('button', { name: /token surge/i }));
     expect(playSound).toHaveBeenLastCalledWith('token-surge', 0.45, false);
     expect(screen.getByText('SURGE ×2')).toBeInTheDocument();
-    expect(screen.getByText('HYPERFOCUS ×3')).toBeInTheDocument();
+    expect(screen.getByText('HYPERFOCUS ×3')).toHaveClass(
+      'after:animate-pulse',
+    );
     await user.click(
       screen.getByRole('button', { name: /start new session.*\+3 rating/i }),
     );
@@ -714,11 +716,15 @@ describe('Tokenmaxxer dashboard', () => {
     expect(screen.getByText('CRIT 20%')).toBeInTheDocument();
   });
 
-  it('marks Critical Prompting as maxed at level 30', () => {
+  it('marks Critical Prompting as maxed and raises its cap during Hyperfocus', async () => {
     const save = createInitialSave();
+    save.progress.tokens = 1_000_000;
     save.progress.stats.tokens = 1_000_000;
+    save.progress.highScoreLevel = 3;
+    save.progress.bonuses = [0, 1, 2];
     save.progress.upgrades.critical = 30;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
+    const user = userEvent.setup();
     render(<App />);
 
     expect(
@@ -726,6 +732,9 @@ describe('Tokenmaxxer dashboard', () => {
         name: /critical prompting.*LV\. 30.*MAX/i,
       }),
     ).toBeDisabled();
+    expect(screen.getByText('CRIT 35%')).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: /hyperfocus/i }));
+    expect(screen.getByText('CRIT 50%')).toBeInTheDocument();
   });
 
   it('labels a previously earned milestone as reclaimed after prestige', async () => {

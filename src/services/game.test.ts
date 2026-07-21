@@ -121,7 +121,7 @@ describe('game calculations', () => {
     const metrics = calculateMetrics(progress);
     expect(metrics.tokensPerClick).toBeCloseTo(8 * 1.25 * 1.2 * 1.5 * 2 * 3);
     expect(metrics.tokensPerSecond).toBeCloseTo(9_017 * 1.35 * 1.2 * 1.5 * 2);
-    expect(metrics.criticalChance).toBe(0.35);
+    expect(metrics.criticalChance).toBe(0.4);
 
     const focused = createInitialProgress();
     focused.abilities.hyperfocus.remaining = 1;
@@ -129,6 +129,9 @@ describe('game calculations', () => {
       tokensPerClick: 3,
       criticalChance: 0.2,
     });
+
+    focused.upgrades.critical = 30;
+    expect(calculateMetrics(focused).criticalChance).toBe(0.5);
   });
 
   it('quotes single, bulk, max, discounted, and unaffordable upgrades', () => {

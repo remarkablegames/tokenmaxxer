@@ -177,7 +177,7 @@ export const ABILITIES: AbilityDefinition[] = [
   {
     id: 'hyperfocus',
     name: 'Hyperfocus',
-    description: '3× clicks and +15% critical chance, up to 35%',
+    description: '3× clicks and +15% critical chance, up to 50%',
     icon: 'icons/abilities/hyperfocus.svg',
     unlockAt: 100_000,
     duration: 15,
@@ -290,17 +290,16 @@ export function calculateMetrics(progress: GameProgress): ProductionMetrics {
     (1 + u.overclock * 0.35) * (1 + u.contextCompaction * 0.2);
   const tokenMultiplier = getTokenMultiplier(progress.prestigeLevel);
   const surge = progress.abilities.surge.remaining > 0 ? 2 : 1;
-  const hyperfocus = progress.abilities.hyperfocus.remaining > 0 ? 3 : 1;
+  const hyperfocusActive = progress.abilities.hyperfocus.remaining > 0;
+  const hyperfocus = hyperfocusActive ? 3 : 1;
   return {
     tokensPerClick:
       manualBase * manualMultiplier * tokenMultiplier * surge * hyperfocus,
     tokensPerSecond:
       automationBase * automationMultiplier * tokenMultiplier * surge,
     criticalChance: Math.min(
-      0.35,
-      0.05 +
-        u.critical * 0.01 +
-        (progress.abilities.hyperfocus.remaining > 0 ? 0.15 : 0),
+      hyperfocusActive ? 0.5 : 0.35,
+      0.05 + u.critical * 0.01 + (hyperfocusActive ? 0.15 : 0),
     ),
   };
 }

@@ -81,6 +81,8 @@ const EYEBROW_CLASS = 'text-xs font-extrabold tracking-[0.2em] text-cyan-300';
 const ACTION_BUTTON_CLASS =
   'cursor-pointer rounded-xl px-4 py-3 font-extrabold transition hover:-translate-y-px hover:brightness-125 disabled:cursor-not-allowed disabled:opacity-40';
 const SHELL_CLASS = 'mx-auto w-full max-w-400 px-3 sm:px-6';
+const ACTIVE_BONUS_CLASS =
+  "relative isolate rounded-full border border-amber-300/30 bg-cyan-400/6 px-3 py-1.5 text-amber-300 shadow-[0_0_10px_rgb(251_191_36/0.14)] after:pointer-events-none after:absolute after:-inset-1 after:-z-10 after:animate-pulse after:rounded-full after:bg-amber-300/20 after:blur-md after:content-['']";
 
 function getOnboardingObjective(
   progress: GameProgress,
@@ -926,14 +928,10 @@ export function App() {
               CRIT {(metrics.criticalChance * 100).toFixed(0)}%
             </span>
             {progress.abilities.surge.remaining > 0 && (
-              <span className="glow-pulse rounded-full border border-amber-300/30 bg-cyan-400/6 px-3 py-1.5 text-amber-300">
-                SURGE ×2
-              </span>
+              <span className={ACTIVE_BONUS_CLASS}>SURGE ×2</span>
             )}
             {progress.abilities.hyperfocus.remaining > 0 && (
-              <span className="glow-pulse rounded-full border border-amber-300/30 bg-cyan-400/6 px-3 py-1.5 text-amber-300">
-                HYPERFOCUS ×3
-              </span>
+              <span className={ACTIVE_BONUS_CLASS}>HYPERFOCUS ×3</span>
             )}
           </div>
         </section>

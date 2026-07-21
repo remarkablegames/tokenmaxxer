@@ -27,7 +27,7 @@ The implementation uses a deterministic TypeScript game engine, React dashboard,
 ### Abilities
 
 - Token Surge unlocks at 10,000 and grants 2× production for 15 active seconds with a 90-second cooldown.
-- Hyperfocus unlocks at 100,000 and grants 3× manual output plus 15 percentage points of critical chance, up to the global 35% cap, for 15 active seconds with a 75-second cooldown.
+- Hyperfocus unlocks at 100,000 and grants 3× manual output plus 15 percentage points of critical chance for 15 active seconds with a 75-second cooldown. It temporarily raises the normal 35% critical cap to 50%.
 - Critical Prompting grants 1 percentage point of critical chance per level and displays MAX at level 30 so it cannot sell ineffective levels beyond the global cap.
 
 ### Balance Acceptance
