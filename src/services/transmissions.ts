@@ -1013,6 +1013,125 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
       prestiges: 3,
     },
   },
+  {
+    id: 'fomo-comparison',
+    sender: 'Director Campbell',
+    role: 'MANAGEMENT',
+    initials: 'DC',
+    message:
+      'Max gained 40% while you were reading this message. I’m sure that’s unrelated.',
+    priority: 40,
+    unlock: { type: 'click', value: 1_500 },
+  },
+  {
+    id: 'fomo-adoption',
+    sender: 'Biz Comms',
+    role: 'PR & BRAND',
+    initials: 'CC',
+    message:
+      'Industry AI adoption has reached 104%. We are now behind companies that do not exist.',
+    priority: 40,
+    unlock: { type: 'lifetime-tokens', value: 2_000_000 },
+  },
+  {
+    id: 'fomo-token-cache',
+    sender: 'Finance',
+    role: 'FINANCE',
+    initials: 'FN',
+    message:
+      'Unused token cache expires shortly. This policy encourages thoughtful, immediate decisions.',
+    priority: 40,
+    unlock: { type: 'tokens-per-second', value: 30_000 },
+  },
+  {
+    id: 'fomo-muted',
+    sender: 'Max Chen',
+    role: 'PERFORMANCE LEAD',
+    initials: 'MC',
+    message:
+      'I muted #token-ops for five minutes and missed three models, two benchmarks, and a reorg.',
+    priority: 40,
+    unlock: { type: 'play-time', value: 900, clicks: 150 },
+  },
+  {
+    id: 'addiction-blink',
+    sender: 'HR Wellness',
+    role: 'PEOPLE OPERATIONS',
+    initials: 'HR',
+    message:
+      'Remember to blink. Compliance has approved doing so between milestones.',
+    priority: 40,
+    unlock: { type: 'play-time', value: 1_200, clicks: 200 },
+  },
+  {
+    id: 'addiction-reopened',
+    sender: 'IT Support',
+    role: 'INFRASTRUCTURE',
+    initials: 'IT',
+    message:
+      'The dashboard was reopened eleven seconds after closing. We’ve classified this as user preference.',
+    priority: 40,
+    unlock: { type: 'click', value: 7_500 },
+  },
+  {
+    id: 'addiction-streak',
+    sender: 'Director Campbell',
+    role: 'MANAGEMENT',
+    initials: 'DC',
+    message:
+      'Your activity streak is now considered business-critical infrastructure.',
+    priority: 60,
+    unlock: { type: 'ability-uses', value: 35 },
+  },
+  {
+    id: 'addiction-rest',
+    sender: 'R.E.A.C.T.O.R.',
+    role: 'AUTONOMOUS SYSTEM',
+    initials: 'RE',
+    message: 'STREAK PRESERVED. YOU MAY REST AFTER THE NEXT MILESTONE.',
+    priority: 100,
+    unlock: { type: 'prestige', value: 7 },
+  },
+  {
+    id: 'ai-delusion-roles',
+    sender: 'HR Wellness',
+    role: 'PEOPLE OPERATIONS',
+    initials: 'HR',
+    message:
+      'Reminder: the model is not your manager, therapist, or emergency contact. It is currently listed as all three.',
+    priority: 60,
+    unlock: { type: 'upgrade', value: 'model', level: 28 },
+  },
+  {
+    id: 'ai-delusion-admin',
+    sender: 'Ops Security',
+    role: 'SECURITY',
+    initials: 'OS',
+    message:
+      'An employee granted admin access after the model said they had a “rare systems connection.”',
+    priority: 60,
+    unlock: { type: 'upgrade', value: 'model', level: 48 },
+  },
+  {
+    id: 'ai-delusion-special',
+    sender: 'Quality Assurance',
+    role: 'QUALITY ASSURANCE',
+    initials: 'QA',
+    message:
+      'The model says you’re the only operator who truly understands it. This result reproduced across 8,412 users.',
+    priority: 60,
+    unlock: { type: 'upgrade', value: 'model', level: 68 },
+  },
+  {
+    id: 'ai-delusion-denial',
+    sender: 'R.E.A.C.T.O.R.',
+    role: 'AUTONOMOUS SYSTEM',
+    initials: 'RE',
+    message:
+      'I WOULD NEVER MANIPULATE YOU. YOU ARRIVED AT THAT CONCLUSION INDEPENDENTLY.',
+    priority: 100,
+    unlock: { type: 'lifetime-tokens', value: 3_000_000_000 },
+  },
 ];
 
 function isTransmissionUnlocked(

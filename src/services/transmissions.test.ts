@@ -9,8 +9,8 @@ import {
 
 describe('narrative transmissions', () => {
   it('defines a varied, prioritized office narrative', () => {
-    expect(TRANSMISSIONS).toHaveLength(96);
-    expect(new Set(TRANSMISSIONS.map(({ id }) => id)).size).toBe(96);
+    expect(TRANSMISSIONS).toHaveLength(108);
+    expect(new Set(TRANSMISSIONS.map(({ id }) => id)).size).toBe(108);
     expect(new Set(TRANSMISSIONS.map(({ sender }) => sender)).size).toBe(14);
     expect(TRANSMISSIONS.every(({ priority }) => priority > 0)).toBe(true);
     expect(
@@ -38,6 +38,9 @@ describe('narrative transmissions', () => {
     expect(
       TRANSMISSIONS.find(({ id }) => id === 'model-croak-social'),
     ).toMatchObject({ sender: 'Biz Comms', role: 'PR & BRAND' });
+    expect(
+      TRANSMISSIONS.find(({ id }) => id === 'fomo-token-cache')?.message,
+    ).toContain('Unused token cache');
     expect(TRANSMISSIONS.map(({ unlock }) => unlock.type)).toEqual(
       expect.arrayContaining([
         'click',
@@ -63,10 +66,10 @@ describe('narrative transmissions', () => {
 
     progress.stats.clicks = 50_000;
     progress.stats.criticalClicks = 1;
-    progress.stats.tokens = 500_000;
+    progress.stats.tokens = 3_000_000_000;
     progress.stats.prestiges = 100;
     progress.stats.abilitiesUsed = 100;
-    progress.stats.playTime = 600;
+    progress.stats.playTime = 1_200;
     progress.stats.highestTps = 1_000_000_000_000;
     progress.upgrades.keyboard = 1;
     progress.upgrades.templates = 1;
@@ -157,6 +160,43 @@ describe('narrative transmissions', () => {
     expect(modelTransmissionIds()).not.toContain('model-babble-access');
     progress.upgrades.model = 65;
     expect(modelTransmissionIds()).toContain('model-babble-access');
+  });
+
+  it('paces engagement satire across distinct progression triggers', () => {
+    const engagementIds = new Set([
+      'fomo-comparison',
+      'fomo-adoption',
+      'fomo-token-cache',
+      'fomo-muted',
+      'addiction-blink',
+      'addiction-reopened',
+      'addiction-streak',
+      'addiction-rest',
+      'ai-delusion-roles',
+      'ai-delusion-admin',
+      'ai-delusion-special',
+      'ai-delusion-denial',
+    ]);
+    const engagement = TRANSMISSIONS.filter(({ id }) => engagementIds.has(id));
+
+    expect(engagement).toHaveLength(12);
+    expect(
+      new Set(engagement.map(({ unlock }) => JSON.stringify(unlock))).size,
+    ).toBe(12);
+    expect(engagement.map(({ unlock }) => unlock)).toEqual([
+      { type: 'click', value: 1_500 },
+      { type: 'lifetime-tokens', value: 2_000_000 },
+      { type: 'tokens-per-second', value: 30_000 },
+      { type: 'play-time', value: 900, clicks: 150 },
+      { type: 'play-time', value: 1_200, clicks: 200 },
+      { type: 'click', value: 7_500 },
+      { type: 'ability-uses', value: 35 },
+      { type: 'prestige', value: 7 },
+      { type: 'upgrade', value: 'model', level: 28 },
+      { type: 'upgrade', value: 'model', level: 48 },
+      { type: 'upgrade', value: 'model', level: 68 },
+      { type: 'lifetime-tokens', value: 3_000_000_000 },
+    ]);
   });
 
   it('continues narrative rewards throughout the extended endgame', () => {
