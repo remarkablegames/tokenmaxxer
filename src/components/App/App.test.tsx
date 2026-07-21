@@ -651,8 +651,8 @@ describe('Tokenmaxxer dashboard', () => {
     ).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: /token surge/i }));
     expect(playSound).toHaveBeenLastCalledWith('token-surge', 0.45, false);
-    expect(screen.getByText('SURGE ×3')).toBeInTheDocument();
-    expect(screen.getByText('HYPERFOCUS ×5')).toBeInTheDocument();
+    expect(screen.getByText('SURGE ×2')).toBeInTheDocument();
+    expect(screen.getByText('HYPERFOCUS ×3')).toBeInTheDocument();
     await user.click(
       screen.getByRole('button', { name: /start new session.*\+3 rating/i }),
     );

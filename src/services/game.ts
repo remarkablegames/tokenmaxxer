@@ -167,16 +167,16 @@ export const ABILITIES: AbilityDefinition[] = [
   {
     id: 'surge',
     name: 'Token Surge',
-    description: '3× all production',
+    description: '2× all production',
     icon: 'icons/abilities/token-surge.svg',
     unlockAt: 10_000,
-    duration: 20,
+    duration: 15,
     cooldown: 90,
   },
   {
     id: 'hyperfocus',
     name: 'Hyperfocus',
-    description: '5× clicks and +30% critical chance',
+    description: '3× clicks and +15% critical chance',
     icon: 'icons/abilities/hyperfocus.svg',
     unlockAt: 100_000,
     duration: 15,
@@ -288,8 +288,8 @@ export function calculateMetrics(progress: GameProgress): ProductionMetrics {
   const automationMultiplier =
     (1 + u.overclock * 0.35) * (1 + u.contextCompaction * 0.2);
   const tokenMultiplier = getTokenMultiplier(progress.prestigeLevel);
-  const surge = progress.abilities.surge.remaining > 0 ? 3 : 1;
-  const hyperfocus = progress.abilities.hyperfocus.remaining > 0 ? 5 : 1;
+  const surge = progress.abilities.surge.remaining > 0 ? 2 : 1;
+  const hyperfocus = progress.abilities.hyperfocus.remaining > 0 ? 3 : 1;
   return {
     tokensPerClick:
       manualBase * manualMultiplier * tokenMultiplier * surge * hyperfocus,
@@ -299,7 +299,7 @@ export function calculateMetrics(progress: GameProgress): ProductionMetrics {
       0.35,
       0.05 +
         u.critical * 0.02 +
-        (progress.abilities.hyperfocus.remaining > 0 ? 0.3 : 0),
+        (progress.abilities.hyperfocus.remaining > 0 ? 0.15 : 0),
     ),
   };
 }

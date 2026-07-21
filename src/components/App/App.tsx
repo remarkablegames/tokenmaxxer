@@ -927,12 +927,12 @@ export function App() {
             </span>
             {progress.abilities.surge.remaining > 0 && (
               <span className="glow-pulse rounded-full border border-amber-300/30 bg-cyan-400/6 px-3 py-1.5 text-amber-300">
-                SURGE ×3
+                SURGE ×2
               </span>
             )}
             {progress.abilities.hyperfocus.remaining > 0 && (
               <span className="glow-pulse rounded-full border border-amber-300/30 bg-cyan-400/6 px-3 py-1.5 text-amber-300">
-                HYPERFOCUS ×5
+                HYPERFOCUS ×3
               </span>
             )}
           </div>

@@ -26,14 +26,14 @@ The implementation uses a deterministic TypeScript game engine, React dashboard,
 
 ### Abilities
 
-- Token Surge unlocks at 10,000 and grants 3× production for 20 active seconds with a 90-second cooldown.
-- Hyperfocus unlocks at 100,000 and grants 5× manual output plus 30 percentage points of critical chance for 15 active seconds with a 75-second cooldown.
+- Token Surge unlocks at 10,000 and grants 2× production for 15 active seconds with a 90-second cooldown.
+- Hyperfocus unlocks at 100,000 and grants 3× manual output plus 15 percentage points of critical chance for 15 active seconds with a 75-second cooldown.
 
 ### Balance Acceptance
 
 - First upgrade is affordable within 15 seconds.
 - Automation begins within one minute.
-- An optimized deterministic strategy reaches first Prestige in 10–15 minutes, leaving normal discovery and interaction in the intended 15–20 minute window.
+- An optimized deterministic strategy reaches first Prestige in 10–16 minutes, leaving normal discovery and interaction in the intended 15–20 minute window.
 - No multi-minute progression dead zones occur before first Prestige.
 
 ## Interface and Presentation

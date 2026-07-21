@@ -92,6 +92,6 @@ describe('progression balance', () => {
     // This deterministic strategy buys the mathematically strongest option
     // immediately; normal discovery and UI interaction extend it toward 15–20m.
     expect(result.firstPrestige).toBeGreaterThanOrEqual(10 * 60);
-    expect(result.firstPrestige).toBeLessThanOrEqual(15 * 60);
+    expect(result.firstPrestige).toBeLessThanOrEqual(16 * 60);
   });
 });

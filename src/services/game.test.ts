@@ -109,9 +109,16 @@ describe('game calculations', () => {
     progress.abilities.surge.remaining = 1;
     progress.abilities.hyperfocus.remaining = 1;
     const metrics = calculateMetrics(progress);
-    expect(metrics.tokensPerClick).toBeCloseTo(8 * 1.25 * 1.2 * 1.5 * 3 * 5);
-    expect(metrics.tokensPerSecond).toBeCloseTo(9_017 * 1.35 * 1.2 * 1.5 * 3);
+    expect(metrics.tokensPerClick).toBeCloseTo(8 * 1.25 * 1.2 * 1.5 * 2 * 3);
+    expect(metrics.tokensPerSecond).toBeCloseTo(9_017 * 1.35 * 1.2 * 1.5 * 2);
     expect(metrics.criticalChance).toBe(0.35);
+
+    const focused = createInitialProgress();
+    focused.abilities.hyperfocus.remaining = 1;
+    expect(calculateMetrics(focused)).toMatchObject({
+      tokensPerClick: 3,
+      criticalChance: 0.2,
+    });
   });
 
   it('quotes single, bulk, max, discounted, and unaffordable upgrades', () => {
@@ -194,12 +201,12 @@ describe('game actions', () => {
     expect(activateAbility(progress, 'surge')).toBe(progress);
     progress.highScoreLevel = 3;
     const active = activateAbility(progress, 'surge');
-    expect(active.abilities.surge).toEqual({ remaining: 20, cooldown: 90 });
+    expect(active.abilities.surge).toEqual({ remaining: 15, cooldown: 90 });
     expect(active.stats.abilitiesUsed).toBe(1);
     expect(activateAbility(active, 'surge')).toBe(active);
     expect(activateAbility(progress, 'missing' as 'surge')).toBe(progress);
     const expired = tickGame(active, 1);
-    expect(expired.abilities.surge.remaining).toBe(19);
+    expect(expired.abilities.surge.remaining).toBe(14);
   });
 
   it('prestiges only with a payout, resets the ladder, and raises rating', () => {
