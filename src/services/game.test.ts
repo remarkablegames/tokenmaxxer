@@ -67,9 +67,13 @@ describe('game calculations', () => {
     expect(
       UPGRADES.find(({ id }) => id === 'contextCompaction')?.baseCost,
     ).toBe(5_000);
-    expect(UPGRADES.find(({ id }) => id === 'overclock')?.baseCost).toBe(
-      25_000,
+    expect(UPGRADES.find(({ id }) => id === 'contextCompaction')?.growth).toBe(
+      1.3,
     );
+    expect(UPGRADES.find(({ id }) => id === 'overclock')).toMatchObject({
+      baseCost: 25_000,
+      growth: 1.4,
+    });
     expect(UPGRADES.find(({ id }) => id === 'critical')).toMatchObject({
       description: '+1% critical click chance',
       maxLevel: 30,
