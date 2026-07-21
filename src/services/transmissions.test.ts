@@ -9,8 +9,8 @@ import {
 
 describe('narrative transmissions', () => {
   it('defines a varied, prioritized office narrative', () => {
-    expect(TRANSMISSIONS).toHaveLength(92);
-    expect(new Set(TRANSMISSIONS.map(({ id }) => id)).size).toBe(92);
+    expect(TRANSMISSIONS).toHaveLength(96);
+    expect(new Set(TRANSMISSIONS.map(({ id }) => id)).size).toBe(96);
     expect(new Set(TRANSMISSIONS.map(({ sender }) => sender)).size).toBe(14);
     expect(TRANSMISSIONS.every(({ priority }) => priority > 0)).toBe(true);
     expect(
@@ -38,6 +38,8 @@ describe('narrative transmissions', () => {
         'tokens-per-second',
         'ability-uses',
         'session',
+        'rebuild',
+        'reclaimed-high-score',
       ]),
     );
   });
@@ -68,6 +70,7 @@ describe('narrative transmissions', () => {
     progress.upgrades.orbital = 1;
     progress.abilities.surge.cooldown = 1;
     progress.abilities.hyperfocus.remaining = 1;
+    progress.highScoreLevel = 22;
     progress.bonuses = Array.from({ length: 22 }, (_, index) => index);
 
     expect(getEligibleTransmissions(progress).map(({ id }) => id)).toEqual(
@@ -163,6 +166,44 @@ describe('narrative transmissions', () => {
         'hundredth-prestige',
       ]),
     );
+  });
+
+  it('unlocks new narrative beats while rebuilding after a prestige', () => {
+    const progress = createInitialProgress();
+    progress.stats.prestiges = 1;
+
+    const newSessionIds = (): string[] =>
+      getEligibleTransmissions(progress)
+        .filter(({ id }) => id.startsWith('new-session-'))
+        .map(({ id }) => id);
+
+    expect(newSessionIds()).toEqual([]);
+
+    progress.upgrades.gpu = 1;
+    expect(newSessionIds()).toEqual(['new-session-automation']);
+
+    progress.highScoreLevel = 3;
+    expect(newSessionIds()).toEqual([
+      'new-session-automation',
+      'new-session-100k',
+    ]);
+
+    progress.stats.prestiges = 2;
+    progress.upgrades.model = 1;
+    expect(newSessionIds()).toEqual([
+      'new-session-automation',
+      'new-session-100k',
+      'new-session-model',
+    ]);
+
+    progress.stats.prestiges = 3;
+    progress.highScoreLevel = 6;
+    expect(newSessionIds()).toEqual([
+      'new-session-automation',
+      'new-session-100k',
+      'new-session-model',
+      'new-session-100m',
+    ]);
   });
 
   it('delays the first critical message until 200 total clicks', () => {

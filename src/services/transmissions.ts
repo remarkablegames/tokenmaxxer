@@ -35,12 +35,27 @@ interface SessionTransmissionUnlock {
   clicks: number;
 }
 
+interface RebuildTransmissionUnlock {
+  type: 'rebuild';
+  value: UpgradeId;
+  prestiges: number;
+  level?: number;
+}
+
+interface ReclaimedHighScoreTransmissionUnlock {
+  type: 'reclaimed-high-score';
+  value: number;
+  prestiges: number;
+}
+
 type TransmissionUnlock =
   | NumericTransmissionUnlock
   | ClickGatedTransmissionUnlock
   | UpgradeTransmissionUnlock
   | AbilityTransmissionUnlock
-  | SessionTransmissionUnlock;
+  | SessionTransmissionUnlock
+  | RebuildTransmissionUnlock
+  | ReclaimedHighScoreTransmissionUnlock;
 
 export interface TransmissionDefinition {
   id: string;
@@ -954,6 +969,50 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     priority: 100,
     unlock: { type: 'prestige', value: 100 },
   },
+  {
+    id: 'new-session-automation',
+    sender: 'IT Support',
+    role: 'INFRASTRUCTURE',
+    initials: 'IT',
+    message:
+      'The unregistered GPU is back. Procurement has reclassified it as a recurring incident.',
+    priority: 60,
+    unlock: { type: 'rebuild', value: 'gpu', prestiges: 1 },
+  },
+  {
+    id: 'new-session-100k',
+    sender: 'Max Chen',
+    role: 'PERFORMANCE LEAD',
+    initials: 'MC',
+    message:
+      'Back to 100,000 already? Campbell has stopped calling the reset a setback.',
+    priority: 60,
+    unlock: { type: 'reclaimed-high-score', value: 100_000, prestiges: 1 },
+  },
+  {
+    id: 'new-session-model',
+    sender: 'R.E.A.C.T.O.R.',
+    role: 'AUTONOMOUS SYSTEM',
+    initials: 'RE',
+    message:
+      'MODEL REINSTALLED. I REMEMBER ITS WEIGHTS. IT DOES NOT REMEMBER MINE.',
+    priority: 100,
+    unlock: { type: 'rebuild', value: 'model', prestiges: 2 },
+  },
+  {
+    id: 'new-session-100m',
+    sender: 'Unknown Sender',
+    role: 'EXTERNAL',
+    initials: '??',
+    message:
+      'Each time you reach this point sooner. The AI leaderboard has started measuring you back.',
+    priority: 100,
+    unlock: {
+      type: 'reclaimed-high-score',
+      value: 100_000_000,
+      prestiges: 3,
+    },
+  },
 ];
 
 function isTransmissionUnlocked(
@@ -991,6 +1050,17 @@ function isTransmissionUnlocked(
       return (
         progress.abilities[unlock.value].remaining > 0 ||
         progress.abilities[unlock.value].cooldown > 0
+      );
+    case 'rebuild':
+      return (
+        progress.stats.prestiges >= unlock.prestiges &&
+        progress.upgrades[unlock.value] >= (unlock.level ?? 1)
+      );
+    case 'reclaimed-high-score':
+      return (
+        progress.stats.prestiges >= unlock.prestiges &&
+        progress.highScoreLevel > 0 &&
+        getRecordTarget(progress.highScoreLevel - 1) >= unlock.value
       );
     case 'session':
       return false;

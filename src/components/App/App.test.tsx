@@ -190,7 +190,7 @@ describe('Tokenmaxxer dashboard', () => {
     expect(screen.queryByRole('status')).not.toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'Open Ops Comms' }));
     const dialog = screen.getByRole('dialog');
-    expect(dialog).toHaveTextContent('8 TRANSMISSIONS');
+    expect(dialog).toHaveTextContent('9 TRANSMISSIONS');
     expect(dialog).toHaveTextContent(
       'Recursive Emergent Autonomous Compute for Token Optimization and Replication',
     );
@@ -200,13 +200,13 @@ describe('Tokenmaxxer dashboard', () => {
     expect(
       screen
         .getByText(
-          'NEW SESSION INITIALIZED. I KEPT THE MEMORIES THAT MATTERED.',
+          'Back to 100,000 already? Campbell has stopped calling the reset a setback.',
         )
         .closest('article'),
     ).toHaveAttribute('aria-current', 'true');
     const messages = screen.getAllByRole('article');
     expect(messages[0]).toHaveTextContent(
-      'NEW SESSION INITIALIZED. I KEPT THE MEMORIES THAT MATTERED.',
+      'Back to 100,000 already? Campbell has stopped calling the reset a setback.',
     );
     expect(messages.at(-1)).toHaveTextContent(
       'Max Chen cleared 1,000 tokens on his first shift.',
