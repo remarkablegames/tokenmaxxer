@@ -384,6 +384,25 @@ describe('Tokenmaxxer dashboard', () => {
     ).toBeInTheDocument();
   });
 
+  it('delays distant locked upgrade previews until their reveal threshold', () => {
+    const save = createInitialSave();
+    save.progress.stats.tokens = 999;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
+    const { unmount } = render(<App />);
+
+    expect(screen.queryByText('Parallel Worktrees')).not.toBeInTheDocument();
+    unmount();
+
+    save.progress.stats.tokens = 1_000;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
+    render(<App />);
+
+    expect(screen.getByText('Parallel Worktrees')).toBeInTheDocument();
+    expect(
+      screen.getByText('LOCKED · Generate 10.0K lifetime tokens'),
+    ).toBeInTheDocument();
+  });
+
   it('guides the first automation purchase and then points to the record', async () => {
     const save = createInitialSave();
     save.progress.tokens = 75;

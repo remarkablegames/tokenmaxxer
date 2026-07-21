@@ -25,6 +25,7 @@ export interface UpgradeDefinition {
   category: UpgradeCategory;
   baseCost: number;
   growth: number;
+  revealAt: number;
   unlockAt: number;
   icon: string;
 }

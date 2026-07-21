@@ -118,15 +118,10 @@ function getVisibleUpgrades(
   progress: GameProgress,
   category: UpgradeCategory,
 ): UpgradeDefinition[] {
-  const categoryUpgrades = UPGRADES.filter(
-    (upgrade) => upgrade.category === category,
-  );
-  const nextLocked = categoryUpgrades
-    .filter((upgrade) => progress.stats.tokens < upgrade.unlockAt)
-    .sort((a, b) => a.unlockAt - b.unlockAt)[0];
-  return categoryUpgrades.filter(
+  return UPGRADES.filter(
     (upgrade) =>
-      progress.stats.tokens >= upgrade.unlockAt || upgrade === nextLocked,
+      upgrade.category === category &&
+      progress.stats.tokens >= upgrade.revealAt,
   );
 }
 
