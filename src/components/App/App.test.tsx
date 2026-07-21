@@ -764,6 +764,7 @@ describe('Tokenmaxxer dashboard', () => {
     initial.progress.upgrades.gpu = 1;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(initial));
     let frameCallback: FrameRequestCallback = () => undefined;
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     vi.mocked(window.requestAnimationFrame).mockImplementation((callback) => {
       frameCallback = callback;
       return 1;
