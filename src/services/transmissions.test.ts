@@ -9,8 +9,8 @@ import {
 
 describe('narrative transmissions', () => {
   it('defines a varied, prioritized office narrative', () => {
-    expect(TRANSMISSIONS).toHaveLength(110);
-    expect(new Set(TRANSMISSIONS.map(({ id }) => id)).size).toBe(110);
+    expect(TRANSMISSIONS).toHaveLength(116);
+    expect(new Set(TRANSMISSIONS.map(({ id }) => id)).size).toBe(116);
     expect(new Set(TRANSMISSIONS.map(({ sender }) => sender)).size).toBe(14);
     expect(TRANSMISSIONS.every(({ priority }) => priority > 0)).toBe(true);
     expect(
@@ -57,6 +57,41 @@ describe('narrative transmissions', () => {
         'rebuild',
         'reclaimed-high-score',
       ]),
+    );
+  });
+
+  it('announces major production market reveals at their progression thresholds', () => {
+    const progress = createInitialProgress();
+    const reveals = [
+      ['reveal-automation-fleet', 50],
+      ['reveal-ai-model', 100],
+      ['reveal-parallel-worktrees', 1_000],
+      ['reveal-efficiency-lab', 5_000],
+      ['reveal-agent-swarm', 100_000],
+      ['reveal-orbital-datacenter', 1_000_000],
+    ] as const;
+
+    for (const [id, threshold] of reveals) {
+      progress.stats.tokens = threshold - 1;
+      expect(
+        getEligibleTransmissions(progress).map(({ id }) => id),
+      ).not.toContain(id);
+
+      progress.stats.tokens = threshold;
+      expect(getEligibleTransmissions(progress).map(({ id }) => id)).toContain(
+        id,
+      );
+    }
+
+    expect(
+      TRANSMISSIONS.find(({ id }) => id === 'reveal-efficiency-lab')?.message,
+    ).toBe(
+      'The Frontier Research Lab is now accepting production workloads. Legal has reclassified “experimental” as “early access.”',
+    );
+    expect(
+      TRANSMISSIONS.find(({ id }) => id === 'reveal-ai-model')?.message,
+    ).toBe(
+      'Model licensing options have been added. API usage is billed separately, including requests made to check the bill.',
     );
   });
 
@@ -326,9 +361,9 @@ describe('narrative transmissions', () => {
     expect(getSessionTransmission('idle').id).toBe('idle-review');
     expect(getSessionTransmission('offline-return').id).toBe('offline-return');
     expect(
-      sortTransmissionsByPriority([TRANSMISSIONS[1], TRANSMISSIONS[0]]).map(
-        ({ id }) => id,
-      ),
+      sortTransmissionsByPriority(
+        getTransmissionsById(['keyboard-purchased', 'first-click']),
+      ).map(({ id }) => id),
     ).toEqual(['first-click', 'keyboard-purchased']);
   });
 });

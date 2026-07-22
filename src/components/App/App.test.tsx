@@ -162,7 +162,7 @@ describe('Tokenmaxxer dashboard', () => {
     await user.click(screen.getByRole('button', { name: /activate reactor/i }));
     await user.click(screen.getByRole('button', { name: 'Close' }));
     expect(
-      screen.getByRole('button', { name: 'Open Ops Comms, 2 unread' }),
+      screen.getByRole('button', { name: 'Open Ops Comms, 3 unread' }),
     ).toBeInTheDocument();
     await user.click(
       screen.getByRole('button', {
