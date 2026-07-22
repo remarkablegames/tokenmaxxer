@@ -17,6 +17,66 @@ const STAGE_NAMES = [
   'Cosmic Token Reactor',
 ];
 
+interface ReactorPalette {
+  accent: string;
+  core: string;
+  edge: string;
+  orbit: string;
+  outerRing: string;
+  ring: string;
+}
+
+const REACTOR_PALETTES: ReactorPalette[] = [
+  {
+    accent: '#67e8f9',
+    core: '#67e8f9',
+    edge: '#0891b2',
+    orbit: '#22d3ee',
+    outerRing: '#164e63',
+    ring: '#22d3ee',
+  },
+  {
+    accent: '#7dd3fc',
+    core: '#38bdf8',
+    edge: '#2563eb',
+    orbit: '#38bdf8',
+    outerRing: '#1e3a8a',
+    ring: '#38bdf8',
+  },
+  {
+    accent: '#a78bfa',
+    core: '#818cf8',
+    edge: '#6d28d9',
+    orbit: '#a78bfa',
+    outerRing: '#312e81',
+    ring: '#818cf8',
+  },
+  {
+    accent: '#e879f9',
+    core: '#c084fc',
+    edge: '#a21caf',
+    orbit: '#e879f9',
+    outerRing: '#581c87',
+    ring: '#d946ef',
+  },
+  {
+    accent: '#fb923c',
+    core: '#fbbf24',
+    edge: '#f97316',
+    orbit: '#fbbf24',
+    outerRing: '#78350f',
+    ring: '#f59e0b',
+  },
+  {
+    accent: '#fb7185',
+    core: '#fb923c',
+    edge: '#dc2626',
+    orbit: '#ef4444',
+    outerRing: '#7f1d1d',
+    ring: '#f97316',
+  },
+];
+
 export function Reactor({
   stage,
   label,
@@ -25,6 +85,7 @@ export function Reactor({
   onActivate,
 }: ReactorProps) {
   const satellites = Array.from({ length: stage + 2 }, (_, index) => index);
+  const palette = REACTOR_PALETTES[stage];
 
   return (
     <button
@@ -41,15 +102,8 @@ export function Reactor({
         <defs>
           <radialGradient id="core-gradient">
             <stop offset="0" stopColor="#fff" />
-            <stop
-              offset="0.25"
-              stopColor={stage >= 4 ? '#fbbf24' : '#67e8f9'}
-            />
-            <stop
-              offset="1"
-              stopColor={stage >= 5 ? '#a855f7' : '#0891b2'}
-              stopOpacity="0.12"
-            />
+            <stop offset="0.25" stopColor={palette.core} />
+            <stop offset="1" stopColor={palette.edge} stopOpacity="0.12" />
           </radialGradient>
           <filter id="core-glow" x="-100%" y="-100%" width="300%" height="300%">
             <feGaussianBlur stdDeviation="8" result="blur" />
@@ -65,7 +119,7 @@ export function Reactor({
           cy="200"
           fill="none"
           r="170"
-          stroke="#164e63"
+          stroke={palette.outerRing}
           strokeDasharray="8 12"
           strokeWidth="2"
         />
@@ -75,7 +129,7 @@ export function Reactor({
           cy="200"
           fill="none"
           r="142"
-          stroke={stage >= 3 ? '#a855f7' : '#22d3ee'}
+          stroke={palette.ring}
           strokeDasharray="3 18"
           strokeLinecap="round"
           strokeWidth="5"
@@ -111,7 +165,7 @@ export function Reactor({
             className="reactor-ring reactor-ring-reverse"
             d="M78 200a122 122 0 0 1 244 0"
             fill="none"
-            stroke="#c084fc"
+            stroke={palette.accent}
             strokeDasharray="24 12"
             strokeWidth="4"
           />
@@ -124,7 +178,7 @@ export function Reactor({
             fill="none"
             rx="178"
             ry="54"
-            stroke="#fbbf24"
+            stroke={palette.orbit}
             strokeWidth="3"
           />
         )}
@@ -141,7 +195,7 @@ export function Reactor({
           cy="200"
           fill="#071525"
           r="66"
-          stroke={stage >= 4 ? '#fbbf24' : '#67e8f9'}
+          stroke={palette.core}
           strokeWidth="3"
         />
         <path
