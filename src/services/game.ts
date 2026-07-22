@@ -109,7 +109,7 @@ export const UPGRADES: UpgradeDefinition[] = [
   {
     id: 'orbital',
     name: 'Orbital Datacenter',
-    description: '+6,000 tokens per second',
+    description: '+5,000 tokens per second',
     category: 'automation',
     baseCost: 1_000_000,
     growth: 1.18,
@@ -285,7 +285,7 @@ export function calculateMetrics(progress: GameProgress): ProductionMetrics {
     u.rack * 12 +
     u.engineer * 100 +
     u.agentSwarm * 800 +
-    u.orbital * 6_000;
+    u.orbital * 5_000;
   const automationMultiplier =
     1 + u.overclock * 0.3 + u.contextCompaction * 0.15;
   const tokenMultiplier = getTokenMultiplier(progress.prestigeLevel);

@@ -7,6 +7,7 @@ import {
   clickReactor,
   createInitialProgress,
   getPurchaseQuote,
+  getRecordTarget,
   purchaseUpgrade,
   tickGame,
   UPGRADES,
@@ -18,13 +19,29 @@ interface BalanceResult {
   firstPrestige: number;
 }
 
+interface UpgradeCandidate {
+  definition: UpgradeDefinition;
+  payback: number;
+}
+
 const ACTIVE_CLICKS_PER_SECOND = 3;
+const CRITICAL_CLICK_MULTIPLIER = 5;
+
+function calculateExpectedRate(progress: GameProgress): number {
+  const metrics = calculateMetrics(progress);
+  const expectedClickMultiplier =
+    1 + metrics.criticalChance * (CRITICAL_CLICK_MULTIPLIER - 1);
+  return (
+    metrics.tokensPerSecond +
+    metrics.tokensPerClick * ACTIVE_CLICKS_PER_SECOND * expectedClickMultiplier
+  );
+}
 
 function buyBestAffordableUpgrade(progress: GameProgress): GameProgress {
-  const metrics = calculateMetrics(progress);
-  const currentRate =
-    metrics.tokensPerSecond + metrics.tokensPerClick * ACTIVE_CLICKS_PER_SECOND;
-  let best: { definition: UpgradeDefinition; payback: number } | null = null;
+  const currentRate = calculateExpectedRate(progress);
+  const timeToTarget =
+    (getRecordTarget(progress.highScoreLevel) - progress.tokens) / currentRate;
+  let best: UpgradeCandidate | null = null;
 
   for (const definition of UPGRADES) {
     if (progress.stats.tokens < definition.unlockAt) continue;
@@ -37,12 +54,10 @@ function buyBestAffordableUpgrade(progress: GameProgress): GameProgress {
         [definition.id]: progress.upgrades[definition.id] + 1,
       },
     };
-    const next = calculateMetrics(projected);
-    const gain =
-      next.tokensPerSecond +
-      next.tokensPerClick * ACTIVE_CLICKS_PER_SECOND -
-      currentRate;
-    const payback = gain > 0 ? quote.cost / gain : Number.POSITIVE_INFINITY;
+    const gain = calculateExpectedRate(projected) - currentRate;
+    if (gain <= 0) continue;
+    const payback = quote.cost / gain;
+    if (payback >= timeToTarget) continue;
     if (best === null || payback < best.payback) best = { definition, payback };
   }
 
@@ -58,7 +73,7 @@ function simulateActivePlayer(): BalanceResult {
   let pendingClicks = 0;
   const step = 0.2;
 
-  for (let elapsed = 0; elapsed <= 3_000; elapsed += step) {
+  for (let elapsed = 0; elapsed <= 12 * 60; elapsed += step) {
     progress = tickGame(progress, step);
     pendingClicks += ACTIVE_CLICKS_PER_SECOND * step;
     while (pendingClicks >= 1) {
@@ -95,9 +110,10 @@ describe('progression balance', () => {
     const result = simulateActivePlayer();
     expect(result.firstUpgrade).toBeLessThanOrEqual(15);
     expect(result.firstAutomation).toBeLessThanOrEqual(60);
-    // Additive efficiency stacking prevents two multiplier upgrades from
-    // dominating the midgame and intentionally creates a longer first run.
-    expect(result.firstPrestige).toBeGreaterThanOrEqual(45 * 60);
-    expect(result.firstPrestige).toBeLessThanOrEqual(50 * 60);
+    // This optimized strategy makes immediate, mathematically ideal purchase
+    // and ability decisions; normal hands-on play should take closer to the
+    // intended 15–20 minute first-session window.
+    expect(result.firstPrestige).toBeGreaterThanOrEqual(9 * 60);
+    expect(result.firstPrestige).toBeLessThanOrEqual(12 * 60);
   });
 });

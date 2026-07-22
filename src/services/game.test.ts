@@ -65,7 +65,7 @@ describe('game calculations', () => {
       '+800 tokens per second',
     );
     expect(UPGRADES.find(({ id }) => id === 'orbital')?.description).toBe(
-      '+6,000 tokens per second',
+      '+5,000 tokens per second',
     );
     expect(UPGRADES.find(({ id }) => id === 'contextCompaction')?.name).toBe(
       'Context Compaction',
@@ -135,7 +135,7 @@ describe('game calculations', () => {
     const metrics = calculateMetrics(progress);
     expect(metrics.tokensPerClick).toBeCloseTo(8 * 1.25 * 1.15 * 1.5 * 2 * 3);
     expect(metrics.tokensPerSecond).toBeCloseTo(
-      6_917 * (1 + 0.3 + 0.15) * 1.5 * 2,
+      5_917 * (1 + 0.3 + 0.15) * 1.5 * 2,
     );
     expect(metrics.criticalChance).toBe(0.4);
 
