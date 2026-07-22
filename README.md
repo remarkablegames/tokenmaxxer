@@ -91,7 +91,3 @@ http://localhost:5173/?tokens=100000000
 ```
 http://localhost:5173/?preview=prestige&tokens=250000000
 ```
-
-## License
-
-[MIT](LICENSE)
