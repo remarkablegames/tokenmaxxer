@@ -9,8 +9,8 @@ import {
 
 describe('narrative transmissions', () => {
   it('defines a varied, prioritized office narrative', () => {
-    expect(TRANSMISSIONS).toHaveLength(108);
-    expect(new Set(TRANSMISSIONS.map(({ id }) => id)).size).toBe(108);
+    expect(TRANSMISSIONS).toHaveLength(110);
+    expect(new Set(TRANSMISSIONS.map(({ id }) => id)).size).toBe(110);
     expect(new Set(TRANSMISSIONS.map(({ sender }) => sender)).size).toBe(14);
     expect(TRANSMISSIONS.every(({ priority }) => priority > 0)).toBe(true);
     expect(
@@ -74,7 +74,7 @@ describe('narrative transmissions', () => {
     progress.upgrades.keyboard = 1;
     progress.upgrades.templates = 1;
     progress.upgrades.gpu = 1;
-    progress.upgrades.model = 75;
+    progress.upgrades.model = 85;
     progress.upgrades.rack = 1;
     progress.upgrades.worktrees = 1;
     progress.upgrades.contextCompaction = 1;
@@ -105,7 +105,7 @@ describe('narrative transmissions', () => {
         .map(({ id }) => id),
     ).toEqual(['model-croak', 'model-croak-social']);
 
-    progress.upgrades.model = 75;
+    progress.upgrades.model = 85;
     expect(
       getEligibleTransmissions(progress)
         .filter(({ id }) => id.startsWith('model-'))
@@ -125,6 +125,8 @@ describe('narrative transmissions', () => {
       'model-deepthunk-training',
       'model-babble',
       'model-babble-access',
+      'model-gimme-k05',
+      'model-gimme-k05-attention',
       'model-legendos',
       'model-legendos-firewall',
     ]);
@@ -160,6 +162,16 @@ describe('narrative transmissions', () => {
     expect(modelTransmissionIds()).not.toContain('model-babble-access');
     progress.upgrades.model = 65;
     expect(modelTransmissionIds()).toContain('model-babble-access');
+
+    progress.upgrades.model = 74;
+    expect(modelTransmissionIds()).not.toContain('model-gimme-k05-attention');
+    progress.upgrades.model = 75;
+    expect(modelTransmissionIds()).toContain('model-gimme-k05-attention');
+
+    progress.upgrades.model = 84;
+    expect(modelTransmissionIds()).not.toContain('model-legendos-firewall');
+    progress.upgrades.model = 85;
+    expect(modelTransmissionIds()).toContain('model-legendos-firewall');
   });
 
   it('paces engagement satire across distinct progression triggers', () => {
@@ -201,7 +213,7 @@ describe('narrative transmissions', () => {
 
   it('continues narrative rewards throughout the extended endgame', () => {
     const progress = createInitialProgress();
-    progress.upgrades.model = 75;
+    progress.upgrades.model = 85;
     progress.stats.highestTps = 1_000_000_000_000;
     progress.stats.clicks = 50_000;
     progress.stats.abilitiesUsed = 100;

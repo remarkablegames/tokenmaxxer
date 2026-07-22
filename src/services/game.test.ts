@@ -118,7 +118,10 @@ describe('game calculations', () => {
     expect(getAiModelDeployment(40)).toBe('Claudio');
     expect(getAiModelDeployment(50)).toBe('DeepThunk');
     expect(getAiModelDeployment(60)).toBe('Babble');
-    expect(getAiModelDeployment(70)).toBe('LegendOS');
+    expect(getAiModelDeployment(69)).toBe('Babble');
+    expect(getAiModelDeployment(70)).toBe('Gimme K0.5');
+    expect(getAiModelDeployment(79)).toBe('Gimme K0.5');
+    expect(getAiModelDeployment(80)).toBe('LegendOS');
     expect(getUpgradeDescription(UPGRADES[0], 1)).toBe(
       '+1 base token per click',
     );

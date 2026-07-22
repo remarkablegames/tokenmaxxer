@@ -239,6 +239,26 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     unlock: { type: 'upgrade', value: 'model', level: 65 },
   },
   {
+    id: 'model-gimme-k05',
+    sender: 'Finance',
+    role: 'FINANCE',
+    initials: 'FN',
+    message:
+      'Finance secured a Gimme K0.5 license minutes before signups closed. Please classify the refresh button as a procurement tool.',
+    priority: 60,
+    unlock: { type: 'upgrade', value: 'model', level: 70 },
+  },
+  {
+    id: 'model-gimme-k05-attention',
+    sender: 'Quality Assurance',
+    role: 'QUALITY ASSURANCE',
+    initials: 'QA',
+    message:
+      'Gimme K0.5 has one trillion parameters and 64 attention heads. It still missed the action item.',
+    priority: 60,
+    unlock: { type: 'upgrade', value: 'model', level: 75 },
+  },
+  {
     id: 'model-legendos',
     sender: 'Ops Security',
     role: 'SECURITY',
@@ -246,7 +266,7 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     message:
       'LegendOS cost more than our entire security budget. The vendor claims it can bypass any system that budget could have protected.',
     priority: 100,
-    unlock: { type: 'upgrade', value: 'model', level: 70 },
+    unlock: { type: 'upgrade', value: 'model', level: 80 },
   },
   {
     id: 'model-legendos-firewall',
@@ -256,7 +276,7 @@ export const TRANSMISSIONS: TransmissionDefinition[] = [
     message:
       'LegendOS completed penetration testing by reclassifying every firewall as a suggestion.',
     priority: 100,
-    unlock: { type: 'upgrade', value: 'model', level: 75 },
+    unlock: { type: 'upgrade', value: 'model', level: 85 },
   },
   {
     id: 'first-critical',

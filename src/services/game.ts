@@ -210,7 +210,8 @@ export function getReactorStage(highScoreLevel: number): number {
 }
 
 export function getAiModelDeployment(level: number): string | null {
-  if (level >= 70) return 'LegendOS';
+  if (level >= 80) return 'LegendOS';
+  if (level >= 70) return 'Gimme K0.5';
   if (level >= 60) return 'Babble';
   if (level >= 50) return 'DeepThunk';
   if (level >= 40) return 'Claudio';
