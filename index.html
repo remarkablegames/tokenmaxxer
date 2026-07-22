@@ -18,5 +18,13 @@
     <noscript>You need to enable JavaScript to run this game.</noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script type="module">
+      if (import.meta.env.WAVEDASH === 'true') {
+        import('https://esm.sh/@wvdsh/sdk-js@1.3.37').then((Wavedash) => {
+          Wavedash.updateLoadProgressZeroToOne(1);
+          Wavedash.init();
+        });
+      }
+    </script>
   </body>
 </html>
