@@ -409,6 +409,20 @@ describe('Tokenmaxxer dashboard', () => {
     expect(screen.getByText('Bring Automation Online')).toBeInTheDocument();
   });
 
+  it('accepts another automation producer instead of guiding Used GPU forever', () => {
+    const save = createInitialSave();
+    save.progress.stats.clicks = 1;
+    save.progress.stats.tokens = 250;
+    save.progress.upgrades.model = 1;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
+    render(<App />);
+
+    expect(screen.getByText('Chase the First Record')).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /used gpu/i }),
+    ).not.toHaveAttribute('data-guided');
+  });
+
   it('delays distant locked upgrade previews until their reveal threshold', () => {
     const save = createInitialSave();
     save.progress.stats.tokens = 199;

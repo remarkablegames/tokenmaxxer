@@ -84,6 +84,19 @@ const SHELL_CLASS = 'mx-auto w-full max-w-400 px-3 sm:px-6';
 const ACTIVE_BONUS_CLASS =
   "relative isolate rounded-full border border-amber-300/30 bg-cyan-400/6 px-3 py-1.5 text-amber-300 shadow-[0_0_10px_rgb(251_191_36/0.14)] after:pointer-events-none after:absolute after:-inset-1 after:-z-10 after:animate-pulse after:rounded-full after:bg-amber-300/20 after:blur-md after:content-['']";
 
+function hasAutomationProducer(progress: GameProgress): boolean {
+  const { upgrades } = progress;
+  return (
+    upgrades.gpu +
+      upgrades.model +
+      upgrades.rack +
+      upgrades.engineer +
+      upgrades.agentSwarm +
+      upgrades.orbital >
+    0
+  );
+}
+
 function getOnboardingObjective(
   progress: GameProgress,
 ): OnboardingObjective | null {
@@ -102,7 +115,7 @@ function getOnboardingObjective(
       description:
         'Buy Mechanical Keyboard, or generate 50 lifetime tokens to continue.',
     };
-  if (progress.upgrades.gpu === 0)
+  if (!hasAutomationProducer(progress))
     return {
       step: 3,
       title: 'Bring Automation Online',
@@ -990,11 +1003,13 @@ export function App() {
                       1,
                     ).cost;
                     const guided =
-                      (upgrade.id === 'keyboard' &&
+                      (onboardingObjective?.step === 2 &&
+                        upgrade.id === 'keyboard' &&
                         progress.stats.clicks > 0 &&
                         progress.upgrades.keyboard === 0 &&
                         quote.count > 0) ||
-                      (upgrade.id === 'gpu' &&
+                      (onboardingObjective?.step === 3 &&
+                        upgrade.id === 'gpu' &&
                         progress.upgrades.gpu === 0 &&
                         quote.count > 0);
                     return (
