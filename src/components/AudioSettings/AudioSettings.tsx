@@ -10,7 +10,7 @@ interface AudioSettingsProps {
 }
 
 const TOGGLE_CLASS =
-  'min-w-18 cursor-pointer rounded-full border border-cyan-400/25 bg-cyan-400/10 px-3 py-2 text-xs font-extrabold text-cyan-300';
+  'min-w-18 cursor-pointer select-none rounded-full border border-cyan-400/25 bg-cyan-400/10 px-3 py-2 text-xs font-extrabold text-cyan-300';
 
 export function AudioSettings({
   onEffectsVolumeChange,

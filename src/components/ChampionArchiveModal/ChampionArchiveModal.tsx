@@ -41,7 +41,7 @@ export function ChampionArchiveModal({
         <button
           aria-controls="archive-panel"
           aria-selected={activeTab === 'milestones'}
-          className={`cursor-pointer rounded-lg px-4 py-3 text-sm font-extrabold transition-colors ${activeTab === 'milestones' ? 'bg-cyan-400/12 text-cyan-200' : 'text-slate-400 hover:text-slate-200'}`}
+          className={`cursor-pointer rounded-lg px-4 py-3 text-sm font-extrabold transition-colors select-none ${activeTab === 'milestones' ? 'bg-cyan-400/12 text-cyan-200' : 'text-slate-400 hover:text-slate-200'}`}
           id="milestones-tab"
           onClick={() => {
             onSelectTab?.();
@@ -55,7 +55,7 @@ export function ChampionArchiveModal({
         <button
           aria-controls="archive-panel"
           aria-selected={activeTab === 'achievements'}
-          className={`cursor-pointer rounded-lg px-4 py-3 text-sm font-extrabold transition-colors ${activeTab === 'achievements' ? 'bg-cyan-400/12 text-cyan-200' : 'text-slate-400 hover:text-slate-200'}`}
+          className={`cursor-pointer rounded-lg px-4 py-3 text-sm font-extrabold transition-colors select-none ${activeTab === 'achievements' ? 'bg-cyan-400/12 text-cyan-200' : 'text-slate-400 hover:text-slate-200'}`}
           id="achievements-tab"
           onClick={() => {
             onSelectTab?.();

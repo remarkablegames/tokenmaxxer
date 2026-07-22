@@ -85,7 +85,7 @@ export function CommsNotification({
     >
       <button
         aria-label={`Open message from ${transmission.sender}`}
-        className="flex w-full cursor-pointer gap-3 pr-7 text-left"
+        className="flex w-full cursor-pointer gap-3 pr-7 text-left select-none"
         onClick={onOpen}
         type="button"
       >
@@ -111,7 +111,7 @@ export function CommsNotification({
       </button>
       <button
         aria-label={`Dismiss notification from ${transmission.sender}`}
-        className="absolute top-2 right-2 grid size-7 cursor-pointer place-items-center rounded-full text-base text-slate-400 opacity-0 transition group-focus-within:opacity-100 group-hover:opacity-100 hover:bg-white/8 hover:text-white focus:opacity-100 focus-visible:outline-2 focus-visible:outline-cyan-300 max-sm:opacity-100 [@media(hover:none)]:opacity-100"
+        className="absolute top-2 right-2 grid size-7 cursor-pointer place-items-center rounded-full text-base text-slate-400 opacity-0 transition select-none group-focus-within:opacity-100 group-hover:opacity-100 hover:bg-white/8 hover:text-white focus:opacity-100 focus-visible:outline-2 focus-visible:outline-cyan-300 max-sm:opacity-100 [@media(hover:none)]:opacity-100"
         onClick={onDismiss}
         type="button"
       >

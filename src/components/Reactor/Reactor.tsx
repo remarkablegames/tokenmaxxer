@@ -29,7 +29,7 @@ export function Reactor({
   return (
     <button
       aria-label={label}
-      className={`group relative mx-auto block aspect-square w-full max-w-108 cursor-pointer rounded-full transition-transform hover:scale-[1.015] focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-cyan-300 active:scale-[.97] max-sm:max-w-80 ${active ? 'saturate-150 [&_.core-aura]:[animation-duration:.28s]' : ''} ${guided ? '[&_.core-aura]:animate-[glow-pulse_1s_ease-in-out_infinite_alternate]' : ''}`}
+      className={`group relative mx-auto block aspect-square w-full max-w-108 cursor-pointer rounded-full transition-transform select-none hover:scale-[1.015] focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-cyan-300 active:scale-[.97] max-sm:max-w-80 ${active ? 'saturate-150 [&_.core-aura]:[animation-duration:.28s]' : ''} ${guided ? '[&_.core-aura]:animate-[glow-pulse_1s_ease-in-out_infinite_alternate]' : ''}`}
       onClick={onActivate}
       type="button"
     >

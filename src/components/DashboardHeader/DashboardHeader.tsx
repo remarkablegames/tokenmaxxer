@@ -13,7 +13,7 @@ interface DashboardHeaderProps {
 }
 
 const ICON_BUTTON_CLASS =
-  'grid size-10 cursor-pointer place-items-center rounded-xl border border-white/10 bg-white/4 text-slate-300 transition-colors hover:border-cyan-300/45 hover:bg-cyan-400/8';
+  'grid size-10 cursor-pointer select-none place-items-center rounded-xl border border-white/10 bg-white/4 text-slate-300 transition-colors hover:border-cyan-300/45 hover:bg-cyan-400/8';
 
 function Stat({
   label,

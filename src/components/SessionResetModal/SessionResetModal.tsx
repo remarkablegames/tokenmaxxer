@@ -65,7 +65,7 @@ export function SessionResetModal({
             </strong>
           </span>
           <button
-            className="cursor-pointer rounded-xl bg-linear-to-r from-cyan-600 to-violet-600 px-5 py-4 text-base font-extrabold text-white transition hover:-translate-y-px hover:brightness-125 disabled:cursor-not-allowed disabled:opacity-40"
+            className="cursor-pointer rounded-xl bg-linear-to-r from-cyan-600 to-violet-600 px-5 py-4 text-base font-extrabold text-white transition select-none hover:-translate-y-px hover:brightness-125 disabled:cursor-not-allowed disabled:opacity-40"
             disabled={pendingPrestigeLevels <= 0}
             onClick={onConfirm}
             type="button"

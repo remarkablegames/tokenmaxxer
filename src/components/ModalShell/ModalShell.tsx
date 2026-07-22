@@ -34,7 +34,7 @@ export function ModalShell({
           </div>
           <button
             aria-label="Close dialog"
-            className="grid size-10 cursor-pointer place-items-center rounded-xl border border-white/10 bg-white/4 text-slate-300 transition-colors hover:border-cyan-300/45 hover:bg-cyan-400/8"
+            className="grid size-10 cursor-pointer place-items-center rounded-xl border border-white/10 bg-white/4 text-slate-300 transition-colors select-none hover:border-cyan-300/45 hover:bg-cyan-400/8"
             onClick={onCloseButton ?? onClose}
             type="button"
           >

@@ -79,7 +79,7 @@ const PANEL_CLASS =
   'rounded-2xl border border-white/8 bg-linear-to-br from-[#0f1e31]/90 to-[#060e1c]/95 shadow-[inset_0_1px_0_rgb(255_255_255/0.035),0_18px_60px_rgb(0_0_0/0.22)]';
 const EYEBROW_CLASS = 'text-xs font-extrabold tracking-[0.2em] text-cyan-300';
 const ACTION_BUTTON_CLASS =
-  'cursor-pointer rounded-xl px-4 py-3 font-extrabold transition hover:-translate-y-px hover:brightness-125 disabled:cursor-not-allowed disabled:opacity-40';
+  'cursor-pointer select-none rounded-xl px-4 py-3 font-extrabold transition hover:-translate-y-px hover:brightness-125 disabled:cursor-not-allowed disabled:opacity-40';
 const SHELL_CLASS = 'mx-auto w-full max-w-400 px-3 sm:px-6';
 const ACTIVE_BONUS_CLASS =
   "relative isolate rounded-full border border-amber-300/30 bg-cyan-400/6 px-3 py-1.5 text-amber-300 shadow-[0_0_10px_rgb(251_191_36/0.14)] after:pointer-events-none after:absolute after:-inset-1 after:-z-10 after:animate-pulse after:rounded-full after:bg-amber-300/20 after:blur-md after:content-['']";
@@ -789,7 +789,7 @@ export function App() {
                   return (
                     <button
                       key={ability.id}
-                      className={`flex w-full cursor-pointer items-center gap-3 rounded-xl border p-3 transition hover:-translate-y-px active:scale-[0.985] disabled:cursor-not-allowed disabled:opacity-70 ${state.remaining > 0 ? 'border-cyan-400/50 bg-cyan-400/6 shadow-[inset_0_0_24px_rgb(34_211_238/0.08)]' : 'border-white/8 bg-white/3 hover:border-cyan-400/45 hover:bg-cyan-400/6'}`}
+                      className={`flex w-full cursor-pointer items-center gap-3 rounded-xl border p-3 transition select-none hover:-translate-y-px active:scale-[0.985] disabled:cursor-not-allowed disabled:opacity-70 ${state.remaining > 0 ? 'border-cyan-400/50 bg-cyan-400/6 shadow-[inset_0_0_24px_rgb(34_211_238/0.08)]' : 'border-white/8 bg-white/3 hover:border-cyan-400/45 hover:bg-cyan-400/6'}`}
                       disabled={!unlocked || state.cooldown > 0}
                       onClick={() => {
                         handleAbility(ability.id);
@@ -871,7 +871,7 @@ export function App() {
               </Panel>
               {showPrestige && (
                 <button
-                  className="flex w-full animate-[modal-in_.35s_ease-out] cursor-pointer items-center justify-between gap-4 rounded-2xl border border-amber-300/30 bg-linear-to-r from-amber-900/25 to-violet-900/20 p-4 text-left disabled:cursor-not-allowed disabled:opacity-75 disabled:saturate-50 [&_small]:block [&_small]:text-xs [&_small]:tracking-[0.15em] [&_small]:text-amber-300 [&_strong]:mt-1 [&_strong]:block [&>span:last-child]:text-xs [&>span:last-child]:text-amber-200"
+                  className="flex w-full animate-[modal-in_.35s_ease-out] cursor-pointer items-center justify-between gap-4 rounded-2xl border border-amber-300/30 bg-linear-to-r from-amber-900/25 to-violet-900/20 p-4 text-left select-none disabled:cursor-not-allowed disabled:opacity-75 disabled:saturate-50 [&_small]:block [&_small]:text-xs [&_small]:tracking-[0.15em] [&_small]:text-amber-300 [&_strong]:mt-1 [&_strong]:block [&>span:last-child]:text-xs [&>span:last-child]:text-amber-200"
                   disabled={progress.pendingPrestigeLevels <= 0}
                   onClick={() => {
                     openModal('prestige');
@@ -968,7 +968,7 @@ export function App() {
               {([1, 10, 'max'] as const).map((mode) => (
                 <button
                   aria-pressed={buyMode === mode}
-                  className="cursor-pointer rounded-md px-2 py-1 text-xs font-extrabold text-slate-400 aria-pressed:bg-cyan-700 aria-pressed:text-white"
+                  className="cursor-pointer rounded-md px-2 py-1 text-xs font-extrabold text-slate-400 select-none aria-pressed:bg-cyan-700 aria-pressed:text-white"
                   key={mode}
                   onClick={() => {
                     playInterfaceSound();
@@ -1014,7 +1014,7 @@ export function App() {
                         quote.count > 0);
                     return (
                       <button
-                        className={`flex w-full cursor-pointer items-center gap-3 rounded-xl border bg-white/3 p-3 transition hover:-translate-y-px hover:border-cyan-400/45 hover:bg-cyan-400/6 active:scale-[0.985] disabled:cursor-not-allowed disabled:opacity-70 ${guided ? 'animate-[guidance-pulse_1.4s_ease-in-out_infinite_alternate] border-cyan-300/60' : 'border-white/8'}`}
+                        className={`flex w-full cursor-pointer items-center gap-3 rounded-xl border bg-white/3 p-3 transition select-none hover:-translate-y-px hover:border-cyan-400/45 hover:bg-cyan-400/6 active:scale-[0.985] disabled:cursor-not-allowed disabled:opacity-70 ${guided ? 'animate-[guidance-pulse_1.4s_ease-in-out_infinite_alternate] border-cyan-300/60' : 'border-white/8'}`}
                         data-guided={guided ? 'true' : undefined}
                         disabled={!unlocked || quote.count === 0}
                         key={upgrade.id}
@@ -1072,7 +1072,7 @@ export function App() {
         <span>LOCAL OPERATIONS · NO NETWORK REQUIRED</span>
         <div className="flex gap-3">
           <button
-            className="cursor-pointer text-slate-500 transition-colors hover:text-cyan-300"
+            className="cursor-pointer text-slate-500 transition-colors select-none hover:text-cyan-300"
             onClick={() => {
               openModal('stats');
             }}
@@ -1081,7 +1081,7 @@ export function App() {
             Statistics
           </button>
           <button
-            className="cursor-pointer text-slate-500 transition-colors hover:text-cyan-300"
+            className="cursor-pointer text-slate-500 transition-colors select-none hover:text-cyan-300"
             onClick={() => {
               openModal('save');
             }}
@@ -1143,7 +1143,7 @@ export function App() {
             </span>
             <button
               autoFocus
-              className="mt-7 min-w-32 cursor-pointer rounded-xl bg-cyan-500 px-4 py-3 text-base font-extrabold text-[#04101c] shadow-[0_0_24px_rgb(6_182_212/0.22)] transition hover:-translate-y-px hover:brightness-125"
+              className="mt-7 min-w-32 cursor-pointer rounded-xl bg-cyan-500 px-4 py-3 text-base font-extrabold text-[#04101c] shadow-[0_0_24px_rgb(6_182_212/0.22)] transition select-none hover:-translate-y-px hover:brightness-125"
               onClick={() => {
                 playInterfaceCloseSound();
                 setCelebration(null);
@@ -1406,7 +1406,7 @@ function ArchiveButton({
 }) {
   return (
     <button
-      className="cursor-pointer rounded-xl border border-white/7 bg-white/3 px-1 py-3 text-center hover:border-amber-300/35"
+      className="cursor-pointer rounded-xl border border-white/7 bg-white/3 px-1 py-3 text-center select-none hover:border-amber-300/35"
       onClick={onClick}
       type="button"
     >
