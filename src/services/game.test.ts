@@ -61,17 +61,27 @@ describe('game calculations', () => {
     expect(UPGRADES.find(({ id }) => id === 'agentSwarm')?.name).toBe(
       'Agent Swarm',
     );
+    expect(UPGRADES.find(({ id }) => id === 'agentSwarm')?.description).toBe(
+      '+800 tokens per second',
+    );
+    expect(UPGRADES.find(({ id }) => id === 'orbital')?.description).toBe(
+      '+6,000 tokens per second',
+    );
     expect(UPGRADES.find(({ id }) => id === 'contextCompaction')?.name).toBe(
       'Context Compaction',
     );
     expect(
       UPGRADES.find(({ id }) => id === 'contextCompaction')?.baseCost,
     ).toBe(5_000);
-    expect(UPGRADES.find(({ id }) => id === 'contextCompaction')?.growth).toBe(
-      1.3,
+    expect(UPGRADES.find(({ id }) => id === 'contextCompaction')).toMatchObject(
+      {
+        description: '×1.15 all production',
+        growth: 1.3,
+      },
     );
     expect(UPGRADES.find(({ id }) => id === 'overclock')).toMatchObject({
       baseCost: 25_000,
+      description: '×1.3 automation output',
       growth: 1.4,
     });
     expect(UPGRADES.find(({ id }) => id === 'critical')).toMatchObject({
@@ -123,9 +133,9 @@ describe('game calculations', () => {
     progress.abilities.surge.remaining = 1;
     progress.abilities.hyperfocus.remaining = 1;
     const metrics = calculateMetrics(progress);
-    expect(metrics.tokensPerClick).toBeCloseTo(8 * 1.25 * 1.2 * 1.5 * 2 * 3);
+    expect(metrics.tokensPerClick).toBeCloseTo(8 * 1.25 * 1.15 * 1.5 * 2 * 3);
     expect(metrics.tokensPerSecond).toBeCloseTo(
-      9_017 * (1 + 0.35 + 0.2) * 1.5 * 2,
+      6_917 * (1 + 0.3 + 0.15) * 1.5 * 2,
     );
     expect(metrics.criticalChance).toBe(0.4);
 

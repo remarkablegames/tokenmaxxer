@@ -18,11 +18,12 @@ interface BalanceResult {
   firstPrestige: number;
 }
 
+const ACTIVE_CLICKS_PER_SECOND = 3;
+
 function buyBestAffordableUpgrade(progress: GameProgress): GameProgress {
-  const clicksPerSecond = 2;
   const metrics = calculateMetrics(progress);
   const currentRate =
-    metrics.tokensPerSecond + metrics.tokensPerClick * clicksPerSecond;
+    metrics.tokensPerSecond + metrics.tokensPerClick * ACTIVE_CLICKS_PER_SECOND;
   let best: { definition: UpgradeDefinition; payback: number } | null = null;
 
   for (const definition of UPGRADES) {
@@ -39,7 +40,7 @@ function buyBestAffordableUpgrade(progress: GameProgress): GameProgress {
     const next = calculateMetrics(projected);
     const gain =
       next.tokensPerSecond +
-      next.tokensPerClick * clicksPerSecond -
+      next.tokensPerClick * ACTIVE_CLICKS_PER_SECOND -
       currentRate;
     const payback = gain > 0 ? quote.cost / gain : Number.POSITIVE_INFINITY;
     if (best === null || payback < best.payback) best = { definition, payback };
@@ -54,12 +55,17 @@ function simulateActivePlayer(): BalanceResult {
   let progress = createInitialProgress();
   let firstUpgrade = -1;
   let firstAutomation = -1;
+  let pendingClicks = 0;
   const step = 0.2;
 
   for (let elapsed = 0; elapsed <= 3_000; elapsed += step) {
     progress = tickGame(progress, step);
-    if (Math.floor(elapsed * 2) !== Math.floor((elapsed - step) * 2))
-      progress = clickReactor(progress, 1).progress;
+    pendingClicks += ACTIVE_CLICKS_PER_SECOND * step;
+    while (pendingClicks >= 1) {
+      const deterministicRoll = ((progress.stats.clicks * 37) % 100) / 100;
+      progress = clickReactor(progress, deterministicRoll).progress;
+      pendingClicks -= 1;
+    }
     for (const ability of ABILITIES)
       progress = activateAbility(progress, ability.id);
 

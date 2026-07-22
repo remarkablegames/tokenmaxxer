@@ -98,7 +98,7 @@ export const UPGRADES: UpgradeDefinition[] = [
   {
     id: 'agentSwarm',
     name: 'Agent Swarm',
-    description: '+900 tokens per second',
+    description: '+800 tokens per second',
     category: 'automation',
     baseCost: 100_000,
     growth: 1.17,
@@ -109,7 +109,7 @@ export const UPGRADES: UpgradeDefinition[] = [
   {
     id: 'orbital',
     name: 'Orbital Datacenter',
-    description: '+8,000 tokens per second',
+    description: '+6,000 tokens per second',
     category: 'automation',
     baseCost: 1_000_000,
     growth: 1.18,
@@ -120,7 +120,7 @@ export const UPGRADES: UpgradeDefinition[] = [
   {
     id: 'contextCompaction',
     name: 'Context Compaction',
-    description: '×1.2 all production',
+    description: '×1.15 all production',
     category: 'efficiency',
     baseCost: 5_000,
     growth: 1.3,
@@ -131,7 +131,7 @@ export const UPGRADES: UpgradeDefinition[] = [
   {
     id: 'overclock',
     name: 'Overclocking',
-    description: '×1.35 automation output',
+    description: '×1.3 automation output',
     category: 'efficiency',
     baseCost: 25_000,
     growth: 1.4,
@@ -278,16 +278,16 @@ export function calculateMetrics(progress: GameProgress): ProductionMetrics {
   const u = progress.upgrades;
   const manualBase = 1 + u.keyboard + u.worktrees * 5;
   const manualMultiplier =
-    (1 + u.templates * 0.25) * (1 + u.contextCompaction * 0.2);
+    (1 + u.templates * 0.25) * (1 + u.contextCompaction * 0.15);
   const automationBase =
     u.gpu +
     u.model * 4 +
     u.rack * 12 +
     u.engineer * 100 +
-    u.agentSwarm * 900 +
-    u.orbital * 8_000;
+    u.agentSwarm * 800 +
+    u.orbital * 6_000;
   const automationMultiplier =
-    1 + u.overclock * 0.35 + u.contextCompaction * 0.2;
+    1 + u.overclock * 0.3 + u.contextCompaction * 0.15;
   const tokenMultiplier = getTokenMultiplier(progress.prestigeLevel);
   const surge = progress.abilities.surge.remaining > 0 ? 2 : 1;
   const hyperfocusActive = progress.abilities.hyperfocus.remaining > 0;
