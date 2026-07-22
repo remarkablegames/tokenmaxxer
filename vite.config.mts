@@ -14,6 +14,10 @@ export default defineConfig({
               name: 'react',
               test: /node_modules\/(react|react-dom)/,
             },
+            {
+              name: 'howler',
+              test: /node_modules\/howler/,
+            },
           ],
         },
       },
