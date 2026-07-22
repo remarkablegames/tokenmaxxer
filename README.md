@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="public/logo.svg" width="150" alt="Tokenmaxxer">
+</p>
+
 # Tokenmaxxer
 
 [![build](https://github.com/remarkablegames/tokenmaxxer/actions/workflows/build.yml/badge.svg)](https://github.com/remarkablegames/tokenmaxxer/actions/workflows/build.yml)
