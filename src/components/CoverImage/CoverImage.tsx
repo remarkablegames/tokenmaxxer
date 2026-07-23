@@ -13,7 +13,7 @@ function CoverTrophy() {
   return (
     <svg
       aria-hidden="true"
-      className="size-[clamp(2.5rem,8vmin,5rem)] text-amber-300 drop-shadow-[0_0_18px_rgb(251_191_36/0.45)]"
+      className="size-[clamp(3rem,10vmin,6rem)] text-amber-300 drop-shadow-[0_0_18px_rgb(251_191_36/0.45)]"
       viewBox="0 0 96 96"
     >
       <path
@@ -44,10 +44,10 @@ function CoverTrophy() {
 
 function CoverReactor() {
   return (
-    <figure className="flex flex-col items-center">
+    <div className="flex items-center justify-center">
       <svg
         aria-hidden="true"
-        className="size-[min(52vmin,320px)] overflow-visible drop-shadow-[0_0_35px_rgb(239_68_68/0.25)] [@media(min-aspect-ratio:3/2)]:size-[min(58vmin,440px)]"
+        className="size-[min(58vmin,350px)] overflow-visible drop-shadow-[0_0_35px_rgb(239_68_68/0.25)] [@media(min-aspect-ratio:3/2)]:size-[min(62vmin,460px)]"
         viewBox="0 0 400 400"
       >
         <defs>
@@ -157,24 +157,6 @@ function CoverReactor() {
           <circle cx="200" cy="223" r="4.5" stroke="none" />
         </g>
       </svg>
-      <figcaption className="-mt-2 text-xs font-black tracking-[0.24em] text-amber-300 uppercase [text-shadow:0_0_14px_rgb(251_191_36/0.45)]">
-        Cosmic Overdrive III
-      </figcaption>
-    </figure>
-  );
-}
-
-function Milestones() {
-  return (
-    <div className="flex items-center justify-center gap-[clamp(0.5rem,2vmin,1rem)]">
-      {['1K', '1M', '1B'].map((milestone) => (
-        <span
-          className="min-w-[clamp(3rem,10vmin,5rem)] rounded-full border border-cyan-300/25 bg-cyan-400/8 px-3 py-1.5 text-center text-xs font-black tracking-[0.16em] text-cyan-100 shadow-[inset_0_1px_0_rgb(255_255_255/0.08),0_0_18px_rgb(6_182_212/0.08)]"
-          key={milestone}
-        >
-          {milestone}
-        </span>
-      ))}
     </div>
   );
 }
@@ -208,10 +190,9 @@ export function CoverImage() {
         <rect fill="url(#cover-grid)" height="100%" width="100%" />
       </svg>
       <div className="absolute inset-x-[8vmin] top-[7vmin] h-px bg-linear-to-r from-transparent via-cyan-300/40 to-transparent" />
-      <div className="absolute inset-x-[8vmin] bottom-[7vmin] h-px bg-linear-to-r from-transparent via-amber-300/30 to-transparent" />
 
       <section
-        className="relative z-10 grid h-full w-full grid-rows-[auto_minmax(0,1fr)_auto] items-center gap-[2vmin] px-[5vmin] py-[4vmin] [@media(min-aspect-ratio:3/2)]:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] [@media(min-aspect-ratio:3/2)]:grid-rows-[1fr_auto] [@media(min-aspect-ratio:3/2)]:gap-[4vmin] [@media(min-aspect-ratio:6/5)]:px-[7vmin]"
+        className="relative z-10 grid h-full w-full grid-rows-[auto_minmax(0,1fr)] items-center gap-[2vmin] px-[5vmin] py-[4vmin] [@media(min-aspect-ratio:3/2)]:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] [@media(min-aspect-ratio:3/2)]:grid-rows-1 [@media(min-aspect-ratio:3/2)]:gap-[4vmin] [@media(min-aspect-ratio:6/5)]:px-[7vmin]"
         data-testid="cover-layout"
       >
         <header className="flex flex-col items-center text-center [@media(min-aspect-ratio:3/2)]:col-start-1 [@media(min-aspect-ratio:3/2)]:row-start-1 [@media(min-aspect-ratio:3/2)]:items-start [@media(min-aspect-ratio:3/2)]:self-center [@media(min-aspect-ratio:3/2)]:text-left">
@@ -225,13 +206,9 @@ export function CoverImage() {
           </p>
         </header>
 
-        <div className="grid min-h-0 place-items-center [@media(min-aspect-ratio:3/2)]:col-start-2 [@media(min-aspect-ratio:3/2)]:row-span-2 [@media(min-aspect-ratio:3/2)]:row-start-1">
+        <div className="grid min-h-0 place-items-center [@media(min-aspect-ratio:3/2)]:col-start-2 [@media(min-aspect-ratio:3/2)]:row-start-1">
           <CoverReactor />
         </div>
-
-        <footer className="[@media(min-aspect-ratio:3/2)]:col-start-1 [@media(min-aspect-ratio:3/2)]:row-start-2 [@media(min-aspect-ratio:3/2)]:self-start">
-          <Milestones />
-        </footer>
       </section>
     </main>
   );
