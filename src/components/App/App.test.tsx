@@ -682,6 +682,8 @@ describe('Tokenmaxxer dashboard', () => {
     const user = userEvent.setup();
     render(<App />);
 
+    expect(screen.getByText('OVERDRIVE I')).toBeInTheDocument();
+
     await user.click(
       screen.getByRole('button', { name: /mechanical keyboard/i }),
     );

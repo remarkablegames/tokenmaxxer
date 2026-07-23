@@ -2,6 +2,7 @@ import type { MouseEvent } from 'react';
 
 interface ReactorProps {
   stage: number;
+  overdriveLevel: number;
   label: string;
   active: boolean;
   guided: boolean;
@@ -77,15 +78,49 @@ const REACTOR_PALETTES: ReactorPalette[] = [
   },
 ];
 
+const OVERDRIVE_PALETTES: ReactorPalette[] = [
+  {
+    accent: '#fda4af',
+    core: '#fb7185',
+    edge: '#ef4444',
+    orbit: '#f43f5e',
+    outerRing: '#991b1b',
+    ring: '#f43f5e',
+  },
+  {
+    accent: '#fb7185',
+    core: '#fff7ed',
+    edge: '#be123c',
+    orbit: '#e11d48',
+    outerRing: '#881337',
+    ring: '#e11d48',
+  },
+  {
+    accent: '#fff7ed',
+    core: '#fef3c7',
+    edge: '#ef4444',
+    orbit: '#f59e0b',
+    outerRing: '#7f1d1d',
+    ring: '#fbbf24',
+  },
+];
+
+const OVERDRIVE_LABELS = ['', 'I', 'II', 'III'];
+
 export function Reactor({
   stage,
   label,
   active,
   guided,
   onActivate,
+  overdriveLevel,
 }: ReactorProps) {
   const satellites = Array.from({ length: stage + 2 }, (_, index) => index);
-  const palette = REACTOR_PALETTES[stage];
+  const cappedOverdriveLevel = Math.min(3, Math.max(0, overdriveLevel));
+  const palette =
+    stage === 5 && cappedOverdriveLevel > 0
+      ? OVERDRIVE_PALETTES[cappedOverdriveLevel - 1]
+      : REACTOR_PALETTES[stage];
 
   return (
     <button
@@ -106,7 +141,10 @@ export function Reactor({
             <stop offset="1" stopColor={palette.edge} stopOpacity="0.12" />
           </radialGradient>
           <filter id="core-glow" x="-100%" y="-100%" width="300%" height="300%">
-            <feGaussianBlur stdDeviation="8" result="blur" />
+            <feGaussianBlur
+              stdDeviation={8 + cappedOverdriveLevel * 2}
+              result="blur"
+            />
             <feMerge>
               <feMergeNode in="blur" />
               <feMergeNode in="SourceGraphic" />
@@ -132,7 +170,7 @@ export function Reactor({
           stroke={palette.ring}
           strokeDasharray="3 18"
           strokeLinecap="round"
-          strokeWidth="5"
+          strokeWidth={5 + cappedOverdriveLevel}
         />
         {satellites.map((index) => {
           const angle = (index / satellites.length) * Math.PI * 2;
@@ -167,7 +205,7 @@ export function Reactor({
             fill="none"
             stroke={palette.accent}
             strokeDasharray="24 12"
-            strokeWidth="4"
+            strokeWidth={4 + cappedOverdriveLevel * 0.5}
           />
         )}
         {stage >= 4 && (
@@ -179,7 +217,7 @@ export function Reactor({
             rx="178"
             ry="54"
             stroke={palette.orbit}
-            strokeWidth="3"
+            strokeWidth={3 + cappedOverdriveLevel * 0.5}
           />
         )}
         <circle
@@ -187,7 +225,7 @@ export function Reactor({
           cx="200"
           cy="200"
           fill="url(#core-gradient)"
-          opacity=".35"
+          opacity={0.35 + cappedOverdriveLevel * 0.07}
           r={76 + stage * 5}
         />
         <circle
@@ -210,8 +248,13 @@ export function Reactor({
           <circle cx="200" cy="219" r="4" stroke="none" />
         </g>
       </svg>
-      <span className="absolute inset-x-0 bottom-2 text-center text-xs font-bold tracking-[0.22em] text-cyan-200 uppercase">
-        {STAGE_NAMES[stage]}
+      <span className="absolute inset-x-0 bottom-2 text-center text-xs font-bold tracking-[0.22em] uppercase">
+        <span className="block text-cyan-200">{STAGE_NAMES[stage]}</span>
+        {cappedOverdriveLevel > 0 && (
+          <small className="mt-1 block text-xs tracking-[0.18em] text-amber-300">
+            OVERDRIVE {OVERDRIVE_LABELS[cappedOverdriveLevel]}
+          </small>
+        )}
       </span>
     </button>
   );

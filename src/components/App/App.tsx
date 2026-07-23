@@ -245,6 +245,7 @@ export function App() {
   });
   const metrics = calculateMetrics(progress);
   const stage = getReactorStage(progress.highScoreLevel);
+  const overdriveLevel = Math.min(3, Math.max(0, progress.highScoreLevel - 5));
   const onboardingObjective = getOnboardingObjective(progress);
   const showProgressPanels = progress.bonuses.length > 0;
   const visibleAbilities = getVisibleAbilities(progress);
@@ -931,6 +932,7 @@ export function App() {
             guided={progress.stats.clicks === 0}
             label={`Activate reactor for ${formatNumber(metrics.tokensPerClick)} tokens`}
             onActivate={handleReactor}
+            overdriveLevel={overdriveLevel}
             stage={stage}
           />
           <p className="mt-2 text-center text-sm text-slate-400">
