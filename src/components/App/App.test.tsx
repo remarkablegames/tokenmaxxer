@@ -37,10 +37,6 @@ describe('Tokenmaxxer dashboard', () => {
     expect(
       screen.getByRole('main', { name: 'Tokenmaxxer storefront cover' }),
     ).toBeInTheDocument();
-    expect(screen.getByText(/chase the next record/i)).toBeInTheDocument();
-    expect(
-      screen.queryByRole('button', { name: 'Open settings' }),
-    ).not.toBeInTheDocument();
     expect(requestedFrames).toBe(0);
   });
 

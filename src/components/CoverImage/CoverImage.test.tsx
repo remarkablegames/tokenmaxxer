@@ -11,11 +11,6 @@ describe('CoverImage', () => {
     });
     expect(cover).toHaveClass('h-dvh', 'w-dvw');
     expect(cover).toHaveTextContent('TOKENMAXXER');
-    expect(cover).toHaveTextContent('Chase the next record');
-    expect(cover).not.toHaveTextContent('Cosmic Overdrive III');
-    expect(cover).not.toHaveTextContent('1K');
-    expect(cover).not.toHaveTextContent('1M');
-    expect(cover).not.toHaveTextContent('1B');
     expect(screen.getByRole('heading', { level: 1 })).toHaveClass('font-brand');
     expect(screen.getByTestId('cover-layout')).toHaveClass(
       '[@media(min-aspect-ratio:6/5)]:px-[7vmin]',

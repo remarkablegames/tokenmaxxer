@@ -197,13 +197,10 @@ export function CoverImage() {
       >
         <header className="flex flex-col items-center text-center [@media(min-aspect-ratio:3/2)]:col-start-1 [@media(min-aspect-ratio:3/2)]:row-start-1 [@media(min-aspect-ratio:3/2)]:items-start [@media(min-aspect-ratio:3/2)]:self-center [@media(min-aspect-ratio:3/2)]:text-left">
           <CoverTrophy />
-          <h1 className="font-brand mt-[1vmin] text-[clamp(2.25rem,9vmin,5.25rem)] leading-none font-black tracking-[-0.04em] drop-shadow-[0_5px_22px_rgb(0_0_0/0.8)]">
+          <h1 className="font-brand mt-[0.5vmin] text-[clamp(2.75rem,10.5vmin,6rem)] leading-none font-black tracking-[-0.04em] drop-shadow-[0_5px_22px_rgb(0_0_0/0.8)]">
             <span className="text-cyan-200">TOKEN</span>
             <span className="text-white">MAXXER</span>
           </h1>
-          <p className="mt-[1.5vmin] text-[clamp(0.875rem,2.8vmin,1.3rem)] font-extrabold tracking-[0.26em] text-amber-300 uppercase [text-shadow:0_0_16px_rgb(251_191_36/0.32)]">
-            Chase the next record
-          </p>
         </header>
 
         <div className="grid min-h-0 place-items-center [@media(min-aspect-ratio:3/2)]:col-start-2 [@media(min-aspect-ratio:3/2)]:row-start-1">
