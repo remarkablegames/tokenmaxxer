@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/remarkablegames/tokenmaxxer/compare/v1.0.0...v1.0.1) (2026-07-23)
+
+
+### Bug Fixes
+
+* use relative asset paths for build ([08a3d8c](https://github.com/remarkablegames/tokenmaxxer/commit/08a3d8ce63c0c571bde79d3e7da03e8f72c69061))
+
 ## 1.0.0 (2026-07-23)
 
 
