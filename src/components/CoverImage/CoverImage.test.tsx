@@ -17,4 +17,16 @@ describe('CoverImage', () => {
       '[@media(min-aspect-ratio:3/2)]:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]',
     );
   });
+
+  it('animates the cover artwork when requested', () => {
+    render(<CoverImage animated />);
+
+    expect(screen.getByTestId('cover-trophy')).toHaveClass(
+      'animate-[cover-float_3s_ease-in-out_infinite]',
+    );
+    expect(screen.getByTestId('cover-reactor')).toHaveAttribute(
+      'data-animated',
+      'true',
+    );
+  });
 });

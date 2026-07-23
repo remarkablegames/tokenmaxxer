@@ -109,6 +109,16 @@
   }
 }
 
+@keyframes cover-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6%);
+  }
+}
+
 @keyframes float-up {
   from {
     transform: translate(-50%, -20%) scale(0.8);

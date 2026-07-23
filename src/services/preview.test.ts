@@ -15,6 +15,10 @@ describe('query preview sandbox', () => {
       mode: 'cover',
       enabled: true,
     });
+    expect(parsePreviewSearch('?preview=cover-animated')).toEqual({
+      mode: 'cover-animated',
+      enabled: true,
+    });
     expect(parsePreviewSearch('?preview=prestige&tokens=2.5e8')).toEqual({
       mode: 'prestige',
       tokens: 250_000_000,
@@ -87,5 +91,8 @@ describe('query preview sandbox', () => {
     const save = createInitialSave();
 
     expect(applyPreview(save, parsePreviewSearch('?preview=cover'))).toBe(save);
+    expect(
+      applyPreview(save, parsePreviewSearch('?preview=cover-animated')),
+    ).toBe(save);
   });
 });

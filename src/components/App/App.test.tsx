@@ -40,6 +40,20 @@ describe('Tokenmaxxer dashboard', () => {
     expect(requestedFrames).toBe(0);
   });
 
+  it('renders the animated standalone cover from its preview mode', () => {
+    window.history.replaceState({}, '', '/?preview=cover-animated');
+    render(<App />);
+
+    expect(screen.getByTestId('cover-reactor')).toHaveAttribute(
+      'data-animated',
+      'true',
+    );
+    expect(
+      screen.queryByRole('button', { name: 'Open settings' }),
+    ).not.toBeInTheDocument();
+    expect(requestedFrames).toBe(0);
+  });
+
   it('plays interface feedback when opening settings and Ops Comms', async () => {
     const user = userEvent.setup();
     render(<App />);

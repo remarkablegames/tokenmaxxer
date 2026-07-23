@@ -173,6 +173,7 @@ interface GameDashboardProps {
 export function App() {
   const previewConfig = parsePreviewSearch(window.location.search);
   if (previewConfig.mode === 'cover') return <CoverImage />;
+  if (previewConfig.mode === 'cover-animated') return <CoverImage animated />;
   return <GameDashboard previewConfig={previewConfig} />;
 }
 

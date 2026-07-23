@@ -9,11 +9,20 @@ const REACTOR_NODES = [
   [88, 88],
 ];
 
-function CoverTrophy() {
+interface CoverArtworkProps {
+  animated: boolean;
+}
+
+interface CoverImageProps {
+  animated?: boolean;
+}
+
+function CoverTrophy({ animated }: CoverArtworkProps) {
   return (
     <svg
       aria-hidden="true"
-      className="size-[clamp(3.25rem,11vmin,6.5rem)] text-amber-300 drop-shadow-[0_0_18px_rgb(251_191_36/0.45)]"
+      className={`size-[clamp(3.25rem,11vmin,6.5rem)] text-amber-300 drop-shadow-[0_0_18px_rgb(251_191_36/0.45)] ${animated ? 'animate-[cover-float_3s_ease-in-out_infinite]' : ''}`}
+      data-testid="cover-trophy"
       viewBox="0 0 96 96"
     >
       <path
@@ -42,12 +51,14 @@ function CoverTrophy() {
   );
 }
 
-function CoverReactor() {
+function CoverReactor({ animated }: CoverArtworkProps) {
   return (
     <div className="flex items-center justify-center">
       <svg
         aria-hidden="true"
         className="size-[min(64vmin,380px)] overflow-visible drop-shadow-[0_0_35px_rgb(239_68_68/0.25)] [@media(min-aspect-ratio:3/2)]:size-[min(66vmin,480px)]"
+        data-animated={animated}
+        data-testid="cover-reactor"
         viewBox="0 0 400 400"
       >
         <defs>
@@ -76,8 +87,15 @@ function CoverReactor() {
             </feMerge>
           </filter>
         </defs>
-        <circle cx="200" cy="200" fill="url(#cover-aura)" r="128" />
         <circle
+          className={animated ? 'core-aura' : undefined}
+          cx="200"
+          cy="200"
+          fill="url(#cover-aura)"
+          r="128"
+        />
+        <circle
+          className={animated ? 'reactor-ring reactor-ring-slow' : undefined}
           cx="200"
           cy="200"
           fill="none"
@@ -87,6 +105,7 @@ function CoverReactor() {
           strokeWidth="3"
         />
         <circle
+          className={animated ? 'reactor-ring reactor-ring-reverse' : undefined}
           cx="200"
           cy="200"
           fill="none"
@@ -97,14 +116,23 @@ function CoverReactor() {
           strokeWidth="7"
         />
         <path
+          className={
+            animated ? 'animate-[energy-flow_1.4s_linear_infinite]' : undefined
+          }
           d="M75 200a125 125 0 0 1 250 0"
           fill="none"
           stroke="#fff7ed"
           strokeDasharray="24 12"
           strokeWidth="5"
         />
-        {REACTOR_NODES.map(([x, y]) => (
-          <g key={`${String(x)}-${String(y)}`}>
+        {REACTOR_NODES.map(([x, y], index) => (
+          <g
+            className={animated ? 'node-light' : undefined}
+            key={`${String(x)}-${String(y)}`}
+            style={
+              animated ? { animationDelay: `${String(index * -0.18)}s` } : {}
+            }
+          >
             <line
               stroke="#155e75"
               strokeDasharray="5 8"
@@ -128,6 +156,7 @@ function CoverReactor() {
           </g>
         ))}
         <ellipse
+          className={animated ? 'planet-ring' : undefined}
           cx="200"
           cy="200"
           fill="none"
@@ -161,7 +190,7 @@ function CoverReactor() {
   );
 }
 
-export function CoverImage() {
+export function CoverImage({ animated = false }: CoverImageProps) {
   return (
     <main
       aria-label="Tokenmaxxer storefront cover"
@@ -196,7 +225,7 @@ export function CoverImage() {
         data-testid="cover-layout"
       >
         <header className="flex flex-col items-center text-center [@media(min-aspect-ratio:3/2)]:col-start-1 [@media(min-aspect-ratio:3/2)]:row-start-1 [@media(min-aspect-ratio:3/2)]:items-start [@media(min-aspect-ratio:3/2)]:self-center [@media(min-aspect-ratio:3/2)]:text-left">
-          <CoverTrophy />
+          <CoverTrophy animated={animated} />
           <h1 className="font-brand mt-[0.5vmin] text-[clamp(2.75rem,10.5vmin,6rem)] leading-none font-black tracking-[-0.04em] drop-shadow-[0_5px_22px_rgb(0_0_0/0.8)]">
             <span className="text-cyan-200">TOKEN</span>
             <span className="text-white">MAXXER</span>
@@ -204,7 +233,7 @@ export function CoverImage() {
         </header>
 
         <div className="grid min-h-0 place-items-center [@media(min-aspect-ratio:3/2)]:col-start-2 [@media(min-aspect-ratio:3/2)]:row-start-1">
-          <CoverReactor />
+          <CoverReactor animated={animated} />
         </div>
       </section>
     </main>
