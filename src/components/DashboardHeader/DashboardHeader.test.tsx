@@ -24,6 +24,8 @@ describe('DashboardHeader', () => {
 
     expect(screen.getByText('PREVIEW MODE')).toBeInTheDocument();
     expect(screen.getByRole('heading', { level: 1 })).toHaveClass('font-brand');
+    expect(screen.getByText('TOKEN')).toHaveClass('text-cyan-200');
+    expect(screen.getByText('MAXXER')).toHaveClass('text-white');
     expect(screen.getByText('1.50K')).toBeInTheDocument();
     expect(screen.getByText(/NEW HIGH SCORE/)).toHaveClass('text-cyan-300');
     await user.click(

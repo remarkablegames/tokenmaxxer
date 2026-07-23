@@ -54,7 +54,9 @@ export function DashboardHeader({
       <div className="mx-auto flex w-full max-w-400 flex-wrap items-center gap-3 px-3 sm:px-6">
         <div className="mr-auto">
           <h1 className="font-brand text-xl font-black tracking-tight sm:text-2xl">
-            <span className="text-amber-300">🏆</span> TOKENMAXXER
+            <span className="text-amber-300">🏆</span>{' '}
+            <span className="text-cyan-200">TOKEN</span>
+            <span className="text-white">MAXXER</span>
           </h1>
           <p
             className={`status text-xs tracking-[.28em] ${notice === 'SYSTEM ONLINE' ? 'text-emerald-300' : 'text-cyan-300'}`}
