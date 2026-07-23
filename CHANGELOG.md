@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.3](https://github.com/remarkablegames/tokenmaxxer/compare/v1.0.2...v1.0.3) (2026-07-23)
+
+
+### Miscellaneous Chores
+
+* release 1.0.3 ([c90918c](https://github.com/remarkablegames/tokenmaxxer/commit/c90918ca9faf9b78dce35e6fed707e7dc8b1db04))
+
 ## [1.0.2](https://github.com/remarkablegames/tokenmaxxer/compare/v1.0.1...v1.0.2) (2026-07-23)
 
 
