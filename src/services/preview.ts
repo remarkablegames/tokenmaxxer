@@ -1,8 +1,8 @@
 import { createInitialProgress } from 'src/services/game';
 import type { SaveEnvelope } from 'src/types/game.types';
 
-interface PreviewConfig {
-  mode: 'high-score' | 'prestige' | null;
+export interface PreviewConfig {
+  mode: 'cover' | 'high-score' | 'prestige' | null;
   tokens?: number;
   enabled: boolean;
 }
@@ -11,7 +11,9 @@ export function parsePreviewSearch(search: string): PreviewConfig {
   const parameters = new URLSearchParams(search);
   const requestedMode = parameters.get('preview');
   const mode =
-    requestedMode === 'high-score' || requestedMode === 'prestige'
+    requestedMode === 'cover' ||
+    requestedMode === 'high-score' ||
+    requestedMode === 'prestige'
       ? requestedMode
       : null;
   const requestedTokens = parameters.get('tokens');
@@ -38,6 +40,7 @@ export function applyPreview(
   config: PreviewConfig,
 ): SaveEnvelope {
   if (!config.enabled) return save;
+  if (config.mode === 'cover') return save;
 
   let progress = save.progress;
   if (config.mode === 'prestige') {

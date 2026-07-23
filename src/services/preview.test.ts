@@ -11,6 +11,10 @@ describe('query preview sandbox', () => {
       mode: 'high-score',
       enabled: true,
     });
+    expect(parsePreviewSearch('?preview=cover')).toEqual({
+      mode: 'cover',
+      enabled: true,
+    });
     expect(parsePreviewSearch('?preview=prestige&tokens=2.5e8')).toEqual({
       mode: 'prestige',
       tokens: 250_000_000,
@@ -77,5 +81,11 @@ describe('query preview sandbox', () => {
     );
     expect(combined.progress.tokens).toBe(250_000_000);
     expect(combined.progress.stats.tokens).toBe(100_000_000);
+  });
+
+  it('leaves save data untouched for the visual-only cover preview', () => {
+    const save = createInitialSave();
+
+    expect(applyPreview(save, parsePreviewSearch('?preview=cover'))).toBe(save);
   });
 });

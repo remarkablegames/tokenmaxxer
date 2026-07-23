@@ -1,5 +1,9 @@
 @import 'tailwindcss';
 
+@theme {
+  --font-brand: 'Orbitron', ui-sans-serif, system-ui, sans-serif;
+}
+
 /* Generated texture and animation primitives that do not map cleanly to
    utility classes. Component presentation lives in Tailwind class names. */
 .noise {

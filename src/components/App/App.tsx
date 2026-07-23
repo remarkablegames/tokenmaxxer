@@ -6,6 +6,7 @@ import {
   ChampionArchiveModal,
 } from 'src/components/ChampionArchiveModal';
 import { CommsNotification } from 'src/components/CommsNotification';
+import { CoverImage } from 'src/components/CoverImage';
 import { DashboardHeader } from 'src/components/DashboardHeader';
 import { HighScorePanel } from 'src/components/HighScorePanel';
 import { ModalShell } from 'src/components/ModalShell';
@@ -31,7 +32,11 @@ import {
   tickGame,
   UPGRADES,
 } from 'src/services/game';
-import { applyPreview, parsePreviewSearch } from 'src/services/preview';
+import {
+  applyPreview,
+  parsePreviewSearch,
+  type PreviewConfig,
+} from 'src/services/preview';
 import { exportSave, loadSave, saveGame } from 'src/services/storage';
 import {
   getEligibleTransmissions,
@@ -161,10 +166,17 @@ function getVisibleAbilities(progress: GameProgress): AbilityDefinition[] {
   return nextLocked === undefined ? unlocked : [...unlocked, nextLocked];
 }
 
+interface GameDashboardProps {
+  previewConfig: PreviewConfig;
+}
+
 export function App() {
-  const [previewConfig] = useState(() =>
-    parsePreviewSearch(window.location.search),
-  );
+  const previewConfig = parsePreviewSearch(window.location.search);
+  if (previewConfig.mode === 'cover') return <CoverImage />;
+  return <GameDashboard previewConfig={previewConfig} />;
+}
+
+function GameDashboard({ previewConfig }: GameDashboardProps) {
   const [initialNarrative] = useState(() => {
     const loaded = applyPreview(loadSave(), previewConfig);
     const initializedAt = Date.now();

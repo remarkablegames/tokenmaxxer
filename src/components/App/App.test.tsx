@@ -14,14 +14,34 @@ vi.mock('src/services/audio', () => ({
 }));
 
 describe('Tokenmaxxer dashboard', () => {
+  let requestedFrames = 0;
+
   beforeEach(() => {
     vi.clearAllMocks();
     localStorage.clear();
-    vi.spyOn(window, 'requestAnimationFrame').mockReturnValue(1);
+    requestedFrames = 0;
+    vi.spyOn(window, 'requestAnimationFrame').mockImplementation(() => {
+      requestedFrames += 1;
+      return 1;
+    });
     vi.spyOn(window, 'cancelAnimationFrame').mockImplementation(
       () => undefined,
     );
     vi.spyOn(Math, 'random').mockReturnValue(1);
+  });
+
+  it('renders the standalone cover without initializing dashboard controls', () => {
+    window.history.replaceState({}, '', '/?preview=cover');
+    render(<App />);
+
+    expect(
+      screen.getByRole('main', { name: 'Tokenmaxxer storefront cover' }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/chase the next record/i)).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'Open settings' }),
+    ).not.toBeInTheDocument();
+    expect(requestedFrames).toBe(0);
   });
 
   it('plays interface feedback when opening settings and Ops Comms', async () => {
