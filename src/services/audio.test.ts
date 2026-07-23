@@ -64,7 +64,7 @@ describe('audio effects', () => {
     playSound(sound, 0.5, false);
     expect(howler.Howl).toHaveBeenCalledWith(
       expect.objectContaining({
-        src: [`/sounds/${file}.ogg`, `/sounds/${file}.mp3`],
+        src: [`./sounds/${file}.ogg`, `./sounds/${file}.mp3`],
         volume: 0.35,
       }),
     );

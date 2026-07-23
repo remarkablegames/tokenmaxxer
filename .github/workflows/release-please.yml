@@ -45,7 +45,7 @@ jobs:
 
       - name: Build game
         shell: bash
-        run: npm run build
+        run: npm run build -- --base=./
 
       - name: Get variables
         id: vars
@@ -125,7 +125,7 @@ jobs:
         run: npm ci --prefer-offline --ignore-scripts
 
       - name: Build game
-        run: npm run build
+        run: npm run build -- --base=./
         env:
           WAVEDASH: true
 

@@ -37,22 +37,22 @@ const SOUND_ASSETS: Record<AssetSoundName, AssetSoundDefinition> = {
   'high-score': {
     fallback: 'milestone',
     sources: [
-      '/sounds/HIT-Noisy-Hit_HY_PC-002.ogg',
-      '/sounds/HIT-Noisy-Hit_HY_PC-002.mp3',
+      './sounds/HIT-Noisy-Hit_HY_PC-002.ogg',
+      './sounds/HIT-Noisy-Hit_HY_PC-002.mp3',
     ],
   },
   'token-surge': {
     fallback: 'ability',
     sources: [
-      '/sounds/INTERFACE-Zap-Select_HY_PC-006.ogg',
-      '/sounds/INTERFACE-Zap-Select_HY_PC-006.mp3',
+      './sounds/INTERFACE-Zap-Select_HY_PC-006.ogg',
+      './sounds/INTERFACE-Zap-Select_HY_PC-006.mp3',
     ],
   },
   hyperfocus: {
     fallback: 'ability',
     sources: [
-      '/sounds/MOVEMENT-Whoosh-Sweep_HY_PC-001.ogg',
-      '/sounds/MOVEMENT-Whoosh-Sweep_HY_PC-001.mp3',
+      './sounds/MOVEMENT-Whoosh-Sweep_HY_PC-001.ogg',
+      './sounds/MOVEMENT-Whoosh-Sweep_HY_PC-001.mp3',
     ],
   },
 };
