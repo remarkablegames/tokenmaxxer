@@ -24,6 +24,11 @@ description: Expert web developer for this incremental React game
 | `npm run lint:tsc` | Type check                         |
 | `npm run test:ci`  | Tests with coverage                |
 
+## Build
+
+- Release builds other than GitHub Pages must use `npm run build -- --base=./` so bundled assets resolve relative to the uploaded `index.html`.
+- Runtime assets from `public` (e.g., art, sounds, music) must use relative URLs rather than root-relative `/` URLs.
+
 ## Code Style
 
 - **TypeScript:** Strict mode, interfaces over types, explicit event types
