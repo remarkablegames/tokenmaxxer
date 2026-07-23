@@ -14,6 +14,14 @@
 
 Click the Token Reactor, automate production, deploy increasingly questionable AI models, and chase ever-larger High Scores. Every record earns a Performance Bonus, while Ops Comms delivers encouragement, office gossip, and absolutely trustworthy updates from management.
 
+## Play
+
+Play the game on:
+
+- [itch.io](https://remarkablegames.itch.io/tokenmaxxer)
+- [Wavedash](https://wavedash.com/games/tokenmaxxer)
+- [remarkablegames](https://remarkablegames.org/tokenmaxxer/)
+
 ## Features
 
 - Click and automate your way from a workstation to a Cosmic Token Reactor
