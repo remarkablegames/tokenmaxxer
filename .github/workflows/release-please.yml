@@ -127,7 +127,7 @@ jobs:
       - name: Build game
         run: npm run build -- --base=./
         env:
-          WAVEDASH: true
+          VITE_WAVEDASH: true
 
       - name: Install Wavedash CLI
         run: curl -fsSL https://wavedash.com/cli/install.sh | sh
