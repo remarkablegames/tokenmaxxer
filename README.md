@@ -10,6 +10,35 @@
 
 🏆 An incremental game where you optimize token production to chase the ultimate high score.
 
+Climb the corporate AI leaderboard—one token at a time.
+
+Click the Token Reactor, automate production, deploy increasingly questionable AI models, and chase ever-larger High Scores. Every record earns a Performance Bonus, while Ops Comms delivers encouragement, office gossip, and absolutely trustworthy updates from management.
+
+## Features
+
+- Click and automate your way from a workstation to a Cosmic Token Reactor
+- Purchase manual, automation, and efficiency upgrades
+- Activate Token Surge and Hyperfocus abilities
+- Unlock satirical AI models and workplace lore
+- Earn milestones and achievements
+- Start new sessions for a permanent Token Multiplier
+- Export and import local save data
+- Continue progressing beyond the main run
+- Enjoy background music and sound effects
+
+Your first session takes roughly 15–20 minutes to reach the reset milestone, but the leaderboard never truly ends.
+
+## Controls
+
+- Click or tap the reactor to generate tokens
+- Select upgrades to purchase them
+- Use ×1, ×10, or MAX purchasing modes
+- Audio begins after your first interaction
+
+Progress saves automatically in your browser. No account or internet connection is required after the game loads.
+
+**Can you outperform your colleague—or will the Token Reactor outperform you?**
+
 ## Credits
 
 - [DavidKBD - Code Injection Dark Techno Music Pack](https://davidkbd.itch.io/code-injection-dark-techno-music-pack)
