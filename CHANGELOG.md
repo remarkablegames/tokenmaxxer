@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/remarkablegames/tokenmaxxer/compare/v1.0.1...v1.0.2) (2026-07-23)
+
+
+### Bug Fixes
+
+* fix the Wavedash build flag ([3de5f4f](https://github.com/remarkablegames/tokenmaxxer/commit/3de5f4f2e3f2cf969242398bc2e2846e2d7acbeb))
+
 ## [1.0.1](https://github.com/remarkablegames/tokenmaxxer/compare/v1.0.0...v1.0.1) (2026-07-23)
 
 
