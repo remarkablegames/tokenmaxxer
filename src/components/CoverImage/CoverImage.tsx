@@ -13,7 +13,7 @@ function CoverTrophy() {
   return (
     <svg
       aria-hidden="true"
-      className="size-[clamp(3rem,10vmin,6rem)] text-amber-300 drop-shadow-[0_0_18px_rgb(251_191_36/0.45)]"
+      className="size-[clamp(3.25rem,11vmin,6.5rem)] text-amber-300 drop-shadow-[0_0_18px_rgb(251_191_36/0.45)]"
       viewBox="0 0 96 96"
     >
       <path
@@ -47,7 +47,7 @@ function CoverReactor() {
     <div className="flex items-center justify-center">
       <svg
         aria-hidden="true"
-        className="size-[min(58vmin,350px)] overflow-visible drop-shadow-[0_0_35px_rgb(239_68_68/0.25)] [@media(min-aspect-ratio:3/2)]:size-[min(62vmin,460px)]"
+        className="size-[min(64vmin,380px)] overflow-visible drop-shadow-[0_0_35px_rgb(239_68_68/0.25)] [@media(min-aspect-ratio:3/2)]:size-[min(66vmin,480px)]"
         viewBox="0 0 400 400"
       >
         <defs>
@@ -197,11 +197,11 @@ export function CoverImage() {
       >
         <header className="flex flex-col items-center text-center [@media(min-aspect-ratio:3/2)]:col-start-1 [@media(min-aspect-ratio:3/2)]:row-start-1 [@media(min-aspect-ratio:3/2)]:items-start [@media(min-aspect-ratio:3/2)]:self-center [@media(min-aspect-ratio:3/2)]:text-left">
           <CoverTrophy />
-          <h1 className="font-brand mt-[1vmin] text-[clamp(2rem,8vmin,4.75rem)] leading-none font-black tracking-[-0.04em] drop-shadow-[0_5px_22px_rgb(0_0_0/0.8)]">
+          <h1 className="font-brand mt-[1vmin] text-[clamp(2.25rem,9vmin,5.25rem)] leading-none font-black tracking-[-0.04em] drop-shadow-[0_5px_22px_rgb(0_0_0/0.8)]">
             <span className="text-cyan-200">TOKEN</span>
             <span className="text-white">MAXXER</span>
           </h1>
-          <p className="mt-[1.5vmin] text-[clamp(0.75rem,2.4vmin,1.15rem)] font-extrabold tracking-[0.26em] text-amber-300 uppercase [text-shadow:0_0_16px_rgb(251_191_36/0.32)]">
+          <p className="mt-[1.5vmin] text-[clamp(0.875rem,2.8vmin,1.3rem)] font-extrabold tracking-[0.26em] text-amber-300 uppercase [text-shadow:0_0_16px_rgb(251_191_36/0.32)]">
             Chase the next record
           </p>
         </header>
