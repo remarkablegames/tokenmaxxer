@@ -10,7 +10,7 @@
 
 🏆 An incremental game where you optimize token production to chase the ultimate high score.
 
-Climb the corporate AI leaderboard—one token at a time.
+> _Climb the corporate AI leaderboard—one token at a time._
 
 Click the Token Reactor, automate production, deploy increasingly questionable AI models, and chase ever-larger High Scores. Every record earns a Performance Bonus, while Ops Comms delivers encouragement, office gossip, and absolutely trustworthy updates from management.
 
