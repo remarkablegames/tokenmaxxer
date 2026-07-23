@@ -22,6 +22,8 @@ Play the game on:
 - [Wavedash](https://wavedash.com/games/tokenmaxxer)
 - [remarkablegames](https://remarkablegames.org/tokenmaxxer/)
 
+Read the [blog post](https://remarkablegames.org/posts/tokenmaxxer/).
+
 ## Features
 
 - Click and automate your way from a workstation to a Cosmic Token Reactor
