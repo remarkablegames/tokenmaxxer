@@ -1,6 +1,6 @@
 import { fileURLToPath } from 'node:url';
 
-import eslint from '@eslint/js';
+import js from '@eslint/js';
 import { defineConfig, includeIgnoreFile } from 'eslint/config';
 import prettier from 'eslint-plugin-prettier';
 import reactDom from 'eslint-plugin-react-dom';
@@ -21,13 +21,13 @@ export default defineConfig([
 
     plugins: {
       'simple-import-sort': simpleImportSort,
-      eslint,
+      js,
       prettier,
       tsdoc,
     },
 
     extends: [
-      eslint.configs.recommended,
+      js.configs.recommended,
       reactDom.configs.recommended,
       reactHooks.configs.flat.recommended,
       reactRefresh.configs.vite,
