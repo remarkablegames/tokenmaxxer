@@ -56,7 +56,7 @@ function CoverReactor({ animated }: CoverArtworkProps) {
     <div className="flex items-center justify-center">
       <svg
         aria-hidden="true"
-        className="size-[min(64vmin,380px)] overflow-visible drop-shadow-[0_0_35px_rgb(239_68_68/0.25)] [@media(min-aspect-ratio:3/2)]:size-[min(66vmin,480px)]"
+        className="size-[min(64vmin,380px)] overflow-visible drop-shadow-[0_0_35px_rgb(239_68_68/0.25)] [@media(min-aspect-ratio:2/1)]:size-[min(66vmin,480px)]"
         data-animated={animated}
         data-testid="cover-reactor"
         viewBox="0 0 400 400"
@@ -221,10 +221,10 @@ export function CoverImage({ animated = false }: CoverImageProps) {
       <div className="absolute inset-x-[8vmin] top-[7vmin] h-px bg-linear-to-r from-transparent via-cyan-300/40 to-transparent" />
 
       <section
-        className="relative z-10 grid h-full w-full grid-rows-[auto_minmax(0,1fr)] items-center gap-[2vmin] px-[5vmin] py-[4vmin] [@media(min-aspect-ratio:3/2)]:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] [@media(min-aspect-ratio:3/2)]:grid-rows-1 [@media(min-aspect-ratio:3/2)]:gap-[4vmin] [@media(min-aspect-ratio:6/5)]:px-[7vmin]"
+        className="relative z-10 grid h-full w-full grid-rows-[auto_auto] content-center gap-[2vmin] px-[5vmin] py-[4vmin] [@media(min-aspect-ratio:2/1)]:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] [@media(min-aspect-ratio:2/1)]:grid-rows-1 [@media(min-aspect-ratio:2/1)]:items-center [@media(min-aspect-ratio:2/1)]:gap-[4vmin] [@media(min-aspect-ratio:6/5)]:px-[7vmin]"
         data-testid="cover-layout"
       >
-        <header className="flex flex-col items-center text-center [@media(min-aspect-ratio:3/2)]:col-start-1 [@media(min-aspect-ratio:3/2)]:row-start-1 [@media(min-aspect-ratio:3/2)]:items-start [@media(min-aspect-ratio:3/2)]:self-center [@media(min-aspect-ratio:3/2)]:text-left">
+        <header className="flex flex-col items-center text-center [@media(min-aspect-ratio:2/1)]:col-start-1 [@media(min-aspect-ratio:2/1)]:row-start-1 [@media(min-aspect-ratio:2/1)]:items-start [@media(min-aspect-ratio:2/1)]:self-center [@media(min-aspect-ratio:2/1)]:text-left">
           <CoverTrophy animated={animated} />
           <h1 className="font-brand mt-[0.5vmin] text-[clamp(2.75rem,10.5vmin,6rem)] leading-none font-black tracking-[-0.04em] drop-shadow-[0_5px_22px_rgb(0_0_0/0.8)]">
             <span className="text-cyan-200">TOKEN</span>
@@ -232,7 +232,7 @@ export function CoverImage({ animated = false }: CoverImageProps) {
           </h1>
         </header>
 
-        <div className="grid min-h-0 place-items-center [@media(min-aspect-ratio:3/2)]:col-start-2 [@media(min-aspect-ratio:3/2)]:row-start-1">
+        <div className="grid min-h-0 place-items-center [@media(min-aspect-ratio:2/1)]:col-start-2 [@media(min-aspect-ratio:2/1)]:row-start-1">
           <CoverReactor animated={animated} />
         </div>
       </section>

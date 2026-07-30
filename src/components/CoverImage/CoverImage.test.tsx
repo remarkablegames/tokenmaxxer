@@ -14,7 +14,7 @@ describe('CoverImage', () => {
     expect(screen.getByRole('heading', { level: 1 })).toHaveClass('font-brand');
     expect(screen.getByTestId('cover-layout')).toHaveClass(
       '[@media(min-aspect-ratio:6/5)]:px-[7vmin]',
-      '[@media(min-aspect-ratio:3/2)]:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]',
+      '[@media(min-aspect-ratio:2/1)]:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]',
     );
   });
 
