@@ -20,6 +20,7 @@ Play the game on:
 
 - [itch.io](https://remarkablegames.itch.io/tokenmaxxer)
 - [Wavedash](https://wavedash.com/games/tokenmaxxer)
+- [Newgrounds](https://www.newgrounds.com/portal/view/1044486)
 - [remarkablegames](https://remarkablegames.org/tokenmaxxer/)
 
 Read the [blog post](https://remarkablegames.org/posts/tokenmaxxer/).
