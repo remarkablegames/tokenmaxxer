@@ -25,6 +25,8 @@ Play the game on:
 
 Read the [blog post](https://remarkablegames.org/posts/tokenmaxxer/).
 
+![Tokenmaxxer screenshot](screenshots/5.png)
+
 ## Features
 
 - Click and automate your way from a workstation to a Cosmic Token Reactor
