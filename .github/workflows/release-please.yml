@@ -126,8 +126,6 @@ jobs:
 
       - name: Build game
         run: npm run build -- --base=./
-        env:
-          VITE_WAVEDASH: true
 
       - name: Upload to Wavedash
         uses: remarkablemark/wavedash-action@v1
