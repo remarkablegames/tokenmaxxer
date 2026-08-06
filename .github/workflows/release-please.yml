@@ -129,18 +129,11 @@ jobs:
         env:
           VITE_WAVEDASH: true
 
-      - name: Install Wavedash CLI
-        run: curl -fsSL https://wavedash.com/cli/install.sh | sh
-
-      - name: Create wavedash.toml
-        run: |
-          cat > wavedash.toml << 'EOF'
-          game_id = "j972wzjtja0yat7c28r4k0m0f58b0e14"
-          upload_dir = "./dist"
-          entrypoint = "index.html"
-          EOF
-
-      - name: Push build
-        run: wavedash build push -m "${{ needs.release.outputs.tag_name }}"
-        env:
-          WAVEDASH_TOKEN: ${{ secrets.WAVEDASH_TOKEN }}
+      - name: Upload to Wavedash
+        uses: remarkablemark/wavedash-action@v1
+        with:
+          token: ${{ secrets.WAVEDASH_TOKEN }}
+          game-id: j972wzjtja0yat7c28r4k0m0f58b0e14
+          upload-dir: dist
+          entrypoint: index.html
+          build-message: ${{ needs.release.outputs.tag_name }}
