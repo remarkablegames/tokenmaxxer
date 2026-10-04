@@ -16,11 +16,17 @@ Click the Token Reactor, automate production, deploy increasingly questionable A
 
 ## Play
 
-Play the game on:
+Play in your browser:
 
-- [itch.io](https://remarkablegames.itch.io/tokenmaxxer)
 - [Wavedash](https://wavedash.com/games/tokenmaxxer)
+- [itch.io](https://remarkablegames.itch.io/tokenmaxxer)
 - [remarkablegames](https://remarkablegames.org/tokenmaxxer/)
+
+Or download for desktop:
+
+- [Windows](https://github.com/remarkablegames/tokenmaxxer/releases/latest/download/windows.zip)
+- [macOS](https://github.com/remarkablegames/tokenmaxxer/releases/latest/download/macos.zip)
+- [Linux](https://github.com/remarkablegames/tokenmaxxer/releases/latest/download/linux.zip)
 
 Read the [blog post](https://remarkablegames.org/posts/tokenmaxxer/).
 
