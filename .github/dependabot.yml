@@ -15,19 +15,14 @@ updates:
           - '@commitlint/*'
       eslint:
         patterns:
-          - '@eslint/*'
-          - 'eslint*'
+          - '*eslint*'
           - prettier
       react:
         patterns:
-          - '@types/react'
-          - '@types/react-dom'
-          - react
-          - react-dom
+          - '*react*'
       vite:
         patterns:
-          - '@vite*'
-          - 'vite*'
+          - '*vite*'
 
   - package-ecosystem: 'github-actions'
     directory: '/'
