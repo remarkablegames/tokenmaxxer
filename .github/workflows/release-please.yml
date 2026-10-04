@@ -131,7 +131,7 @@ jobs:
         uses: remarkablemark/wavedash-action@v1
         with:
           token: ${{ secrets.WAVEDASH_TOKEN }}
-          game-id: j972wzjtja0yat7c28r4k0m0f58b0e14
+          game-id: ${{ secrets.WAVEDASH_GAME_ID }}
           upload-dir: dist
           entrypoint: index.html
           build-message: ${{ needs.release.outputs.tag_name }}
